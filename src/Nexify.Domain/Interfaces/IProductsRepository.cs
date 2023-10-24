@@ -5,7 +5,7 @@ namespace Nexify.Domain.Interfaces
 {
     public interface IProductsRepository
     {
-        public Task AddProductsAsync(Product products);
+        public Task AddAsync(Product products);
         public Task<PagedResult<Product>> GetAllAsync(PaginationFilter validFilter);
         public Task UpdateAsync(Product product);
         public Task<Product> GetAsync(Guid id);

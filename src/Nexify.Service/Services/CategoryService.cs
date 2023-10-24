@@ -20,9 +20,9 @@ namespace Nexify.Service.Services
 
         public CategoryService(
             IMapper mapper,
-            ICategoryRepository categoryRepository,
-            IUriService uriService,
-            IImagesService imagesService)
+                ICategoryRepository categoryRepository,
+                    IUriService uriService,
+                        IImagesService imagesService)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));

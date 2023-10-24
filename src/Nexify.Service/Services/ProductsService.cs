@@ -20,9 +20,9 @@ namespace Nexify.Service.Services
 
         public ProductsService(
             IImagesService imagesService,
-            IProductsRepository productsRepository,
-            IProductsCategoriesRepository productCategoriesRepository,
-            IMapper mapper,
+                IProductsRepository productsRepository,
+                    IProductsCategoriesRepository productCategoriesRepository,
+                        IMapper mapper,
             IUriService uriService)
         {
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
@@ -44,7 +44,7 @@ namespace Nexify.Service.Services
                     SaveImages(product.Images));
             }
 
-            await _productsRepository.AddProductsAsync(result);
+            await _productsRepository.AddAsync(result);
 
             if (!string.IsNullOrEmpty(product.CategoriesNames))
             {

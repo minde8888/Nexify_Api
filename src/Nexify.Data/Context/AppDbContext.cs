@@ -7,6 +7,7 @@ using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.CategoriesProducts;
 using Nexify.Domain.Entities.User;
+using Nexify.Domain.Entities.SubCategories;
 
 namespace Nexify.Data.Context
 {
@@ -22,6 +23,8 @@ namespace Nexify.Data.Context
         public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<Subcategory> Subcategory { get; set; }
+        public DbSet<User> User { get; set; }
         public DbSet<CategoriesProducts> CategoriesProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -32,7 +35,6 @@ namespace Nexify.Data.Context
 
             builder.Entity<User>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Product>().HasQueryFilter(p => p.IsDeleted == false);
-            builder.Entity<Category>().HasQueryFilter(p => p.IsDeleted == false);
 
             builder.Entity<CategoriesProducts>()
                 .HasKey(i => new { i.ProductsId, i.CategoriesId });

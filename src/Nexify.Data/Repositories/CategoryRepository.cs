@@ -64,10 +64,7 @@ namespace Nexify.Data.Repositories
             var category = await _context.Category.FirstOrDefaultAsync(x => x.CategoryId == id);
 
             var categoriesProducts = await _context.CategoriesProducts.FirstOrDefaultAsync(x => x.CategoriesId == id);
-            if (categoriesProducts != null)
-            {
-                _context.CategoriesProducts.Remove(categoriesProducts);
-            }
+            _context.CategoriesProducts.Remove(categoriesProducts);
 
             category.IsDeleted = true;
             await _context.SaveChangesAsync();
