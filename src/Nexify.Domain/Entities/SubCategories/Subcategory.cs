@@ -1,15 +1,15 @@
-﻿
-using Nexify.Domain.Entities.Products;
+﻿using Nexify.Domain.Entities.Products;
 
-namespace Nexify.Domain.Entities.SubCategories;
-
-public class Subcategory
+namespace Nexify.Domain.Entities.Subcategories
 {
-    public Guid SubCategoryId { get; set; }
-    public string SubCategoryName { get; set; }
-    public string Description { get; set; }
-    public string ImageName { get; set; }
-    public List<Product> Products { get; set; }
-    public DateTime DateCreated { get; set; } = DateTime.Now;
-    public DateTime DateUpdated { get; set; }
+    public class Subcategory
+    {
+        public Guid SubCategoryId { get; set; }
+        public string SubCategoryName { get; set; }
+        public string Description { get; set; }
+        public string ImageName { get; set; }
+        public List<Product> Products { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateUpdated { get; set; }
+    }
 }

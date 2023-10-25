@@ -1,5 +1,5 @@
 ﻿using Nexify.Domain.Entities.Products;
-using Nexify.Domain.Entities.SubCategories;
+using Nexify.Domain.Entities.Subcategories;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -14,5 +14,7 @@ public class Category
     public string ImageName { get; set; }
     public ICollection<Subcategory> SubCategorys { get; set; }
     public ICollection<Product> Products { get; set; }
+    public DateTime DateCreated { get; set; } = DateTime.Now;
+    public DateTime DateUpdated { get; set; }
     public bool IsDeleted { get; set; } = false;
 }

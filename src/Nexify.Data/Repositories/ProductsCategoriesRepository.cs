@@ -15,11 +15,29 @@ namespace Nexify.Data.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        public async Task AddProductCategoriesAsync(IEnumerable<Category> categories, Guid productId)
+        {
+            foreach (var cat in categories)
+            {
+                var category = await _context.Category.SingleOrDefaultAsync(c => c.CategoryName == cat.CategoryName);
+                if (category == null)
+                {
+                    category = new Category { CategoryName = cat.CategoryName };
+                    _context.Category.Add(category);
+                }
+
+                var categoriesProducts = new CategoriesProducts { ProductsId = productId, CategoriesId = category.CategoryId };
+                _context.CategoriesProducts.Add(categoriesProducts);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateCategoriesProductAsync(Guid id, string[] categoryNames)
         {
             var existingCategories = await _context.CategoriesProducts
                 .Where(cp => cp.ProductsId == id)
-            .ToListAsync();
+                .ToListAsync();
 
             _context.CategoriesProducts.RemoveRange(existingCategories);
 
@@ -39,25 +57,6 @@ namespace Nexify.Data.Repositories
                 };
                 _context.CategoriesProducts.Add(categoriesProduct);
             }
-        }
-
-        public async Task AddProductCategoriesAsync(IEnumerable<Category> categories, Guid productId)
-        {
-
-            foreach (var cat in categories)
-            {
-                var category = await _context.Category.SingleOrDefaultAsync(c => c.CategoryName == cat.CategoryName);
-                if (category == null)
-                {
-                    category = new Category { CategoryName = cat.CategoryName };
-                    _context.Category.Add(category);
-                }
-
-                var categoriesProducts = new CategoriesProducts { ProductsId = productId, CategoriesId = category.CategoryId };
-                _context.CategoriesProducts.Add(categoriesProducts);
-            }
-
-            await _context.SaveChangesAsync();
         }
     }
 }

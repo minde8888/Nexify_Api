@@ -8,7 +8,7 @@ using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductController : Controller
@@ -27,6 +27,14 @@ namespace Nexify.Api.Controllers
         public async Task<ActionResult> AddNewProductAsync([FromForm] ProductRequest products)
         {
             await _productsService.AddProductAsync(products);
+            return Ok();
+        }
+
+        [HttpPost("cat")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ProductCategoriesAsync([FromForm] ProductCategories productCategories)
+        {
+            await _productsService.AddProductCategoriesAsync(productCategories);
             return Ok();
         }
 

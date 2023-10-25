@@ -1,5 +1,5 @@
 ﻿
-using Nexify.Domain.Entities.SubCategories;
+using Nexify.Domain.Entities.Subcategories;
 
 namespace Nexify.Domain.Interfaces
 {

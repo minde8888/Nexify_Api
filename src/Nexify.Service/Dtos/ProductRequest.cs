@@ -16,6 +16,5 @@ namespace Nexify.Service.Dtos
 
         public string ImageName { get; set; } = string.Empty;
 
-        public string CategoriesNames { get; set; }
     }
 }

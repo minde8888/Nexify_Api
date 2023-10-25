@@ -2,7 +2,7 @@
 using Nexify.Data.Context;
 using Nexify.Domain.Entities.CategoriesProducts;
 using Nexify.Domain.Entities.Products;
-using Nexify.Domain.Entities.SubCategories;
+using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Nexify.Data.Repositories;
 using Nexify.Domain.Entities.Products;
-using Nexify.Domain.Entities.SubCategories;
+using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;

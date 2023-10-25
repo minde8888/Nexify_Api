@@ -45,17 +45,17 @@ namespace Nexify.Service.Services
             }
 
             await _productsRepository.AddAsync(result);
+        }
 
-            if (!string.IsNullOrEmpty(product.CategoriesNames))
-            {
-                var categories = product.CategoriesNames.Split(',')
-                    .Select(catName => new Category
-                    {
-                        CategoryName = catName.Trim()
-                    });
+        public async Task AddProductCategoriesAsync(ProductCategories productCategories)
+        {
+               var categories = productCategories.CategoriesNames.Split(',')
+                .Select(catName => new Category
+                {
+                    CategoryName = catName.Trim()
+                });
 
-                await _productCategoriesRepository.AddProductCategoriesAsync(categories, result.Id);
-            }
+            await _productCategoriesRepository.AddProductCategoriesAsync(categories, new Guid(productCategories.ProductId) );
         }
 
         public async Task<ProductsResponse> GetAllProductsAsync(
