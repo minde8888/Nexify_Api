@@ -30,7 +30,7 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpPost("cat")]
+        [HttpPost("category")]
         [AllowAnonymous]
         public async Task<ActionResult> ProductCategoriesAsync([FromForm] ProductCategories productCategories)
         {
@@ -65,12 +65,20 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("delete/{id}")]
         [AllowAnonymous]
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteProductAsync(string id)
         {
             await _productsService.RemoveProductsAsync(id);
+            return Ok();
+        }
+
+        [HttpDelete("delete/category/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult> DeleteProductCategoriesAsync(string id)
+        {
+            await _productsService.RemoveProductCategoriesAsync(id);
             return Ok();
         }
     }

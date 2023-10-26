@@ -1,7 +1,6 @@
-﻿using Nexify.Domain.Entities.Categories;
-using Nexify.Domain.Entities.Products;
+﻿using Nexify.Domain.Entities.Products;
 
-namespace Nexify.Domain.Entities.CategoriesProducts
+namespace Nexify.Domain.Entities.Categories
 {
     public class CategoriesProducts
     {

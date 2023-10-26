@@ -11,7 +11,5 @@ namespace Nexify.Domain.Entities.Products
         public string Price { get; set; }
         public List<IFormFile> Images { get; set; }
         public string ImageName { get; set; } = string.Empty;
-        public string CategoriesName { get; set; }
-        public string CategoryId { get; set; }
     }
 }

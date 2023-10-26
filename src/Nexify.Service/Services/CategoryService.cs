@@ -8,6 +8,7 @@ using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
+using Nexify.Domain.Entities.Subcategories;
 
 namespace Nexify.Service.Services
 {
@@ -39,6 +40,18 @@ namespace Nexify.Service.Services
             }
 
             await _categoryRepository.AddAsync(category, categoryDto.ProductsId);
+        }
+
+        public async Task AddSubcategoryAsync(SubcategoryDto subcategoryDto)
+        {
+            var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
+
+            if (subcategoryDto.Image != null)
+            {
+                subcategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { subcategoryDto.Image });
+            }
+
+            await _categoryRepository.AddSubcategoryAsync(subcategory, subcategoryDto.ProductsId);
         }
 
         public async Task<List<CategoryResponse>> GetAllCategoriesAsync(string imageSrc)

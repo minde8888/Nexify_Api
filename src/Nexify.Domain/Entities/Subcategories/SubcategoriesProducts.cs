@@ -1,7 +1,6 @@
 ﻿using Nexify.Domain.Entities.Products;
-using Nexify.Domain.Entities.Subcategories;
 
-namespace Nexify.Domain.Entities.SubcategoriesProducts
+namespace Nexify.Domain.Entities.Subcategories
 {
     public class SubcategoriesProducts
     {

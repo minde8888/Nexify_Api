@@ -35,7 +35,7 @@ namespace Nexify.Service.Services
         public async Task AddProductAsync(ProductRequest product)
         {
             var result = _mapper.Map<Product>(product);
-            result.Id = Guid.NewGuid();
+            result.ProductId = Guid.NewGuid();
 
             if (product.Images?.Any() == true)
             {
@@ -49,13 +49,7 @@ namespace Nexify.Service.Services
 
         public async Task AddProductCategoriesAsync(ProductCategories productCategories)
         {
-               var categories = productCategories.CategoriesNames.Split(',')
-                .Select(catName => new Category
-                {
-                    CategoryName = catName.Trim()
-                });
-
-            await _productCategoriesRepository.AddProductCategoriesAsync(categories, new Guid(productCategories.ProductId) );
+            await _productCategoriesRepository.AddProductCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId) );
         }
 
         public async Task<ProductsResponse> GetAllProductsAsync(
@@ -109,12 +103,6 @@ namespace Nexify.Service.Services
             if (product == null)
                 throw new ProductException("Product can't by null");
 
-            if (product.CategoriesName != null)
-            {
-                var categories = product.CategoriesName.Split(',');
-                await _productCategoriesRepository.UpdateCategoriesProductAsync(product.ProductsId, categories);
-            }
-
             if (product.Images != null)
             {
                 var imagesNames = product.ImageName.Split(',');
@@ -139,6 +127,14 @@ namespace Nexify.Service.Services
             await _productsRepository.RemoveAsync(newId);
         }
 
+        public async Task RemoveProductCategoriesAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id)) throw new ProductException("Product id can't by null");
+            Guid newId = new(id);
+
+            await _productCategoriesRepository.DeleteCategoriesProductAsync(newId);
+        }
+
         private ProductDto MapProduct(Product product, string imageSrc)
         {
             if (product.ImageName == null)
@@ -151,7 +147,7 @@ namespace Nexify.Service.Services
             var imageUrls = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToList();
             return new ProductDto
             {
-                Id = product.Id,
+                Id = product.ProductId,
                 Title = product.Title,
                 Description = product.Description,
                 Price = product.Price,

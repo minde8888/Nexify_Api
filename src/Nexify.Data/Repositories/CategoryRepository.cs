@@ -3,6 +3,7 @@ using Nexify.Data.Context;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.CategoriesProducts;
 using Nexify.Domain.Entities.Pagination;
+using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
@@ -27,6 +28,12 @@ namespace Nexify.Data.Repositories
                 CategoriesId = category.CategoryId
             };
             _context.CategoriesProducts.Add(categoriesProducts);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddSubcategoryAsync(Subcategory subcategory, Guid subCategoryId)
+        {
+
             await _context.SaveChangesAsync();
         }
 

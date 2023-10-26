@@ -5,7 +5,6 @@ using Nexify.Domain.Entities.Auth;
 using Nexify.Data.Configuration;
 using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Entities.Categories;
-using Nexify.Domain.Entities.CategoriesProducts;
 using Nexify.Domain.Entities.User;
 using Nexify.Domain.Entities.Subcategories;
 
