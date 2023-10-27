@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexify.Data.Context;
 using Nexify.Domain.Entities.Categories;
-using Nexify.Domain.Entities.CategoriesProducts;
 using Nexify.Domain.Entities.Pagination;
-using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
@@ -31,8 +29,13 @@ namespace Nexify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddSubcategoryAsync(Subcategory subcategory, Guid subCategoryId)
+        public async Task AddSubcategoryAsync(Guid categoryId, Guid subCategoryId)
         {
+            var subcategorySave = await _context.Subcategory
+                .FirstOrDefaultAsync(x => x.SubcategoryId == subCategoryId);
+
+            subcategorySave.CategoryId = categoryId;
+            _context.Entry(subcategorySave).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
         }
@@ -74,6 +77,16 @@ namespace Nexify.Data.Repositories
             _context.CategoriesProducts.Remove(categoriesProducts);
 
             category.IsDeleted = true;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveSubcategoryAsync(Guid id)
+        {
+            var subcategory = await _context.Subcategory.FirstOrDefaultAsync(x => x.SubcategoryId == id);
+
+            subcategory.CategoryId = Guid.Empty;
+            _context.Entry(subcategory).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
         }
 

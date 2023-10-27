@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexify.Data.Context;
-using Nexify.Domain.Entities.CategoriesProducts;
-using Nexify.Domain.Entities.Products;
+using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Interfaces;
 
@@ -24,7 +23,7 @@ namespace Nexify.Data.Repositories
             var categoriesProducts = new CategoriesProducts
             {
                 ProductsId = productId,
-                CategoriesId = subcategory.SubCategoryId
+                CategoriesId = subcategory.SubcategoryId
             };
             _context.CategoriesProducts.Add(categoriesProducts);
             await _context.SaveChangesAsync();
@@ -34,22 +33,22 @@ namespace Nexify.Data.Repositories
         {
             return await _context.Subcategory
                .Include(c => c.Products)
-               .FirstOrDefaultAsync(x => x.SubCategoryId == id);
+               .FirstOrDefaultAsync(x => x.SubcategoryId == id);
         }
 
         public async Task RemoveAsync(Guid id)
         {
             var currentProduct = await _context.Subcategory
-            .FirstOrDefaultAsync(p => p.SubCategoryId == id);
+            .FirstOrDefaultAsync(p => p.SubcategoryId == id);
 
-            _context.Remove(_context.Subcategory.FirstOrDefaultAsync(p => p.SubCategoryId == id));
+            _context.Remove(_context.Subcategory.FirstOrDefaultAsync(p => p.SubcategoryId == id));
             _context.SaveChanges();
         }
 
         public async Task UpdateAsync(Subcategory subcategory)
         {
             var currentProduct = await _context.Subcategory
-                .FirstOrDefaultAsync(p => p.SubCategoryId == subcategory.SubCategoryId);
+                .FirstOrDefaultAsync(p => p.SubcategoryId == subcategory.SubcategoryId);
 
             currentProduct.Description = subcategory.Description;
             currentProduct.SubCategoryName = subcategory.Description;

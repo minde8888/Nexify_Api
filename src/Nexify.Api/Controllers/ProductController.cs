@@ -38,6 +38,14 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("subcategory")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ProductSubcategoriesAsync(string productId, string subcategoryId)
+        {
+            await _productsService.AddProductSubcategoriesByIdAsync(productId, subcategoryId);
+            return Ok();
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<ProductRequest>> GetAllAsync([FromQuery] PaginationFilter filter)
@@ -74,11 +82,19 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete/category/{id}")]
+        [HttpDelete("delete/category/{id}")] 
         [AllowAnonymous]
         public async Task<ActionResult> DeleteProductCategoriesAsync(string id)
         {
             await _productsService.RemoveProductCategoriesAsync(id);
+            return Ok();
+        }
+
+        [HttpDelete("delete/subcategory/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult> DeleteProductSubategoriesAsync(string productId, string subcategoryId)
+        {
+            await _productsService.RemoveProductSubcategoriesAsync(productId, subcategoryId);
             return Ok();
         }
     }

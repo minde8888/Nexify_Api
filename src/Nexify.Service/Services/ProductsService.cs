@@ -34,6 +34,8 @@ namespace Nexify.Service.Services
 
         public async Task AddProductAsync(ProductRequest product)
         {
+            if (product == null)
+                throw new ProductException("Product can't by null");
             var result = _mapper.Map<Product>(product);
             result.ProductId = Guid.NewGuid();
 
@@ -49,7 +51,17 @@ namespace Nexify.Service.Services
 
         public async Task AddProductCategoriesAsync(ProductCategories productCategories)
         {
+            if (productCategories == null)
+                throw new ProductException("Product categories can't by null");
             await _productCategoriesRepository.AddProductCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId) );
+        }
+
+        public async Task AddProductSubcategoriesByIdAsync(string productId, string subcategoryId)
+        {
+            if (string.IsNullOrEmpty(productId) || string.IsNullOrEmpty(subcategoryId))
+                throw new ProductException("Product id or subcategory id can't by null");
+
+            await _productsRepository.AddProductSubcategoriesAsync(new Guid(productId), new Guid(subcategoryId));
         }
 
         public async Task<ProductsResponse> GetAllProductsAsync(
@@ -121,7 +133,9 @@ namespace Nexify.Service.Services
 
         public async Task RemoveProductsAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) throw new ProductException("Product id can't by null");
+            if (string.IsNullOrEmpty(id)) 
+                throw new ProductException("Product id can't by null");
+
             Guid newId = new(id);
 
             await _productsRepository.RemoveAsync(newId);
@@ -129,10 +143,20 @@ namespace Nexify.Service.Services
 
         public async Task RemoveProductCategoriesAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) throw new ProductException("Product id can't by null");
+            if (string.IsNullOrEmpty(id)) 
+                throw new ProductException("Product id can't by null");
+
             Guid newId = new(id);
 
             await _productCategoriesRepository.DeleteCategoriesProductAsync(newId);
+        }
+
+        public async Task RemoveProductSubcategoriesAsync(string productId, string subcategoryId)
+        {
+            if (string.IsNullOrEmpty(productId) || string.IsNullOrEmpty(subcategoryId))
+                throw new ProductException("Product id or subcategory id can't by null");
+
+            await _productsRepository.DeleteSubcategoriesProductAsync(new Guid(productId), new Guid(subcategoryId));
         }
 
         private ProductDto MapProduct(Product product, string imageSrc)

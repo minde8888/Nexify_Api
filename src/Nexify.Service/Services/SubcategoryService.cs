@@ -72,7 +72,7 @@ namespace Nexify.Service.Services
 
             return new SubcategoryResponse
             {
-                SubCategoryId = subcategory.SubCategoryId,
+                SubCategoryId = subcategory.SubcategoryId,
                 SubCategoryName = subcategory.SubCategoryName,
                 Description = subcategory.Description,
                 ImageSrc = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToString(),

@@ -31,9 +31,9 @@ namespace Nexify.Api.Controllers
 
         [HttpPost("subcategory")]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddNewSubcatategory([FromForm] SubcategoryDto subcategory)
+        public async Task<IActionResult> AddNewSubcatategory(string categoryId, string subcategoryId)
         {
-            await _categoryService.AddSubcategoryAsync(subcategory);
+            await _categoryService.AddSubcategoryToCategoryAsync(categoryId, subcategoryId);
             return Ok();
         }
 
@@ -56,7 +56,7 @@ namespace Nexify.Api.Controllers
             return Ok(productsInCategory);
         }
 
-        [HttpPut("Update")]
+        [HttpPut("update")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update([FromForm] CategoryDto category)
         {
@@ -64,11 +64,18 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("delete/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string id)
         {
             await _categoryService.RemoveCategoryAsync(id);
+            return Ok();
+        }
+
+        [HttpDelete("delete/subcategory/{id}")]
+        public async Task<ActionResult> DeleteSubcategory(string id)
+        {
+            await _categoryService.RemoveSubcategoryByIdAsync(id);
             return Ok();
         }
     }

@@ -32,6 +32,9 @@ namespace Nexify.Service.Services
         }
         public async Task AddCategoryAsync(CategoryDto categoryDto)
         {
+            if (categoryDto == null)
+                throw new CategoryException("Category can't be null");
+
             var category = _mapper.Map<Category>(categoryDto);
 
             if (categoryDto.Image != null)
@@ -42,17 +45,22 @@ namespace Nexify.Service.Services
             await _categoryRepository.AddAsync(category, categoryDto.ProductsId);
         }
 
-        public async Task AddSubcategoryAsync(SubcategoryDto subcategoryDto)
+        public async Task AddSubcategoryToCategoryAsync(string categoryId, string subcategoryId)
         {
-            var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
-
-            if (subcategoryDto.Image != null)
+            if (!Guid.TryParse(categoryId, out Guid guidCategoryId))
             {
-                subcategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { subcategoryDto.Image });
+                throw new CategoryException($"Invalid GUID: {categoryId}");
             }
-
-            await _categoryRepository.AddSubcategoryAsync(subcategory, subcategoryDto.ProductsId);
+            else if (!Guid.TryParse(subcategoryId, out Guid guidSubcategoryId))
+            {
+                throw new SubcategoryException($"Invalid GUID: {subcategoryId}");
+            }
+            else
+            {
+                await _categoryRepository.AddSubcategoryAsync(guidCategoryId, guidSubcategoryId);
+            }
         }
+
 
         public async Task<List<CategoryResponse>> GetAllCategoriesAsync(string imageSrc)
         {
@@ -144,6 +152,9 @@ namespace Nexify.Service.Services
 
         public async Task UpdateCategory(CategoryDto category, string contentRootPath)
         {
+            if (category == null)
+                throw new CategoryException("Category can't be null");
+
             var mappedCategory = _mapper.Map<Category>(category);
 
             category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { category.Image });
@@ -155,10 +166,27 @@ namespace Nexify.Service.Services
 
         public async Task RemoveCategoryAsync(string id)
         {
-            var guidId = new Guid(id);
-            await _categoryRepository.RemoveAsync(guidId);
+            if (Guid.TryParse(id, out Guid parsedId))
+            {
+                await _categoryRepository.RemoveAsync(parsedId);
+            }
+            else
+            {
+                throw new CategoryException($"Invalid GUID: {id}");
+            }
         }
 
+        public async Task RemoveSubcategoryByIdAsync(string id)
+        {
+            if (Guid.TryParse(id, out Guid parsedId))
+            {
+                await _categoryRepository.RemoveSubcategoryAsync(parsedId);
+            }
+            else
+            {
+                throw new SubcategoryException($"Invalid GUID: {id}");
+            }
+        }
 
     }
 }

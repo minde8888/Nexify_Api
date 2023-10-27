@@ -20,6 +20,16 @@ namespace Nexify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddProductSubcategoriesAsync(Guid productId, Guid subcategoryId)
+        {
+            var product = await _context.Product
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
+            product.SubcategoriesId = subcategoryId;
+
+            _context.Entry(product).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<PagedResult<Product>> GetAllAsync(PaginationFilter validFilter)
         {
             var pagedData = await _context.Product
@@ -36,13 +46,13 @@ namespace Nexify.Data.Repositories
         {
             return await _context.Product.
                 Include(c => c.Categories).
-                Where(x => x.Id == id).FirstOrDefaultAsync();
+                Where(x => x.ProductId == id).FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(Product product)
         {
             var currentProduct = await _context.Product
-                .FirstOrDefaultAsync(p => p.Id == product.Id);
+                .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
 
             currentProduct.Title = product.Title;
             currentProduct.Description = product.Description;
@@ -57,9 +67,19 @@ namespace Nexify.Data.Repositories
         public async Task RemoveAsync(Guid id)
         {
             var product = await _context.Product.
-                Where(x => x.Id == id).FirstOrDefaultAsync();
+                Where(x => x.ProductId == id).FirstOrDefaultAsync();
 
             product.IsDeleted = true;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteSubcategoriesProductAsync(Guid productId, Guid subcategoryId)
+        {
+            var product = await _context.Product
+              .FirstOrDefaultAsync(p => p.ProductId == productId);
+            product.SubcategoriesId = Guid.Empty;
+
+            _context.Entry(product).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }
