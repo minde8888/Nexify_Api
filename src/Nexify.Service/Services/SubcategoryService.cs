@@ -6,6 +6,7 @@ using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
+using Nexify.Service.Validators;
 
 namespace Nexify.Service.Services
 {
@@ -27,6 +28,10 @@ namespace Nexify.Service.Services
 
         public async Task AddSubCategoryAsync(SubcategoryDto subcategoryDto)
         {
+            var varlidationResult = await new SubcategoryDtoValidator().ValidateAsync(subcategoryDto);
+            if (!varlidationResult.IsValid)
+                throw new SubcategoryValidationException(varlidationResult.Errors.ToString());
+
             var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
 
             if (subcategoryDto.Image != null)
@@ -39,6 +44,9 @@ namespace Nexify.Service.Services
 
         public async Task<SubcategoryResponse> GetSubCategoryAsync(string id, string imageSrc)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new SubcategoryException("Subcategory id can't by null");
+
             var subcategory = await _subcategoryRepository.GetAsync(Guid.Parse(id));
 
             return MapProduct(subcategory, imageSrc);
@@ -46,6 +54,10 @@ namespace Nexify.Service.Services
 
         public async Task UpdateSubCategoryAsync(SubcategoryDto subcategoryDto, string rootPath)
         {
+            var varlidationResult = await new SubcategoryDtoValidator().ValidateAsync(subcategoryDto);
+            if (!varlidationResult.IsValid)
+                throw new SubcategoryValidationException(varlidationResult.Errors.ToString());
+
             var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
 
             if (subcategoryDto.Image != null)
@@ -58,6 +70,9 @@ namespace Nexify.Service.Services
         
         public async Task DeleteSubCategoryAsync(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new SubcategoryException("Subcategory id can't by null");
+
             await _subcategoryRepository.RemoveAsync(Guid.Parse(id));
         }
 

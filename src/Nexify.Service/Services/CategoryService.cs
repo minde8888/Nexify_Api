@@ -32,8 +32,10 @@ namespace Nexify.Service.Services
         }
         public async Task AddCategoryAsync(CategoryDto categoryDto)
         {
-            if (categoryDto == null)
-                throw new CategoryException("Category can't be null");
+            var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
+
+            if (!validationResult.IsValid)
+                throw new CategoryValidationException(validationResult.Errors.ToString());
 
             var category = _mapper.Map<Category>(categoryDto);
 
@@ -47,18 +49,10 @@ namespace Nexify.Service.Services
 
         public async Task AddSubcategoryToCategoryAsync(string categoryId, string subcategoryId)
         {
-            if (!Guid.TryParse(categoryId, out Guid guidCategoryId))
-            {
-                throw new CategoryException($"Invalid GUID: {categoryId}");
-            }
-            else if (!Guid.TryParse(subcategoryId, out Guid guidSubcategoryId))
-            {
-                throw new SubcategoryException($"Invalid GUID: {subcategoryId}");
-            }
-            else
-            {
-                await _categoryRepository.AddSubcategoryAsync(guidCategoryId, guidSubcategoryId);
-            }
+            if (string.IsNullOrEmpty(categoryId) || string.IsNullOrEmpty(subcategoryId))
+                throw new CategoryException("Product id or subcategory id can't by null");
+
+            await _categoryRepository.AddSubcategoryAsync(new Guid(categoryId), new Guid(subcategoryId));
         }
 
 
@@ -85,9 +79,7 @@ namespace Nexify.Service.Services
             string imageSrc)
         {
             if (!Guid.TryParse(id, out Guid guidId))
-            {
                 throw new CategoryException($"Invalid GUID: {id}");
-            }
 
             var validationResult = await new PaginationFilterValidator().ValidateAsync(filter);
             if (!validationResult.IsValid)
@@ -123,9 +115,6 @@ namespace Nexify.Service.Services
 
         private List<CategoryProducts> ListImages(ICollection<Product> products, string imageSrc)
         {
-            if (products == null)
-                throw new ProductException("Product collection can't be null");
-
             var catProducts = _mapper.Map<List<CategoryProducts>>(products);
             var imageUrls = new List<string>();
 
@@ -150,15 +139,17 @@ namespace Nexify.Service.Services
             return catProducts;
         }
 
-        public async Task UpdateCategory(CategoryDto category, string contentRootPath)
+        public async Task UpdateCategory(CategoryDto categoryDto, string contentRootPath)
         {
-            if (category == null)
-                throw new CategoryException("Category can't be null");
+            var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
 
-            var mappedCategory = _mapper.Map<Category>(category);
+            if (!validationResult.IsValid)
+                throw new CategoryValidationException(validationResult.Errors.ToString());
 
-            category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { category.Image });
-            var imagePath = Path.Combine(contentRootPath, "Images", category.ImageName);
+            var mappedCategory = _mapper.Map<Category>(categoryDto);
+
+            categoryDto.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
+            var imagePath = Path.Combine(contentRootPath, "Images", categoryDto.ImageName);
             await _imagesService.DeleteImageAsync(imagePath);
 
             await _categoryRepository.UpdateAsync(mappedCategory);
@@ -166,27 +157,19 @@ namespace Nexify.Service.Services
 
         public async Task RemoveCategoryAsync(string id)
         {
-            if (Guid.TryParse(id, out Guid parsedId))
-            {
-                await _categoryRepository.RemoveAsync(parsedId);
-            }
-            else
-            {
+            if (string.IsNullOrEmpty(id))
                 throw new CategoryException($"Invalid GUID: {id}");
-            }
+
+            await _categoryRepository.RemoveAsync(new Guid(id));
         }
 
         public async Task RemoveSubcategoryByIdAsync(string id)
         {
-            if (Guid.TryParse(id, out Guid parsedId))
-            {
-                await _categoryRepository.RemoveSubcategoryAsync(parsedId);
-            }
-            else
-            {
-                throw new SubcategoryException($"Invalid GUID: {id}");
-            }
+            if (string.IsNullOrEmpty(id))
+                throw new CategoryException($"Invalid GUID: {id}");
+
+            await _categoryRepository.RemoveAsync(new Guid(id));
         }
 
     }
-}
+} 

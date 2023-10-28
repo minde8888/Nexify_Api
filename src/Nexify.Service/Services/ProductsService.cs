@@ -34,8 +34,11 @@ namespace Nexify.Service.Services
 
         public async Task AddProductAsync(ProductRequest product)
         {
-            if (product == null)
-                throw new ProductException("Product can't by null");
+            var validationResult = await new ProductRequestValidator().ValidateAsync(product);
+
+            if (!validationResult.IsValid)
+                throw new ProductValidationException(validationResult.Errors.ToString());
+
             var result = _mapper.Map<Product>(product);
             result.ProductId = Guid.NewGuid();
 
@@ -51,9 +54,12 @@ namespace Nexify.Service.Services
 
         public async Task AddProductCategoriesAsync(ProductCategories productCategories)
         {
-            if (productCategories == null)
-                throw new ProductException("Product categories can't by null");
-            await _productCategoriesRepository.AddProductCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId) );
+            var validationResult = await new ProductCategoriesValidator().ValidateAsync(productCategories);
+
+            if (!validationResult.IsValid)
+                throw new ProductCategoriesValidationException(validationResult.Errors.ToString());
+
+            await _productCategoriesRepository.AddProductCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId));
         }
 
         public async Task AddProductSubcategoriesByIdAsync(string productId, string subcategoryId)
@@ -105,6 +111,9 @@ namespace Nexify.Service.Services
 
         public async Task<ProductDto> GetProductAsync(string id, string imageSrc)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ProductException("Product id can't by null");
+
             var product = await _productsRepository.GetAsync(Guid.Parse(id));
 
             return MapProduct(product, imageSrc);
@@ -112,8 +121,11 @@ namespace Nexify.Service.Services
 
         public async Task UpdateProductAsync(string contentRootPath, ProductUpdate product)
         {
-            if (product == null)
-                throw new ProductException("Product can't by null");
+            var validationResult = await new ProductUpdateValidator().ValidateAsync(product);
+            if (!validationResult.IsValid)
+            {
+                throw new ProductValidationException(validationResult.Errors.ToString());
+            }
 
             if (product.Images != null)
             {
@@ -133,7 +145,7 @@ namespace Nexify.Service.Services
 
         public async Task RemoveProductsAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) 
+            if (string.IsNullOrEmpty(id))
                 throw new ProductException("Product id can't by null");
 
             Guid newId = new(id);
@@ -143,7 +155,7 @@ namespace Nexify.Service.Services
 
         public async Task RemoveProductCategoriesAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) 
+            if (string.IsNullOrEmpty(id))
                 throw new ProductException("Product id can't by null");
 
             Guid newId = new(id);

@@ -37,10 +37,6 @@ namespace Nexify.Api.Middleware
                     statusCode = (int)HttpStatusCode.BadRequest;
                     message = exception.Message;
                     break;
-                case CategoryException _:
-                    statusCode = (int)HttpStatusCode.BadRequest;
-                    message = exception.Message;
-                    break;
                 case PaginationValidationException _:
                     statusCode = (int)HttpStatusCode.BadRequest;
                     message = exception.Message;
@@ -49,15 +45,35 @@ namespace Nexify.Api.Middleware
                     statusCode = (int)HttpStatusCode.BadRequest;
                     message = exception.Message;
                     break;
+                case CategoryException _:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
+                case CategoryValidationException _:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
                 case ProductException _:
                     statusCode = (int)HttpStatusCode.BadRequest;
                     message = exception.Message;
                     break;
-                case FileException _:
+                case ProductCategoriesValidationException _:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
+                case ProductValidationException _:
                     statusCode = (int)HttpStatusCode.BadRequest;
                     message = exception.Message;
                     break;
                 case SubcategoryException _:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
+                case SubcategoryValidationException _:
+                statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
+                case FileException _:
                     statusCode = (int)HttpStatusCode.BadRequest;
                     message = exception.Message;
                     break;
