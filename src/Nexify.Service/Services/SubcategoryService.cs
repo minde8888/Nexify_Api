@@ -63,6 +63,8 @@ namespace Nexify.Service.Services
             if (subcategoryDto.Image != null)
             {
                 subcategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { subcategoryDto.Image });
+                var imagePath = Path.Combine(rootPath, "Images", subcategoryDto.ImageName);
+                await _imagesService.DeleteImageAsync(imagePath);
             }
 
             await _subcategoryRepository.UpdateAsync(subcategory);

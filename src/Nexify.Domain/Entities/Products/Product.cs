@@ -9,6 +9,7 @@ namespace Nexify.Domain.Entities.Products
         public string Title { get; set; }
         public string Description { get; set; }
         public string Price { get; set; }
+        public string Discount { get; set; }
         public string ImageName { get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
         public DateTime DateCreated { get; set; } = DateTime.Now;

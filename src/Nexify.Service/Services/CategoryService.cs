@@ -148,9 +148,12 @@ namespace Nexify.Service.Services
 
             var mappedCategory = _mapper.Map<Category>(categoryDto);
 
-            categoryDto.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
-            var imagePath = Path.Combine(contentRootPath, "Images", categoryDto.ImageName);
-            await _imagesService.DeleteImageAsync(imagePath);
+            if(categoryDto.Image != null)
+            {
+                categoryDto.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
+                var imagePath = Path.Combine(contentRootPath, "Images", categoryDto.ImageName);
+                await _imagesService.DeleteImageAsync(imagePath);
+            }
 
             await _categoryRepository.UpdateAsync(mappedCategory);
         }
