@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Products;
@@ -13,20 +12,20 @@ namespace Nexify.Api.Controllers
     [Route("api/v1/[controller]")]
     public class ProductController : Controller
     {
-        private readonly ProductsService _productsService;
+        private readonly ProductsService _productService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductController(ProductsService productsService, IWebHostEnvironment hostEnvironment)
+        public ProductController(ProductsService productService, IWebHostEnvironment hostEnvironment)
         {
-            _productsService = productsService ?? throw new ArgumentNullException(nameof(productsService));
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult> AddNewProductAsync([FromForm] ProductRequest products)
+        public async Task<ActionResult> AddNewProductAsync([FromForm] ProductRequest product)
         {
-            await _productsService.AddProductAsync(products);
+            await _productService.AddProductAsync(product);
             return Ok();
         }
 
@@ -34,7 +33,7 @@ namespace Nexify.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ProductCategoriesAsync([FromForm] ProductCategories productCategories)
         {
-            await _productsService.AddProductCategoriesAsync(productCategories);
+            await _productService.AddProductCategoriesAsync(productCategories);
             return Ok();
         }
 
@@ -42,7 +41,7 @@ namespace Nexify.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ProductSubcategoriesAsync(string productId, string subcategoryId)
         {
-            await _productsService.AddProductSubcategoriesByIdAsync(productId, subcategoryId);
+            await _productService.AddProductSubcategoriesByIdAsync(productId, subcategoryId);
             return Ok();
         }
 
@@ -52,16 +51,16 @@ namespace Nexify.Api.Controllers
         {
             var route = Request.Path.Value;
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var response = await _productsService.GetAllProductsAsync(filter, imageSrc, route);
+            var response = await _productService.GetAllProductsAsync(filter, imageSrc, route);
             return Ok(response);
         }
 
         [HttpGet("id")]
         [AllowAnonymous]
-        public async Task<ActionResult<ProductDto>> Get(string id)
+        public async Task<ActionResult<ProductDto>> GetAsync(string id)
         {
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var product = await _productsService.GetProductAsync(id, imageSrc);
+            var product = await _productService.GetProductAsync(id, imageSrc);
             return Ok(product);
         }
 
@@ -69,7 +68,7 @@ namespace Nexify.Api.Controllers
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateAsync([FromForm] ProductUpdate product)
         {
-            await _productsService.UpdateProductAsync(_hostEnvironment.ContentRootPath, product);
+            await _productService.UpdateProductAsync(_hostEnvironment.ContentRootPath, product);
             return Ok();
         }
 
@@ -78,7 +77,7 @@ namespace Nexify.Api.Controllers
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteProductAsync(string id)
         {
-            await _productsService.RemoveProductsAsync(id);
+            await _productService.RemoveProductsAsync(id);
             return Ok();
         }
 
@@ -86,7 +85,7 @@ namespace Nexify.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> DeleteProductCategoriesAsync(string id)
         {
-            await _productsService.RemoveProductCategoriesAsync(id);
+            await _productService.RemoveProductCategoriesAsync(id);
             return Ok();
         }
 
@@ -94,7 +93,7 @@ namespace Nexify.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> DeleteProductSubategoriesAsync(string productId, string subcategoryId)
         {
-            await _productsService.RemoveProductSubcategoriesAsync(productId, subcategoryId);
+            await _productService.RemoveProductSubcategoriesAsync(productId, subcategoryId);
             return Ok();
         }
     }

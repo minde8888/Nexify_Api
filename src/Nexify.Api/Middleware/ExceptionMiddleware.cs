@@ -69,6 +69,10 @@ namespace Nexify.Api.Middleware
                     statusCode = (int)HttpStatusCode.BadRequest;
                     message = exception.Message;
                     break;
+                case PostCategoriesValidationException _:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
                 case SubcategoryException _:
                     statusCode = (int)HttpStatusCode.BadRequest;
                     message = exception.Message;

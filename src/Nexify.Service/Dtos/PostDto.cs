@@ -1,16 +1,15 @@
 ﻿using Nexify.Domain.Entities.Categories;
 
-namespace Nexify.Domain.Entities.Posts
+namespace Nexify.Service.Dtos
 {
-    public class Post
+    public class PostDto
     {
         public Guid PostId { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
+        public ICollection<string> ImageSrc { get; set; }
         public string ImageName { get; set; } = string.Empty;
-        public bool IsDeleted { get; set; } = false;
-        public DateTime DateCreated { get; set; } = DateTime.Now;
-        public DateTime DateUpdated { get; set; }
+        public DateTime DateCreated { get; set; }
         public ICollection<Category> Categories { get; set; }
     }
 }

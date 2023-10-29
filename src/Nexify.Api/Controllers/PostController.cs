@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nexify.Domain.Entities.Posts;
 using Nexify.Service.Dtos;
 using Nexify.Service.Services;
 
@@ -16,9 +17,17 @@ namespace Nexify.Api.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult> AddNewProductAsync([FromForm] PostRequest post)
+        public async Task<ActionResult> AddNewPosttAsync([FromForm] PostRequest post)
         {
-            await _postService.AddProductAsync(post);
+            await _postService.AddPostAsync(post);
+            return Ok();
+        }
+
+        [HttpPost("category")]
+        [AllowAnonymous]
+        public async Task<ActionResult> PostCategoriesAsync([FromForm] PostCategories postCategories)
+        {
+            await _postService.AddPostCategoriesAsync(postCategories);
             return Ok();
         }
 

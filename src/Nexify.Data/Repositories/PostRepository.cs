@@ -1,6 +1,4 @@
-﻿
-
-using Nexify.Domain.Entities.Posts;
+﻿using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories 

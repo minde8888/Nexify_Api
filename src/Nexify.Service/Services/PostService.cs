@@ -12,15 +12,21 @@ namespace Nexify.Service.Services
         private readonly IMapper _mapper;
         private readonly IPostRepository _postRepository;
         private readonly IImagesService _imagesService;
+        private readonly IItemCategoriesRepository _postCategoriesRepository;
 
-        public PostService(IPostRepository postRepository, IImagesService imagesService, IMapper mapper)
+        public PostService(
+            IPostRepository postRepository,
+                IImagesService imagesService,
+                    IMapper mapper,
+                        IItemCategoriesRepository itemCategoriesRepository)
         {
-            _postRepository = postRepository;
-            _imagesService = imagesService;
-            _mapper = mapper;
+            _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
+            _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _postCategoriesRepository = itemCategoriesRepository ?? throw new ArgumentNullException(nameof(itemCategoriesRepository));
         }
 
-        public async Task AddProductAsync(PostRequest post)
+        public async Task AddPostAsync(PostRequest post)
         {
             var validationResult = await new PostRequestValidator().ValidateAsync(post);
 
@@ -38,6 +44,16 @@ namespace Nexify.Service.Services
             }
 
             await _postRepository.AddAsync(result);
+        }
+
+        public async Task AddPostCategoriesAsync(PostCategories postCategories)
+        {
+            var validationResult = await new PostCategoriesValidator().ValidateAsync(postCategories);
+
+            if (!validationResult.IsValid)
+                throw new PostCategoriesValidationException(validationResult.Errors.ToString());
+
+            await _postCategoriesRepository.AddItemCategoriesAsync(new Guid(postCategories.CategoryId), new Guid(postCategories.PostId));
         }
     }
 }

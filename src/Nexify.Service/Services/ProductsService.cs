@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Exceptions;
@@ -15,13 +14,13 @@ namespace Nexify.Service.Services
         private readonly IMapper _mapper;
         private readonly IImagesService _imagesService;
         private readonly IProductsRepository _productsRepository;
-        private readonly IProductsCategoriesRepository _productCategoriesRepository;
+        private readonly IItemCategoriesRepository _productCategoriesRepository;
         private readonly IUriService _uriService;
 
         public ProductsService(
             IImagesService imagesService,
                 IProductsRepository productsRepository,
-                    IProductsCategoriesRepository productCategoriesRepository,
+                    IItemCategoriesRepository productCategoriesRepository,
                         IMapper mapper,
             IUriService uriService)
         {
@@ -59,7 +58,7 @@ namespace Nexify.Service.Services
             if (!validationResult.IsValid)
                 throw new ProductCategoriesValidationException(validationResult.Errors.ToString());
 
-            await _productCategoriesRepository.AddProductCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId));
+            await _productCategoriesRepository.AddItemCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId));
         }
 
         public async Task AddProductSubcategoriesByIdAsync(string productId, string subcategoryId)
@@ -160,7 +159,7 @@ namespace Nexify.Service.Services
 
             Guid newId = new(id);
 
-            await _productCategoriesRepository.DeleteCategoriesProductAsync(newId);
+            await _productCategoriesRepository.DeleteCategoriesItemAsync(newId);
         }
 
         public async Task RemoveProductSubcategoriesAsync(string productId, string subcategoryId)
