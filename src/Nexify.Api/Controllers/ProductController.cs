@@ -47,7 +47,7 @@ namespace Nexify.Api.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ProductRequest>> GetAllAsync([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<ProductsResponse>> GetAllAsync([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";

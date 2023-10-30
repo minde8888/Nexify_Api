@@ -14,13 +14,13 @@ namespace Nexify.Service.Services
         private readonly IMapper _mapper;
         private readonly IImagesService _imagesService;
         private readonly IProductsRepository _productsRepository;
-        private readonly IItemCategoriesRepository _productCategoriesRepository;
+        private readonly IItemCategoryRepository _productCategoriesRepository;
         private readonly IUriService _uriService;
 
         public ProductsService(
             IImagesService imagesService,
                 IProductsRepository productsRepository,
-                    IItemCategoriesRepository productCategoriesRepository,
+                    IItemCategoryRepository productCategoriesRepository,
                         IMapper mapper,
             IUriService uriService)
         {
@@ -71,19 +71,17 @@ namespace Nexify.Service.Services
 
         public async Task<ProductsResponse> GetAllProductsAsync(
             PaginationFilter filter,
-            string imageSrc,
-            string route)
+                string imageSrc,
+                    string route)
         {
 
             var validationResult = await new PaginationFilterValidator().ValidateAsync(filter);
 
             if (!validationResult.IsValid)
-            {
                 throw new PaginationValidationException(validationResult.Errors.ToString());
-            }
 
             var validFilter = filter ?? new PaginationFilter();
-            var result = await _productsRepository.GetAllAsync(validFilter);
+            var result = await _productsRepository.FetchAllAsync(validFilter);
 
             var pageParams = new PagedParams<Product>(
                 result.Items,
@@ -113,7 +111,7 @@ namespace Nexify.Service.Services
             if (string.IsNullOrEmpty(id))
                 throw new ProductException("Product id can't by null");
 
-            var product = await _productsRepository.GetAsync(Guid.Parse(id));
+            var product = await _productsRepository.RetrieveAsync(Guid.Parse(id));
 
             return MapProduct(product, imageSrc);
         }
@@ -139,7 +137,7 @@ namespace Nexify.Service.Services
             }
 
             var result = _mapper.Map<Product>(product);
-            await _productsRepository.UpdateAsync(result);
+            await _productsRepository.ModifyAsync(result);
         }
 
         public async Task RemoveProductsAsync(string id)

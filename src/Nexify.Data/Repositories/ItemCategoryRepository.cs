@@ -5,10 +5,10 @@ using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
 {
-    public class ItemCategoriesRepository : IItemCategoriesRepository
+    public class ItemCategoryRepository : IItemCategoryRepository
     {
         private readonly AppDbContext _context;
-        public ItemCategoriesRepository(AppDbContext context)
+        public ItemCategoryRepository(AppDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

@@ -1,7 +1,8 @@
-﻿using Nexify.Domain.Entities.Posts;
+﻿using Nexify.Domain.Entities.Pagination;
+using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Interfaces;
 
-namespace Nexify.Data.Repositories 
+namespace Nexify.Data.Repositories
 {
     public class PostRepository : IPostRepository
     {
@@ -10,12 +11,12 @@ namespace Nexify.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task<PagedResult<Post>> RetrieveAllAsync(PaginationFilter validFilter)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Post>> GetAllAsync()
+        public Task DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -29,5 +30,6 @@ namespace Nexify.Data.Repositories
         {
             throw new NotImplementedException();
         }
+
     }
 }

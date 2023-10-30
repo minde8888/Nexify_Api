@@ -1,6 +1,6 @@
 ﻿namespace Nexify.Domain.Interfaces
 {
-    public interface IItemCategoriesRepository
+    public interface IItemCategoryRepository
     {
         public Task AddItemCategoriesAsync(Guid categoryId, Guid productId);
         public Task DeleteCategoriesItemAsync(Guid id);

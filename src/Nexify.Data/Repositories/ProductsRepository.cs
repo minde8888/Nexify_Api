@@ -30,7 +30,7 @@ namespace Nexify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<Product>> GetAllAsync(PaginationFilter validFilter)
+        public async Task<PagedResult<Product>> FetchAllAsync(PaginationFilter validFilter)
         {
             var pagedData = await _context.Product
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
@@ -42,14 +42,14 @@ namespace Nexify.Data.Repositories
             return new PagedResult<Product> { Items = pagedData, TotalCount = totalCount };
         }
 
-        public async Task<Product> GetAsync(Guid id)
+        public async Task<Product> RetrieveAsync(Guid id)
         {
             return await _context.Product.
                 Include(c => c.Categories).
                 Where(x => x.ProductId == id).FirstOrDefaultAsync();
         }
 
-        public async Task UpdateAsync(Product product)
+        public async Task ModifyAsync(Product product)
         {
             var currentProduct = await _context.Product
                 .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
