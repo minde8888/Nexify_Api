@@ -37,7 +37,7 @@ namespace Nexify.Api
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<ITokenRepository, TokenRepository>();
-            services.AddTransient<IProductsRepository, ProductsRepository>();
+            services.AddTransient<IProductsRepository, ProductRepository>();
             services.AddTransient<IItemCategoryRepository, ItemCategoryRepository>();
 
             services.AddTransient<UserManager<ApplicationUser>>();

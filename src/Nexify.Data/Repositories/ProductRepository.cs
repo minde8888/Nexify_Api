@@ -6,10 +6,10 @@ using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
 {
-    public class ProductsRepository : IProductsRepository
+    public class ProductRepository : IProductsRepository
     {
         private readonly AppDbContext _context;
-        public ProductsRepository(AppDbContext context)
+        public ProductRepository(AppDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

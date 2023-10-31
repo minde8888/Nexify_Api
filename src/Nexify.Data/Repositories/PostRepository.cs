@@ -1,4 +1,6 @@
-﻿using Nexify.Domain.Entities.Pagination;
+﻿using Microsoft.EntityFrameworkCore;
+using Nexify.Data.Context;
+using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Interfaces;
 
@@ -6,29 +8,59 @@ namespace Nexify.Data.Repositories
 {
     public class PostRepository : IPostRepository
     {
-        public Task AddAsync(Post post)
+        private readonly AppDbContext _context;
+
+        public PostRepository(AppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public async Task AddAsync(Post post)
+        {
+            _context.Post.Add(post);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<PagedResult<Post>> RetrieveAllAsync(PaginationFilter validFilter)
         {
-            throw new NotImplementedException();
+            var pagedData = await _context.Post
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToListAsync();
+
+            var totalCount = await _context.Product.CountAsync();
+
+            return new PagedResult<Post> { Items = pagedData, TotalCount = totalCount };
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var post = await _context.Post.
+                Where(x => x.PostId == id).FirstOrDefaultAsync();
+
+            post.IsDeleted = true;
+            await _context.SaveChangesAsync();
         }
 
-        public Task<Post> GetByIdAsync(Guid id)
+        public async Task<Post> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Post.
+               Include(c => c.Categories).
+               Where(x => x.PostId == id).FirstOrDefaultAsync();
         }
 
-        public Task UpdateAsync(Post post)
+        public async Task ModifyAsync(Post post)
         {
-            throw new NotImplementedException();
+            var currentPost = await _context.Post
+                .FirstOrDefaultAsync(p => p.PostId == post.PostId);
+
+            currentPost.Title = post.Title;
+            currentPost.Context = post.Context;
+            currentPost.ImageName = post.ImageName;
+            currentPost.DateUpdated = DateTime.UtcNow;
+
+            _context.Entry(currentPost).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
     }

@@ -100,6 +100,76 @@ namespace Nexify.Service.Services
             };
         }
 
+        public async Task<PostDto> GetPostAsync(string id, string imageSrc)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new ProductException("Post id can't by null");
+
+            var post = await _postRepository.GetByIdAsync(Guid.Parse(id));
+
+            return MapPost(post, imageSrc);
+        }
+
+        public async Task UpdatePostAsync(string contentRootPath, PostRequest post)
+        {
+            var validationResult = await new PostRequestValidator().ValidateAsync(post);
+            if (!validationResult.IsValid)
+            {
+                throw new ProductValidationException(validationResult.Errors.ToString());
+            }
+
+            if (post.Images != null)
+            {
+                var imagesNames = post.ImageName.Split(',');
+                foreach (var imageName in imagesNames)
+                {
+                    var imagePath = Path.Combine(contentRootPath, "Images", imageName);
+                    await _imagesService.DeleteImageAsync(imagePath);
+                }
+
+                post.ImageName = await _imagesService.SaveImages(post.Images);
+            }
+
+            var result = _mapper.Map<Post>(post);
+            await _postRepository.ModifyAsync(result);
+        }
+
+        public async Task RemovePostAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new PostException("Post id can't by null");
+
+            await _postRepository.DeleteAsync(Guid.Parse(id));
+        }
+
+        public async Task RemovePostCategoriesAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new PostException("Post id can't by null");
+
+            await _postCategoriesRepository.DeleteCategoriesItemAsync(new Guid(id));
+        }
+
+        private PostDto MapPost(Post post, string imageSrc)
+        {
+            if (post.ImageName == null)
+                throw new PostException("Popst image name can't be null");
+
+            var imageNames = post.ImageName.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            if (imageNames.Length == 0)
+                throw new PostException("There are no images for the post.");
+
+            var imageUrls = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToList();
+            return new PostDto
+            {
+                PostId = post.PostId,
+                Title = post.Title,
+                Context = post.Context,
+                DateCreated = post.DateCreated,
+                ImageSrc = imageUrls,
+            };
+        }
+
         private List<PostDto> MapPagedPost(PagedParams<Post> pageParams, string imageSrc)
         {
             var pagedPosts = PaginationService.CreatePagedResponse(pageParams);

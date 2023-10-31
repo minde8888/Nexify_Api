@@ -6,7 +6,7 @@ namespace Nexify.Domain.Entities.Posts
     {
         public Guid PostId { get; set; }
         public string Title { get; set; }
-        public string Text { get; set; }
+        public string Context { get; set; }
         public string ImageName { get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
         public DateTime DateCreated { get; set; } = DateTime.Now;

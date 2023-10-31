@@ -7,6 +7,7 @@ using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.User;
 using Nexify.Domain.Entities.Subcategories;
+using Nexify.Domain.Entities.Posts;
 
 namespace Nexify.Data.Context
 {
@@ -21,6 +22,7 @@ namespace Nexify.Data.Context
         public DbSet<IdentityUserClaim<Guid>> IdentityUserClaims { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<Product> Product { get; set; }
+        public DbSet<Post> Post { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Subcategory> Subcategory { get; set; }
         public DbSet<User> User { get; set; }
