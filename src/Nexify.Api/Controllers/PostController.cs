@@ -18,8 +18,8 @@ namespace Nexify.Api.Controllers
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
+        //[Authorize(Roles = "Admin")]
+        [HttpPost("post")]
         public async Task<ActionResult> AddNewPosttAsync([FromForm] PostRequest post)
         {
             await _postService.AddPostAsync(post);
