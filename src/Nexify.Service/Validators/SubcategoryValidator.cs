@@ -4,9 +4,9 @@ using Nexify.Service.Dtos;
 
 namespace Nexify.Service.Validators
 {
-    public class SubcategoryDtoValidator : AbstractValidator<SubcategoryDto>
+    public class SubcategoryValidator : AbstractValidator<SubcategoryDto>
     {
-        public SubcategoryDtoValidator()
+        public SubcategoryValidator()
         {
             RuleFor(dto => dto.SubCategoryName)
                 .NotEmpty().WithMessage("SubCategoryName is required")

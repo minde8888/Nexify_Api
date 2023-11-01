@@ -16,19 +16,22 @@ namespace Nexify.Service.Services
         private readonly IProductsRepository _productsRepository;
         private readonly IItemCategoryRepository _productCategoriesRepository;
         private readonly IUriService _uriService;
+        private readonly DiscountService _discountService;
 
         public ProductsService(
             IImagesService imagesService,
                 IProductsRepository productsRepository,
                     IItemCategoryRepository productCategoriesRepository,
                         IMapper mapper,
-            IUriService uriService)
+                            IUriService uriService,
+                                DiscountService discountService)
         {
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
             _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(productsRepository));
             _productCategoriesRepository = productCategoriesRepository ?? throw new ArgumentNullException(nameof(productCategoriesRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _uriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
+            _discountService = discountService ?? throw new ArgumentException(nameof(discountService));
         }
 
         public async Task AddProductAsync(ProductRequest product)
@@ -113,6 +116,9 @@ namespace Nexify.Service.Services
 
             var product = await _productsRepository.RetrieveAsync(Guid.Parse(id));
 
+            if (product.Discount != null)
+                product.Price = _discountService.DiscountCounter(product.Discount, product.Price);
+
             return MapProduct(product, imageSrc);
         }
 
@@ -194,6 +200,9 @@ namespace Nexify.Service.Services
 
             var result = pagedProducts.Data.Select(product =>
             {
+                if (product.Discount != null)
+                    product.Price = _discountService.DiscountCounter(product.Discount, product.Price);
+
                 var productDto = _mapper.Map<ProductDto>(product);
 
                 if (!string.IsNullOrEmpty(product.ImageName))

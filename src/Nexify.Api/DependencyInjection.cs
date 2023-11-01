@@ -9,8 +9,10 @@ using Nexify.Data.Repositories;
 using Nexify.Domain.Entities.Auth;
 using Nexify.Domain.Entities.Email;
 using Nexify.Domain.Entities.Pagination;
+using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Interfaces;
+using Nexify.Service.Dtos;
 using Nexify.Service.Interfaces;
 using Nexify.Service.MapperProfile;
 using Nexify.Service.Services;
@@ -26,25 +28,37 @@ namespace Nexify.Api
         {
             services.AddAutoMapper(typeof(MapperProfile));
 
-            services.AddTransient<ProductsService>();
             services.AddTransient<CategoryService>();
+            services.AddTransient<DiscountService>();
+            services.AddTransient<PostService>();
+            services.AddTransient<ProductsService>();              
+            services.AddTransient<SubcategoryService>();
 
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<ITokenService, TokenService>();
 
             services.AddTransient<ITokenServiceWrap, TokenServiceWrap>();
-
-            services.AddTransient<IUserRepository, UserRepository>();
+            
             services.AddTransient<ICategoryRepository, CategoryRepository>();
-            services.AddTransient<ITokenRepository, TokenRepository>();
-            services.AddTransient<IProductsRepository, ProductRepository>();
             services.AddTransient<IItemCategoryRepository, ItemCategoryRepository>();
+            services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IProductsRepository, ProductRepository>();
+            services.AddTransient<ISubcategoryRepository, SubcategoryRepository>();
+            services.AddTransient<ITokenRepository, TokenRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddTransient<UserManager<ApplicationUser>>();
 
-            services.AddTransient<IValidator<RequestToken>, RequestTokenValidator>();
+            services.AddTransient<IValidator<CategoryDto>, CategoryValidator>();
             services.AddTransient<IValidator<PagedParams<Product>>, PagedParamsValidator<Product>>();
-            services.AddTransient<IValidator<PaginationFilter>, PaginationFilterValidator>();
+            services.AddTransient<IValidator<PaginationFilter>, PaginationFilterValidator>();            
+            services.AddTransient<IValidator<PostCategories>, PostCategoriesValidator>();
+            services.AddTransient<IValidator<PostRequest>, PostRequestValidator>();
+            services.AddTransient<IValidator<ProductCategories>, ProductCategoriesValidator>();
+            services.AddTransient<IValidator<ProductRequest>, ProductRequestValidator>();
+            services.AddTransient<IValidator<ProductUpdate>, ProductUpdateValidator>();
+            services.AddTransient<IValidator<RequestToken>, RequestTokenValidator>();
+            services.AddTransient<IValidator<SubcategoryDto>, SubcategoryValidator>();     
 
             services.AddSingleton<IUriService>(sp =>
             {

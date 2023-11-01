@@ -28,7 +28,7 @@ namespace Nexify.Service.Services
 
         public async Task AddSubCategoryAsync(SubcategoryDto subcategoryDto)
         {
-            var varlidationResult = await new SubcategoryDtoValidator().ValidateAsync(subcategoryDto);
+            var varlidationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
             if (!varlidationResult.IsValid)
                 throw new SubcategoryValidationException(varlidationResult.Errors.ToString());
 
@@ -54,7 +54,7 @@ namespace Nexify.Service.Services
 
         public async Task UpdateSubCategoryAsync(SubcategoryDto subcategoryDto, string rootPath)
         {
-            var varlidationResult = await new SubcategoryDtoValidator().ValidateAsync(subcategoryDto);
+            var varlidationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
             if (!varlidationResult.IsValid)
                 throw new SubcategoryValidationException(varlidationResult.Errors.ToString());
 
