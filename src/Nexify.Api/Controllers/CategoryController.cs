@@ -31,7 +31,7 @@ namespace Nexify.Api.Controllers
 
         [HttpPost("subcategory")]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddNewSubcatategory(string categoryId, string subcategoryId)
+        public async Task<IActionResult> AddNewSubcategory(string categoryId, string subcategoryId)
         {
             await _categoryService.AddSubcategoryToCategoryAsync(categoryId, subcategoryId);
             return Ok();

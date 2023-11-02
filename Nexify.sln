@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5E765FE8-294
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApiITesting", "WebApiITesting", "{A001D92F-F935-4EFC-8A42-91C1A5185F4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{9F3BB4AA-2BC8-4F21-97F3-5F7D4D189475}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{9F3BB4AA-2BC8-4F21-97F3-5F7D4D189475}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrasjonTests", "IntegrasjonTests\IntegrasjonTests.csproj", "{00C3F422-F889-4A39-B4DF-922E94B19B3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrasjonTests", "IntegrasjonTests\IntegrasjonTests.csproj", "{00C3F422-F889-4A39-B4DF-922E94B19B3B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nexify.Data", "src\Nexify.Data\Nexify.Data.csproj", "{F063E809-D982-4982-8AB0-6AB7517A65EB}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nexify.Service", "src\Nexify.Service\Nexify.Service.csproj", "{53437B9B-A729-42E3-A3D7-69635C1F4D03}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nexify.Api", "src\Nexify.Api\Nexify.Api.csproj", "{C343A786-9FF3-426C-AF48-D59ABB5B9406}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C20B70CC-D102-420A-98AD-4339D72F92CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{C343A786-9FF3-426C-AF48-D59ABB5B9406}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C343A786-9FF3-426C-AF48-D59ABB5B9406}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C343A786-9FF3-426C-AF48-D59ABB5B9406}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C20B70CC-D102-420A-98AD-4339D72F92CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C20B70CC-D102-420A-98AD-4339D72F92CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C20B70CC-D102-420A-98AD-4339D72F92CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C20B70CC-D102-420A-98AD-4339D72F92CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

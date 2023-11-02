@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Nexify.Data.Repositories;
-using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
@@ -28,9 +26,9 @@ namespace Nexify.Service.Services
 
         public async Task AddSubCategoryAsync(SubcategoryDto subcategoryDto)
         {
-            var varlidationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
-            if (!varlidationResult.IsValid)
-                throw new SubcategoryValidationException(varlidationResult.Errors.ToString());
+            var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
+            if (!validationResult.IsValid)
+                throw new SubcategoryValidationException(validationResult.Errors.ToString());
 
             var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
 
@@ -54,9 +52,9 @@ namespace Nexify.Service.Services
 
         public async Task UpdateSubCategoryAsync(SubcategoryDto subcategoryDto, string rootPath)
         {
-            var varlidationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
-            if (!varlidationResult.IsValid)
-                throw new SubcategoryValidationException(varlidationResult.Errors.ToString());
+            var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
+            if (!validationResult.IsValid)
+                throw new SubcategoryValidationException(validationResult.Errors.ToString());
 
             var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
 

@@ -20,7 +20,7 @@ namespace Nexify.Api.Controllers
 
         //[Authorize(Roles = "Admin")]
         [HttpPost("post")]
-        public async Task<ActionResult> AddNewPosttAsync([FromForm] PostRequest post)
+        public async Task<ActionResult> AddNewPostAsync([FromForm] PostRequest post)
         {
             await _postService.AddPostAsync(post);
             return Ok();

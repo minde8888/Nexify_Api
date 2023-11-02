@@ -91,7 +91,7 @@ namespace Nexify.Api.Controllers
 
         [HttpDelete("delete/subcategory/{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult> DeleteProductSubategoriesAsync(string productId, string subcategoryId)
+        public async Task<ActionResult> DeleteProductSubcategoriesAsync(string productId, string subcategoryId)
         {
             await _productService.RemoveProductSubcategoriesAsync(productId, subcategoryId);
             return Ok();
