@@ -85,6 +85,22 @@ namespace Nexify.Api.Middleware
                     statusCode = (int)HttpStatusCode.BadRequest;
                     message = exception.Message;
                     break;
+                case EmailException _:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
+                case UserException _:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
+                case TokenException _:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
+                case PasswordException _:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
                 default:
                     statusCode = (int)HttpStatusCode.InternalServerError;
                     message = "Internal server error occurred. " + exception;

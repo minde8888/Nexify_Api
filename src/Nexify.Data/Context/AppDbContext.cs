@@ -36,6 +36,7 @@ namespace Nexify.Data.Context
 
             builder.Entity<User>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Product>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Post>().HasQueryFilter(p => p.IsDeleted == false);
 
             builder.Entity<CategoriesProducts>()
                 .HasKey(i => new { i.ProductsId, i.CategoriesId });

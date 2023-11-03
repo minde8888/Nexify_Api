@@ -1,5 +1,4 @@
 ﻿
-
 namespace Nexify.Domain.Exceptions
 {
     public class SubcategoryException : Exception

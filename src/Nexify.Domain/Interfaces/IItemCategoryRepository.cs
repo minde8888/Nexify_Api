@@ -1,4 +1,5 @@
-﻿namespace Nexify.Domain.Interfaces
+﻿
+namespace Nexify.Domain.Interfaces
 {
     public interface IItemCategoryRepository
     {

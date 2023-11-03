@@ -1,5 +1,4 @@
-﻿
-using Nexify.Domain.Entities.Pagination;
+﻿using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
 
 namespace Nexify.Domain.Interfaces

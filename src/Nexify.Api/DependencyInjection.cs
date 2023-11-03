@@ -28,6 +28,7 @@ namespace Nexify.Api
         {
             services.AddAutoMapper(typeof(MapperProfile));
 
+            services.AddTransient<AuthService>();
             services.AddTransient<CategoryService>();
             services.AddTransient<DiscountService>();
             services.AddTransient<PostService>();
@@ -36,9 +37,13 @@ namespace Nexify.Api
 
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IEmailService, EmailService>();
 
             services.AddTransient<ITokenServiceWrap, TokenServiceWrap>();
-            
+            services.AddTransient<IAuthRepository, AuthRepository>();
+            services.AddTransient<ITokenServiceWrap, TokenServiceWrap>();
+            services.AddTransient<IAuthServiceWrap, AuthServiceWrap>();
+
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IItemCategoryRepository, ItemCategoryRepository>();
             services.AddTransient<IPostRepository, PostRepository>();
@@ -49,6 +54,11 @@ namespace Nexify.Api
 
             services.AddTransient<UserManager<ApplicationUser>>();
 
+            services.AddTransient<IValidator<Login>, LoginValidator>();
+            services.AddTransient<IValidator<RequestToken>, RequestTokenValidator>();
+            services.AddTransient<IValidator<Signup>, SignupValidator>();
+            services.AddTransient<IValidator<ForgotPassword>, ForgotPasswordValidator>();
+            services.AddTransient<IValidator<ResetPassword>, ResetPasswordValidator>();
             services.AddTransient<IValidator<CategoryDto>, CategoryValidator>();
             services.AddTransient<IValidator<PagedParams<Product>>, PagedParamsValidator<Product>>();
             services.AddTransient<IValidator<PaginationFilter>, PaginationFilterValidator>();            
