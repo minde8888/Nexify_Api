@@ -188,7 +188,7 @@ namespace Nexify.Service.Services
             {
                 Id = product.ProductId,
                 Title = product.Title,
-                Description = product.Description,
+                Context = product.Context,
                 Price = product.Price,
                 ImageSrc = imageUrls
             };

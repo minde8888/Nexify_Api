@@ -55,7 +55,7 @@ namespace Nexify.Data.Repositories
                 .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
 
             currentProduct.Title = product.Title;
-            currentProduct.Description = product.Description;
+            currentProduct.Context = product.Context;
             currentProduct.ImageName = product.ImageName;
             currentProduct.Price = product.Price;
             currentProduct.DateUpdated = DateTime.UtcNow;

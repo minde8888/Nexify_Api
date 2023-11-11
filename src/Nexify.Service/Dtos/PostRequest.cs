@@ -9,7 +9,7 @@ namespace Nexify.Service.Dtos
 
         public string Title { get; set; }
 
-        public string Text { get; set; }
+        public string Context { get; set; }
 
         public List<IFormFile> Images { get; set; }
 

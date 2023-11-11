@@ -12,7 +12,7 @@ namespace Nexify.Service.Validators
                 .NotEmpty().WithMessage("Title is required")
                 .MaximumLength(255).WithMessage("Title cannot be longer than 255 characters");
 
-            RuleFor(request => request.Text)
+            RuleFor(request => request.Context)
                 .NotEmpty().WithMessage("Text is required")
                 .MaximumLength(1000).WithMessage("Text cannot be longer than 1000 characters");
 
