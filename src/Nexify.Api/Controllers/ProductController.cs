@@ -21,7 +21,7 @@ namespace Nexify.Api.Controllers
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult> AddNewProductAsync([FromForm] ProductRequest product)
         {
