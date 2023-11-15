@@ -164,7 +164,7 @@ namespace Nexify.Service.Services
             {
                 PostId = post.PostId,
                 Title = post.Title,
-                Context = post.Context,
+                Content = post.Content,
                 DateCreated = post.DateCreated,
                 ImageSrc = imageUrls,
             };

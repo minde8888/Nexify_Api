@@ -16,6 +16,7 @@ namespace Nexify.Data.Repositories
 
         public async Task AddAsync(Product products)
         {
+            products.SubcategoriesId = Guid.Empty;
             _context.Product.Add(products);
             await _context.SaveChangesAsync();
         }
@@ -55,7 +56,7 @@ namespace Nexify.Data.Repositories
                 .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
 
             currentProduct.Title = product.Title;
-            currentProduct.Context = product.Context;
+            currentProduct.Content = product.Content;
             currentProduct.ImageName = product.ImageName;
             currentProduct.Price = product.Price;
             currentProduct.DateUpdated = DateTime.UtcNow;

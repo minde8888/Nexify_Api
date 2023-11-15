@@ -8,6 +8,7 @@ using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.User;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Entities.Posts;
+using System.Reflection.Emit;
 
 namespace Nexify.Data.Context
 {
@@ -51,6 +52,20 @@ namespace Nexify.Data.Context
                     x => x.HasOne(x => x.Categories)
                         .WithMany()
                         .HasForeignKey(x => x.CategoriesId));
+
+            builder.Entity<SubcategoriesProducts>()
+                .HasKey(i => new { i.ProductsId, i.SubcategoriesId });
+
+            builder.Entity<Subcategory>()
+                .HasMany(x => x.Products)
+                .WithMany(x => x.Subcategories)
+                .UsingEntity<SubcategoriesProducts>(
+                    x => x.HasOne(x => x.Products)
+                        .WithMany()
+                        .HasForeignKey(x => x.ProductsId),
+                    x => x.HasOne(x => x.Subcategories)
+                        .WithMany()
+                        .HasForeignKey(x => x.SubcategoriesId));
         }
     }
 }

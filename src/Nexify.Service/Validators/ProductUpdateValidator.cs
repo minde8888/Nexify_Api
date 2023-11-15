@@ -15,7 +15,7 @@ namespace Nexify.Service.Validators
             RuleFor(update => update.Title)
                 .MaximumLength(255).WithMessage("Title cannot be longer than 255 characters");
 
-            RuleFor(update => update.Description)
+            RuleFor(update => update.Content)
                 .MaximumLength(1000).WithMessage("Description cannot be longer than 1000 characters");
 
             RuleFor(update => update.Price)

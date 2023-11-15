@@ -55,7 +55,7 @@ namespace Nexify.Data.Repositories
                 .FirstOrDefaultAsync(p => p.PostId == post.PostId);
 
             currentPost.Title = post.Title;
-            currentPost.Context = post.Context;
+            currentPost.Content = post.Content;
             currentPost.ImageName = post.ImageName;
             currentPost.DateUpdated = DateTime.UtcNow;
 

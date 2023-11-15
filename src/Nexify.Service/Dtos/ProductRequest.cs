@@ -6,12 +6,12 @@ namespace Nexify.Service.Dtos
     {
         public Guid ProductsId { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
+        public string Content { get; set; }
         public string Price { get; set; }
         public string Discount { get; set; }
-        public string Stok { get; set; }
+        public string Stock { get; set; }
         public List<IFormFile> Images { get; set; }
-        public List<string> ImageNames { get; set; }
+        public string ImageName { get; set; }
 
     }
 }

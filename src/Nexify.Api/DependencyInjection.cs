@@ -32,7 +32,7 @@ namespace Nexify.Api
             services.AddTransient<CategoryService>();
             services.AddTransient<DiscountService>();
             services.AddTransient<PostService>();
-            services.AddTransient<ProductsService>();              
+            services.AddTransient<ProductsService>();
             services.AddTransient<SubcategoryService>();
 
             services.AddTransient<IImagesService, ImagesService>();
@@ -61,14 +61,14 @@ namespace Nexify.Api
             services.AddTransient<IValidator<ResetPassword>, ResetPasswordValidator>();
             services.AddTransient<IValidator<CategoryDto>, CategoryValidator>();
             services.AddTransient<IValidator<PagedParams<Product>>, PagedParamsValidator<Product>>();
-            services.AddTransient<IValidator<PaginationFilter>, PaginationFilterValidator>();            
+            services.AddTransient<IValidator<PaginationFilter>, PaginationFilterValidator>();
             services.AddTransient<IValidator<PostCategories>, PostCategoriesValidator>();
             services.AddTransient<IValidator<PostRequest>, PostRequestValidator>();
             services.AddTransient<IValidator<ProductCategories>, ProductCategoriesValidator>();
             services.AddTransient<IValidator<ProductRequest>, ProductRequestValidator>();
             services.AddTransient<IValidator<ProductUpdate>, ProductUpdateValidator>();
             services.AddTransient<IValidator<RequestToken>, RequestTokenValidator>();
-            services.AddTransient<IValidator<SubcategoryDto>, SubcategoryValidator>();     
+            services.AddTransient<IValidator<SubcategoryDto>, SubcategoryValidator>();
 
             services.AddSingleton<IUriService>(sp =>
             {
@@ -124,9 +124,11 @@ namespace Nexify.Api
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("http://192.168.0.182:9002", "https://192.168.0.182:9002")
+                    //builder.WithOrigins("http://192.168.0.182:9002", "https://192.168.0.182:9002") 
+                    builder.WithOrigins("http://localhost:8000/")
                         .AllowAnyMethod()
                         .AllowAnyHeader();
+
                 });
             });
         }

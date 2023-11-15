@@ -6,7 +6,7 @@ namespace Nexify.Service.Dtos
     {
         public Guid PostId { get; set; }
         public string Title { get; set; }
-        public string Context { get; set; }
+        public string Content { get; set; }
         public ICollection<string> ImageSrc { get; set; }
         public string ImageName { get; set; } = string.Empty;
         public DateTime DateCreated { get; set; }
