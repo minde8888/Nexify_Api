@@ -16,7 +16,6 @@ namespace Nexify.Data.Repositories
 
         public async Task AddAsync(Product products)
         {
-            products.SubcategoriesId = Guid.Empty;
             _context.Product.Add(products);
             await _context.SaveChangesAsync();
         }

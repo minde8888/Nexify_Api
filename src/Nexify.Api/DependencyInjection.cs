@@ -124,11 +124,10 @@ namespace Nexify.Api
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    //builder.WithOrigins("http://192.168.0.182:9002", "https://192.168.0.182:9002") 
-                    builder.WithOrigins("http://localhost:8000/")
+                    builder
+                        .WithOrigins("http://localhost:8000", "https://localhost:9002")
                         .AllowAnyMethod()
                         .AllowAnyHeader();
-
                 });
             });
         }

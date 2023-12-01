@@ -30,21 +30,25 @@ namespace Nexify.Service.Services
             _uriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
         }
-        public async Task AddCategoryAsync(CategoryDto categoryDto)
+        public async Task AddCategoryAsync(List<CategoryDto> categories)
         {
-            var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
-
-            if (!validationResult.IsValid)
-                throw new CategoryValidationException(validationResult.Errors.ToString());
-
-            var category = _mapper.Map<Category>(categoryDto);
-
-            if (categoryDto.Image != null)
+            foreach (var categoryDto in categories)
             {
-                category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
-            }
+                var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
 
-            await _categoryRepository.AddAsync(category, categoryDto.ProductsId);
+                if (!validationResult.IsValid)
+                    throw new CategoryValidationException(validationResult.Errors.ToString());
+
+                var category = _mapper.Map<Category>(categoryDto);
+
+                if (categoryDto.Image != null)
+                {
+                    category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
+                }
+
+                await _categoryRepository.AddAsync(category, categoryDto.ProductsId);
+            }          
+
         }
 
         public async Task AddSubcategoryToCategoryAsync(string categoryId, string subcategoryId)

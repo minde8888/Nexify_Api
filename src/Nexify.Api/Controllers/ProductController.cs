@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Products;
@@ -7,7 +8,7 @@ using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductController : Controller
@@ -23,6 +24,7 @@ namespace Nexify.Api.Controllers
 
         //[Authorize(Roles = "Admin")]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> AddNewProductAsync([FromForm] ProductRequest product)
         {
             await _productService.AddProductAsync(product);
