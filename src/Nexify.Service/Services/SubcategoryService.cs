@@ -24,20 +24,24 @@ namespace Nexify.Service.Services
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
         }
 
-        public async Task AddSubCategoryAsync(SubcategoryDto subcategoryDto)
+        public async Task AddSubCategoryAsync(List<SubcategoryDto> subcategories)
         {
-            var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
-            if (!validationResult.IsValid)
-                throw new SubcategoryValidationException(validationResult.Errors.ToString());
-
-            var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
-
-            if (subcategoryDto.Image != null)
+            foreach (var subcategoryDto in subcategories)
             {
-                subcategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { subcategoryDto.Image });
-            }
+                var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
 
-            await _subcategoryRepository.AddAsync(subcategory, subcategoryDto.ProductsId);
+                if (!validationResult.IsValid)
+                    throw new SubcategoryValidationException(validationResult.Errors.ToString());
+
+                var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
+
+                if (subcategoryDto.Image != null)
+                {
+                    subcategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { subcategoryDto.Image });
+                }
+
+                await _subcategoryRepository.AddAsync(subcategory, subcategoryDto.ProductsId);
+            }
         }
 
         public async Task<SubcategoryResponse> GetSubCategoryAsync(string id, string imageSrc)

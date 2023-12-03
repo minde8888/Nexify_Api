@@ -18,17 +18,20 @@ namespace Nexify.Service.Services
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUriService _uriService;
         private readonly IImagesService _imagesService;
+        private readonly SubcategoryService _subcategoryService;
 
         public CategoryService(
             IMapper mapper,
                 ICategoryRepository categoryRepository,
                     IUriService uriService,
-                        IImagesService imagesService)
+                        IImagesService imagesService,
+                           SubcategoryService subcategoryService)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
             _uriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
+            _subcategoryService = subcategoryService ?? throw new ArgumentNullException(nameof(subcategoryService));
         }
         public async Task AddCategoryAsync(List<CategoryDto> categories)
         {
@@ -44,6 +47,11 @@ namespace Nexify.Service.Services
                 if (categoryDto.Image != null)
                 {
                     category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
+                }
+
+                if (categoryDto.Subcategories != null)
+                {
+                    await _subcategoryService.AddSubCategoryAsync(categoryDto.Subcategories);
                 }
 
                 await _categoryRepository.AddAsync(category, categoryDto.ProductsId);
