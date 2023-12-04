@@ -15,17 +15,9 @@ namespace Nexify.Data.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddAsync(Category category, Guid productId)
+        public async Task AddAsync(Category category)
         {
             _context.Category.Add(category);
-            await _context.SaveChangesAsync();
-
-            var categoriesProducts = new CategoriesProducts
-            {
-                ProductsId = productId,
-                CategoriesId = category.CategoryId
-            };
-            _context.CategoriesProducts.Add(categoriesProducts);
             await _context.SaveChangesAsync();
         }
 

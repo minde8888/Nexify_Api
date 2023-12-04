@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Products;
+using Nexify.Domain.Entities.Subcategories;
 using Nexify.Service.Dtos;
 
 namespace Nexify.Service.MapperProfile
@@ -14,6 +15,7 @@ namespace Nexify.Service.MapperProfile
             CreateMap<Product, ProductUpdate>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<CategoryResponse, Category>().ReverseMap();
+            CreateMap<Subcategory, SubcategoryDto>().ReverseMap();
 
             CreateMap<Category, CategoriesResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CategoryId))

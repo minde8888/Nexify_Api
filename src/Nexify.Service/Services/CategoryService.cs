@@ -49,12 +49,12 @@ namespace Nexify.Service.Services
                     category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
                 }
 
+                await _categoryRepository.AddAsync(category);
+
                 if (categoryDto.Subcategories != null)
                 {
-                    await _subcategoryService.AddSubCategoryAsync(categoryDto.Subcategories);
+                    await _subcategoryService.AddSubCategoryAsync(categoryDto.Subcategories, category.CategoryId);
                 }
-
-                await _categoryRepository.AddAsync(category, categoryDto.ProductsId);
             }          
 
         }

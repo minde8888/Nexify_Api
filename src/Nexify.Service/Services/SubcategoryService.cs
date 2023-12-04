@@ -24,7 +24,7 @@ namespace Nexify.Service.Services
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
         }
 
-        public async Task AddSubCategoryAsync(List<SubcategoryDto> subcategories)
+        public async Task AddSubCategoryAsync(List<SubcategoryDto> subcategories, Guid categoryId)
         {
             foreach (var subcategoryDto in subcategories)
             {
@@ -34,13 +34,14 @@ namespace Nexify.Service.Services
                     throw new SubcategoryValidationException(validationResult.Errors.ToString());
 
                 var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
+                subcategory.CategoryId = categoryId;
 
                 if (subcategoryDto.Image != null)
                 {
                     subcategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { subcategoryDto.Image });
                 }
 
-                await _subcategoryRepository.AddAsync(subcategory, subcategoryDto.ProductsId);
+                await _subcategoryRepository.AddAsync(subcategory);
             }
         }
 

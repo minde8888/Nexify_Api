@@ -21,9 +21,6 @@ namespace Nexify.Service.Validators
             RuleFor(dto => dto.ImageName)
                 .MaximumLength(255).WithMessage("ImageName cannot be longer than 255 characters");
 
-            RuleFor(dto => dto.ProductsId)
-                .NotEmpty().WithMessage("ProductsId is required")
-                .NotEqual(Guid.Empty).WithMessage("ProductsId cannot be empty");
         }
 
         private bool BeAValidImage(IFormFile image)
