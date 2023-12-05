@@ -21,17 +21,6 @@ namespace Nexify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddSubcategoryAsync(Guid categoryId, Guid subCategoryId)
-        {
-            var subcategorySave = await _context.Subcategory
-                .FirstOrDefaultAsync(x => x.SubcategoryId == subCategoryId);
-
-            subcategorySave.CategoryId = categoryId;
-            _context.Entry(subcategorySave).State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<List<Category>> GetAllAsync()
         {
             return await _context.Category.ToListAsync();

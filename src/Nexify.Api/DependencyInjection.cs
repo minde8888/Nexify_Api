@@ -125,7 +125,7 @@ namespace Nexify.Api
                 options.AddDefaultPolicy(builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:8000", "https://localhost:9002")
+                        .WithOrigins("http://localhost:3000", "https://localhost:9002")
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 });

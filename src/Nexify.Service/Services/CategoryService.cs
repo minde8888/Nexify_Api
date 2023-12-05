@@ -8,7 +8,6 @@ using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
-using Nexify.Domain.Entities.Subcategories;
 
 namespace Nexify.Service.Services
 {
@@ -55,18 +54,8 @@ namespace Nexify.Service.Services
                 {
                     await _subcategoryService.AddSubCategoryAsync(categoryDto.Subcategories, category.CategoryId);
                 }
-            }          
-
+            }        
         }
-
-        public async Task AddSubcategoryToCategoryAsync(string categoryId, string subcategoryId)
-        {
-            if (string.IsNullOrEmpty(categoryId) || string.IsNullOrEmpty(subcategoryId))
-                throw new CategoryException("Product id or subcategory id can't by null");
-
-            await _categoryRepository.AddSubcategoryAsync(new Guid(categoryId), new Guid(subcategoryId));
-        }
-
 
         public async Task<List<CategoryResponse>> GetAllCategoriesAsync(string imageSrc)
         {

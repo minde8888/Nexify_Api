@@ -6,7 +6,6 @@ namespace Nexify.Domain.Interfaces
     public interface ICategoryRepository
     {
         public Task AddAsync(Category category);
-        public Task AddSubcategoryAsync(Guid subcategory, Guid subCategoryId);
         public Task<List<Category>> GetAllAsync();
         public Task<PagedEntityResult<Category>> GetAsync(Guid id, PaginationFilter validFilter);
         public Task RemoveAsync(Guid id);

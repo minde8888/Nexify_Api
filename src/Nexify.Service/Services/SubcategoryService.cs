@@ -41,7 +41,7 @@ namespace Nexify.Service.Services
                     subcategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { subcategoryDto.Image });
                 }
 
-                await _subcategoryRepository.AddAsync(subcategory);
+                await _subcategoryRepository.AddAsync(subcategory);               
             }
         }
 
@@ -71,8 +71,8 @@ namespace Nexify.Service.Services
             }
 
             await _subcategoryRepository.UpdateAsync(subcategory);
-        } 
-        
+        }
+
         public async Task DeleteSubCategoryAsync(string id)
         {
             if (string.IsNullOrEmpty(id))

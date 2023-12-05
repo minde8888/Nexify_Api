@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexify.Data.Context;
-using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Interfaces;
 
