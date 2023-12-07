@@ -68,8 +68,9 @@ namespace Nexify.Data.Context
                         .HasForeignKey(x => x.SubcategoriesId));
 
             builder.Entity<Category>()
-                .HasMany(c => c.SubCategory)
+                .HasMany(c => c.Subcategories)
                 .WithOne(s => s.Category)
+                .HasForeignKey(s => s.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
         }

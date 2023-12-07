@@ -96,7 +96,7 @@ namespace Nexify.Service.Services
                 SubCategoryName = subcategory.SubCategoryName,
                 Description = subcategory.Description,
                 ImageSrc = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToString(),
-                Products = _mapper.Map<List<ProductDto>>(subcategory.Products)
+                //Products = _mapper.Map<List<ProductDto>>(subcategory.Products)
             };
         }
     }

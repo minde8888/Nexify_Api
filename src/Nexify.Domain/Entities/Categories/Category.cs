@@ -12,7 +12,7 @@ public class Category
     public string CategoryName { get; set; }
     public string Description { get; set; }
     public string ImageName { get; set; }
-    public ICollection<Subcategory> SubCategory { get; set; }
+    public ICollection<Subcategory> Subcategories { get; set; }
     public ICollection<Product> Products { get; set; }
     public DateTime DateCreated { get; set; } = DateTime.Now;
     public DateTime DateUpdated { get; set; }

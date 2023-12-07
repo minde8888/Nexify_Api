@@ -54,7 +54,7 @@ namespace Nexify.Service.Services
                 {
                     await _subcategoryService.AddSubCategoryAsync(categoryDto.Subcategories, category.CategoryId);
                 }
-            }        
+            }
         }
 
         public async Task<List<CategoryResponse>> GetAllCategoriesAsync(string imageSrc)
@@ -66,6 +66,13 @@ namespace Nexify.Service.Services
                 category.ImageName = !string.IsNullOrEmpty(category.ImageName) ?
                     $"{imageSrc}/Images/{category.ImageName}" :
                     null;
+
+                foreach (var subcategory in category.Subcategories)
+                {
+                    subcategory.ImageName = !string.IsNullOrEmpty(subcategory.ImageName) ?
+                        $"{imageSrc}/Images/{subcategory.ImageName}" :
+                        null;
+                }
             }
 
             var mappedCategories = _mapper.Map<List<CategoryResponse>>(categories);
@@ -149,7 +156,7 @@ namespace Nexify.Service.Services
 
             var mappedCategory = _mapper.Map<Category>(categoryDto);
 
-            if(categoryDto.Image != null)
+            if (categoryDto.Image != null)
             {
                 categoryDto.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
                 var imagePath = Path.Combine(contentRootPath, "Images", categoryDto.ImageName);
@@ -176,4 +183,4 @@ namespace Nexify.Service.Services
         }
 
     }
-} 
+}

@@ -23,7 +23,9 @@ namespace Nexify.Data.Repositories
 
         public async Task<List<Category>> GetAllAsync()
         {
-            return await _context.Category.ToListAsync();
+            return await _context.Category
+                .Include(s => s.Subcategories)
+                .ToListAsync();
         }
 
         public async Task<PagedEntityResult<Category>> GetAsync(Guid id, PaginationFilter validFilter)
