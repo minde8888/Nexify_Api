@@ -7,6 +7,6 @@ namespace Nexify.Service.Dtos
         public string CategoryName { get; set; }
         public string Description { get; set; }
         public string ImageSrc { get; set; }
-        public List<SubcategoryResponse> Subcategories { get; set; }
+        public IList<SubcategoryResponse> Subcategories { get; set; }
     }
 }

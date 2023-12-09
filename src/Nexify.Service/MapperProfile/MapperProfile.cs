@@ -15,14 +15,17 @@ namespace Nexify.Service.MapperProfile
             CreateMap<Product, ProductUpdate>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Subcategory, SubcategoryDto>().ReverseMap();
-            CreateMap<CategoryResponse, Category>()
+
+            CreateMap<Category, CategoryResponse>()
+                .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
                 .ForMember(dest => dest.Subcategories, opt => opt.MapFrom(src => src.Subcategories))
                 .ReverseMap();
+
+            CreateMap<Subcategory, SubcategoryResponse>().ReverseMap();
 
             CreateMap<Category, CategoriesResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CategoryId))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.CategoryName))
-                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
                 .ReverseMap();
             CreateMap<Product, CategoryProducts>().ReverseMap();
