@@ -16,21 +16,16 @@ namespace Nexify.Service.Validators
                 .MaximumLength(1000).WithMessage("Description cannot be longer than 1000 characters");
 
             RuleFor(dto => dto.Image)
-                .Must(BeAValidImage).WithMessage("Image is required and must be a valid image file");
+                .Must(HaveAtLeastOneImage).WithMessage("Image is required and must be a valid image file");
 
             RuleFor(dto => dto.ImageName)
                 .MaximumLength(255).WithMessage("ImageName cannot be longer than 255 characters");
 
         }
 
-        private bool BeAValidImage(IFormFile image)
+        private bool HaveAtLeastOneImage(List<IFormFile> images)
         {
-            if (image == null || image.Length == 0)
-            {
-                return false;
-            }
-
-            return true;
+            return images != null && images.Count > 0;
         }
     }
 }

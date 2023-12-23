@@ -77,9 +77,9 @@ namespace Nexify.Data.Repositories
         {
             var categorySave = await _context.Category
                 .FirstOrDefaultAsync(x => x.CategoryId == category.CategoryId);
-            categorySave.CategoryName = category.CategoryName;
-            categorySave.Description = category.Description;
-            categorySave.ImageName = category.ImageName;
+                    categorySave.CategoryName = category.CategoryName;
+                    categorySave.Description = category.Description;
+                    categorySave.ImageName = category.ImageName;
 
             _context.Entry(categorySave).State = EntityState.Modified;
             await _context.SaveChangesAsync();

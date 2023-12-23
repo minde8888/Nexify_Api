@@ -8,6 +8,7 @@ using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
+using Nexify.Domain.Entities.Subcategories;
 
 namespace Nexify.Service.Services
 {
@@ -45,7 +46,10 @@ namespace Nexify.Service.Services
 
                 if (categoryDto.Image != null)
                 {
-                    category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
+                    foreach (var image in categoryDto.Image)
+                    {
+                        category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
+                    }                    
                 }
 
                 await _categoryRepository.AddAsync(category);
@@ -158,7 +162,10 @@ namespace Nexify.Service.Services
 
             if (categoryDto.Image != null)
             {
-                categoryDto.ImageName = await _imagesService.SaveImages(new List<IFormFile> { categoryDto.Image });
+                foreach (var image in categoryDto.Image)
+                {
+                    categoryDto.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
+                }
                 var imagePath = Path.Combine(contentRootPath, "Images", categoryDto.ImageName);
                 await _imagesService.DeleteImageAsync(imagePath);
             }
