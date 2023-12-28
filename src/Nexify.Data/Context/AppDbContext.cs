@@ -8,7 +8,6 @@ using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.User;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Entities.Posts;
-using System.Reflection.Emit;
 
 namespace Nexify.Data.Context
 {
@@ -28,6 +27,9 @@ namespace Nexify.Data.Context
         public DbSet<Subcategory> Subcategory { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<CategoriesProducts> CategoriesProducts { get; set; }
+        public DbSet<BlogCategory> BlogCategory { get; set; }
+        public DbSet<BlogCategoryPost> BlogCategoryPost { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -73,6 +75,16 @@ namespace Nexify.Data.Context
                 .HasForeignKey(s => s.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<BlogCategory>()
+                .HasMany(bc => bc.Posts)
+                .WithMany(p => p.Categories)
+                .UsingEntity<BlogCategoryPost>(
+                    j => j.HasOne(bcp => bcp.Posts)  
+                          .WithMany()
+                          .HasForeignKey(bcp => bcp.PostId),
+                    j => j.HasOne(bcp => bcp.Categories)
+                          .WithMany()
+                          .HasForeignKey(bcp => bcp.CategoriesId));
         }
     }
 }

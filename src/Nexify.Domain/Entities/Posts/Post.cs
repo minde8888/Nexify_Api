@@ -11,6 +11,6 @@ namespace Nexify.Domain.Entities.Posts
         public bool IsDeleted { get; set; } = false;
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DateUpdated { get; set; }
-        public ICollection<Category> Categories { get; set; }
+        public IList<BlogCategory> Categories{ get; set; }
     }
 }

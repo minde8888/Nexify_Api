@@ -2,65 +2,57 @@
 using Microsoft.AspNetCore.Http;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Pagination;
-using Nexify.Domain.Entities.Products;
+using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
-using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
+using Nexify.Service.Validators;
 
 namespace Nexify.Service.Services
 {
-    public class CategoryService
+    public class BlogCategoryService
     {
         private readonly IMapper _mapper;
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IBlogCategoryRepository _categoryRepository;
         private readonly IUriService _uriService;
         private readonly IImagesService _imagesService;
-        private readonly SubcategoryService _subcategoryService;
 
-        public CategoryService(
+        public BlogCategoryService(
             IMapper mapper,
-                ICategoryRepository categoryRepository,
+                IBlogCategoryRepository categoryRepository,
                     IUriService uriService,
-                        IImagesService imagesService,
-                           SubcategoryService subcategoryService)
+                        IImagesService imagesService)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
             _uriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
-            _subcategoryService = subcategoryService ?? throw new ArgumentNullException(nameof(subcategoryService));
         }
-        public async Task AddCategoryAsync(List<CategoryDto> categories)
+        public async Task AddCategoryAsync(List<BlogCategoryDto> categories)
         {
             foreach (var categoryDto in categories)
             {
-                var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
+                var validationResult = await new BlogCategoryDtoValidator().ValidateAsync(categoryDto);
 
                 if (!validationResult.IsValid)
                     throw new CategoryValidationException(validationResult.Errors.ToString());
 
-                var category = _mapper.Map<Category>(categoryDto);
+                var category = _mapper.Map<BlogCategory>(categoryDto);
 
                 if (categoryDto.Image != null)
                 {
                     foreach (var image in categoryDto.Image)
                     {
                         category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
-                    }                    
+                    }
                 }
 
                 await _categoryRepository.AddAsync(category);
-
-                if (categoryDto.Subcategories != null)
-                {
-                    await _subcategoryService.AddSubCategoryAsync(categoryDto.Subcategories, category.CategoryId);
-                }
             }
         }
 
-        public async Task<List<CategoryResponse>> GetAllCategoriesAsync(string imageSrc)
+        public async Task<List<BlogPostCategoryResponse>> GetAllCategoriesAsync(string imageSrc)
         {
             var categories = await _categoryRepository.GetAllAsync();
 
@@ -69,21 +61,14 @@ namespace Nexify.Service.Services
                 category.ImageName = !string.IsNullOrEmpty(category.ImageName) ?
                     $"{imageSrc}/Images/{category.ImageName}" :
                     null;
-
-                foreach (var subcategory in category.Subcategories)
-                {
-                    subcategory.ImageName = !string.IsNullOrEmpty(subcategory.ImageName) ?
-                        $"{imageSrc}/Images/{subcategory.ImageName}" :
-                        null;
-                }
             }
 
-            var mappedCategories = _mapper.Map<List<CategoryResponse>>(categories);
+            var mappedCategories = _mapper.Map<List<BlogPostCategoryResponse>>(categories);
 
             return mappedCategories;
         }
 
-        public async Task<CategoriesResponse> GetCategoryAsync(
+        public async Task<BlogPostCategoryResponse> GetCategoryAsync(
             PaginationFilter filter,
             string id,
             string route,
@@ -101,8 +86,8 @@ namespace Nexify.Service.Services
             var validFilter = filter ?? new PaginationFilter();
             var category = await _categoryRepository.GetAsync(guidId, validFilter);
 
-            var pagedParams = new PagedParams<Category>(
-                new List<Category> { category.Items },
+            var pagedParams = new PagedParams<BlogCategory>(
+                new List<BlogCategory> { category.Items },
                 validFilter,
                 category.TotalCount,
                 _uriService,
@@ -110,12 +95,12 @@ namespace Nexify.Service.Services
 
             var pagedResponse = PaginationService.CreatePagedResponse(pagedParams);
 
-            var productsWithImages = category.Items.Products != null ?
-                ListImages(category.Items.Products, imageSrc) :
+            var postsWithImages = category.Items.Posts != null ?
+                ListImages(category.Items.Posts, imageSrc) :
                 null;
 
-            var result = _mapper.Map<CategoriesResponse>(category.Items);
-            result.Products = productsWithImages;
+            var result = _mapper.Map<BlogPostCategoryResponse>(category.Items);
+            result.Posts = postsWithImages;
             result.PageSize = pagedResponse.PageSize;
             result.TotalPages = pagedResponse.TotalPages;
             result.TotalRecords = pagedResponse.TotalRecords;
@@ -124,40 +109,40 @@ namespace Nexify.Service.Services
             return result;
         }
 
-        private List<CategoryProducts> ListImages(ICollection<Product> products, string imageSrc)
+        private List<CategoryPosts> ListImages(ICollection<Post> posts, string imageSrc)
         {
-            var catProducts = _mapper.Map<List<CategoryProducts>>(products);
+            var catPosts = _mapper.Map<List<CategoryPosts>>(posts);
             var imageUrls = new List<string>();
 
-            foreach (var product in products)
+            foreach (var post in posts)
             {
-                if (product.ImageName == null)
-                    throw new ProductException("Product image name can't be null");
+                if (post.ImageName == null)
+                    throw new PostException("Post image name can't be null");
 
-                var imageNames = product.ImageName.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var imageNames = post.ImageName.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 if (imageNames.Length == 0)
-                    throw new ProductException("There are no images for the product.");
+                    throw new PostException("There are no images for the product.");
 
                 var productImageUrls = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToList();
                 imageUrls.AddRange(productImageUrls);
             }
 
-            foreach (var item in catProducts)
+            foreach (var item in catPosts)
             {
                 item.ImageSrc = imageUrls;
             }
 
-            return catProducts;
+            return catPosts;
         }
 
-        public async Task UpdateCategory(CategoryDto categoryDto, string contentRootPath)
+        public async Task UpdateCategory(BlogCategoryDto categoryDto, string contentRootPath)
         {
-            var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
+            var validationResult = await new BlogCategoryDtoValidator().ValidateAsync(categoryDto);
 
             if (!validationResult.IsValid)
                 throw new CategoryValidationException(validationResult.Errors.ToString());
 
-            var mappedCategory = _mapper.Map<Category>(categoryDto);
+            var mappedCategory = _mapper.Map<BlogCategory>(categoryDto);
 
             if (categoryDto.Image != null)
             {
@@ -179,14 +164,5 @@ namespace Nexify.Service.Services
 
             await _categoryRepository.RemoveAsync(new Guid(id));
         }
-
-        public async Task RemoveSubcategoryByIdAsync(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                throw new CategoryException($"Invalid GUID: {id}");
-
-            await _categoryRepository.RemoveAsync(new Guid(id));
-        }
-
     }
 }

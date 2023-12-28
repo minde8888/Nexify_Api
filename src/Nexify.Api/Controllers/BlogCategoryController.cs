@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Service.Dtos;
@@ -7,15 +6,14 @@ using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class CategoryController : Controller
+    public class BlogCategoryController : Controller
     {
-        private readonly CategoryService _categoryService;
+        private readonly BlogCategoryService _categoryService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public CategoryController(CategoryService categoryService, IWebHostEnvironment hostEnvironment)
+        public BlogCategoryController(BlogCategoryService categoryService, IWebHostEnvironment hostEnvironment)
         {
             _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
@@ -23,14 +21,14 @@ namespace Nexify.Api.Controllers
 
         [HttpPost]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddNewCategory([FromForm] List<CategoryDto> categories)
+        public async Task<IActionResult> AddNewCategory([FromForm] List<BlogCategoryDto> categories)
         {
             await _categoryService.AddCategoryAsync(categories);
             return Ok();
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<CategoryResponse>>> GetAll()
         {
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
@@ -39,7 +37,7 @@ namespace Nexify.Api.Controllers
         }
 
         [HttpGet("id")]
-        [AllowAnonymous]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<CategoryResponse>> Get([FromQuery] PaginationFilter filter, string id)
         {
             var route = Request.Path.Value;
@@ -50,7 +48,7 @@ namespace Nexify.Api.Controllers
 
         [HttpPut("update")]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Update([FromForm] CategoryDto category)
+        public async Task<ActionResult> Update([FromForm] BlogCategoryDto category)
         {
             await _categoryService.UpdateCategory(category, _hostEnvironment.ContentRootPath);
             return Ok();
@@ -61,13 +59,6 @@ namespace Nexify.Api.Controllers
         public async Task<ActionResult> Delete(string id)
         {
             await _categoryService.RemoveCategoryAsync(id);
-            return Ok();
-        }
-
-        [HttpDelete("delete/subcategory/{id}")]
-        public async Task<ActionResult> DeleteSubcategory(string id)
-        {
-            await _categoryService.RemoveSubcategoryByIdAsync(id);
             return Ok();
         }
     }
