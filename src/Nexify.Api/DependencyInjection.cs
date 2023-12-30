@@ -34,6 +34,7 @@ namespace Nexify.Api
             services.AddTransient<PostService>();
             services.AddTransient<ProductsService>();
             services.AddTransient<SubcategoryService>();
+            services.AddTransient<BlogCategoryService>();
 
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<ITokenService, TokenService>();
@@ -51,6 +52,7 @@ namespace Nexify.Api
             services.AddTransient<ISubcategoryRepository, SubcategoryRepository>();
             services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IBlogCategoryRepository, BlogCategoryRepository>();
 
             services.AddTransient<UserManager<ApplicationUser>>();
 
@@ -69,6 +71,7 @@ namespace Nexify.Api
             services.AddTransient<IValidator<ProductUpdate>, ProductUpdateValidator>();
             services.AddTransient<IValidator<RequestToken>, RequestTokenValidator>();
             services.AddTransient<IValidator<SubcategoryDto>, SubcategoryValidator>();
+            services.AddTransient<IValidator<BlogCategoryDto>, BlogCategoryDtoValidator>();
 
             services.AddSingleton<IUriService>(sp =>
             {

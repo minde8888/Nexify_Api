@@ -29,6 +29,7 @@ namespace Nexify.Service.MapperProfile
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
                 .ReverseMap();
             CreateMap<Product, CategoryProducts>().ReverseMap();
+            CreateMap<BlogCategory, BlogCategoryDto>().ReverseMap();
         }
 
     }

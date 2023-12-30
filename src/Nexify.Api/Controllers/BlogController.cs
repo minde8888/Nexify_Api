@@ -7,32 +7,33 @@ using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers
 {
-    public class PostController: Controller
+    [Route("api/v1/[controller]")]
+    [ApiController]
+    public class BlogController : Controller
     {
         private readonly PostService _postService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public PostController(PostService postService, IWebHostEnvironment hostEnvironment)
+        public BlogController(PostService postService, IWebHostEnvironment hostEnvironment)
         {
             _postService = postService ?? throw new ArgumentNullException(nameof(postService));
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
         }
 
         //[Authorize(Roles = "Admin")]
-        [HttpPost("post")]
+        [HttpPost]
         public async Task<ActionResult> AddNewPostAsync([FromForm] PostRequest post)
         {
             await _postService.AddPostAsync(post);
             return Ok();
         }
 
-        [HttpPost("category")]
-        [AllowAnonymous]
-        public async Task<ActionResult> PostCategoriesAsync([FromForm] PostCategories postCategories)
-        {
-            await _postService.AddPostCategoriesAsync(postCategories);
-            return Ok();
-        }
+        //[AllowAnonymous]
+        //public async Task<ActionResult> PostCategoriesAsync([FromForm] PostCategories postCategories)
+        //{
+        //    await _postService.AddPostCategoriesAsync(postCategories);
+        //    return Ok();
+        //}
 
         [HttpGet]
         [AllowAnonymous]
@@ -54,7 +55,7 @@ namespace Nexify.Api.Controllers
         }
 
         //[Authorize(Roles = "Admin")]
-        [HttpPut("Update")]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateAsync([FromForm] PostRequest post)
         {
             await _postService.UpdatePostAsync(_hostEnvironment.ContentRootPath, post);

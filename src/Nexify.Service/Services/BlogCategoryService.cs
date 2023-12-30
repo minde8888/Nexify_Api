@@ -36,7 +36,13 @@ namespace Nexify.Service.Services
                 var validationResult = await new BlogCategoryDtoValidator().ValidateAsync(categoryDto);
 
                 if (!validationResult.IsValid)
-                    throw new CategoryValidationException(validationResult.Errors.ToString());
+                {
+                    var validationErrors = validationResult.Errors
+                        .Select(error => $"{error.PropertyName}: {error.ErrorMessage}")
+                        .ToList();
+
+                    throw new CategoryValidationException(string.Join(Environment.NewLine, validationErrors));
+                }
 
                 var category = _mapper.Map<BlogCategory>(categoryDto);
 
@@ -52,7 +58,7 @@ namespace Nexify.Service.Services
             }
         }
 
-        public async Task<List<BlogPostCategoryResponse>> GetAllCategoriesAsync(string imageSrc)
+        public async Task<List<BlogCategoryDto>> GetAllCategoriesAsync(string imageSrc)
         {
             var categories = await _categoryRepository.GetAllAsync();
 
@@ -63,7 +69,7 @@ namespace Nexify.Service.Services
                     null;
             }
 
-            var mappedCategories = _mapper.Map<List<BlogPostCategoryResponse>>(categories);
+            var mappedCategories = _mapper.Map<List<BlogCategoryDto>>(categories);
 
             return mappedCategories;
         }

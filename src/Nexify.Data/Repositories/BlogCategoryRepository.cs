@@ -31,7 +31,7 @@ namespace Nexify.Data.Repositories
         {
             var category = await _context.BlogCategory
                 .Include(c => c.Posts)
-                .FirstOrDefaultAsync(x => x.CategoryId == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (category != null && category.Posts != null)
             {
@@ -53,7 +53,7 @@ namespace Nexify.Data.Repositories
 
         public async Task RemoveAsync(Guid id)
         {
-            var category = await _context.BlogCategory.FirstOrDefaultAsync(x => x.CategoryId == id);
+            var category = await _context.BlogCategory.FirstOrDefaultAsync(x => x.Id == id);
 
             var categoriesProducts = await _context.CategoriesProducts.FirstOrDefaultAsync(x => x.CategoriesId == id);
             _context.CategoriesProducts.Remove(categoriesProducts);
@@ -65,7 +65,7 @@ namespace Nexify.Data.Repositories
         public async Task UpdateAsync(BlogCategory category)
         {
             var categorySave = await _context.BlogCategory
-                .FirstOrDefaultAsync(x => x.CategoryId == category.CategoryId);
+                .FirstOrDefaultAsync(x => x.Id == category.Id);
             categorySave.CategoryName = category.CategoryName;
             categorySave.Description = category.Description;
             categorySave.ImageName = category.ImageName;

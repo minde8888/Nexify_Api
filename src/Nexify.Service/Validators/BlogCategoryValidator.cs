@@ -14,20 +14,12 @@ public class BlogCategoryDtoValidator : AbstractValidator<BlogCategoryDto>
             .MaximumLength(1000).WithMessage("Description cannot be longer than 1000 characters.");
 
         RuleFor(dto => dto.Image)
-            .Must(HaveValidImages).WithMessage("Image must be a valid file.");
-
-        RuleFor(dto => dto.PostId)
-            .NotEmpty().WithMessage("PostId is required.")
-            .NotEqual(Guid.Empty).WithMessage("Invalid PostId.");
+            .Must(HaveAtLeastOneImage).WithMessage("Image is required and must be a valid image file")
+            .When(dto => dto.Image != null);
     }
 
-    private bool HaveValidImages(List<IFormFile> images)
+    private bool HaveAtLeastOneImage(List<IFormFile> images)
     {
-        return images != null && images.All(IsImage);
-    }
-
-    private bool IsImage(IFormFile file)
-    {
-        return file.ContentType.StartsWith("image/");
+        return images != null && images.Count > 0;
     }
 }

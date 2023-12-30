@@ -6,7 +6,7 @@ namespace Nexify.Domain.Entities.Categories
     public class BlogCategory
     {
         [Key]
-        public Guid CategoryId { get; set; }
+        public Guid Id { get; set; }
         public string CategoryName { get; set; }
         public string Description { get; set; }
         public string ImageName { get; set; }
