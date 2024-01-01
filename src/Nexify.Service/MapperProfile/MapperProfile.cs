@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Nexify.Domain.Entities.Categories;
+using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Service.Dtos;
@@ -30,6 +31,7 @@ namespace Nexify.Service.MapperProfile
                 .ReverseMap();
             CreateMap<Product, CategoryProducts>().ReverseMap();
             CreateMap<BlogCategory, BlogCategoryDto>().ReverseMap();
+            CreateMap<PostRequest, Post>().ReverseMap();
         }
 
     }

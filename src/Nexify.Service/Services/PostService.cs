@@ -41,7 +41,7 @@ namespace Nexify.Service.Services
                 throw new PostValidationException(validationResult.Errors.ToString());
 
             var result = _mapper.Map<Post>(post);
-            result.PostId = Guid.NewGuid();
+            await _postRepository.AddAsync(result);
 
             if (post.Images?.Any() == true)
             {
@@ -49,8 +49,10 @@ namespace Nexify.Service.Services
                     Join(",", await _imagesService.
                     SaveImages(post.Images));
             }
-
-            await _postRepository.AddAsync(result);
+            if (post.CategoryId != null)
+            { 
+                await _postCategoriesRepository.AddItemCategoriesAsync(post.CategoryId, result.PostId);
+            }            
         }
 
         public async Task AddPostCategoriesAsync(PostCategories postCategories)

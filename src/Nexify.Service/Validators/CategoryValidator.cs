@@ -15,7 +15,7 @@ namespace Nexify.Service.Validators
             RuleFor(dto => dto.Description)
                 .MaximumLength(1000).WithMessage("Description cannot be longer than 1000 characters");
 
-            RuleFor(dto => dto.Image)
+            RuleFor(dto => dto.Images)
                 .Must(HaveAtLeastOneImage).WithMessage("Image is required and must be a valid image file");
 
             RuleFor(dto => dto.ImageName)

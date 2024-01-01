@@ -43,9 +43,9 @@ namespace Nexify.Service.Services
 
                 var category = _mapper.Map<Category>(categoryDto);
 
-                if (categoryDto.Image != null)
+                if (categoryDto.Images != null)
                 {
-                    foreach (var image in categoryDto.Image)
+                    foreach (var image in categoryDto.Images)
                     {
                         category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
                     }                    
@@ -159,9 +159,9 @@ namespace Nexify.Service.Services
 
             var mappedCategory = _mapper.Map<Category>(categoryDto);
 
-            if (categoryDto.Image != null)
+            if (categoryDto.Images != null)
             {
-                foreach (var image in categoryDto.Image)
+                foreach (var image in categoryDto.Images)
                 {
                     categoryDto.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
                 }
