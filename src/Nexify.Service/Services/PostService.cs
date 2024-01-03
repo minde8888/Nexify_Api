@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Nexify.Data.Repositories;
+using Nexify.Data.Helpers;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
-using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
@@ -36,9 +35,7 @@ namespace Nexify.Service.Services
         public async Task AddPostAsync(PostRequest post)
         {
             var validationResult = await new PostRequestValidator().ValidateAsync(post);
-
-            if (!validationResult.IsValid)
-                throw new PostValidationException(validationResult.Errors.ToString());
+            ValidationExceptionHelper.ThrowIfInvalid<PostValidationException>(validationResult);
 
             var result = _mapper.Map<Post>(post);
             await _postRepository.AddAsync(result);
@@ -50,17 +47,15 @@ namespace Nexify.Service.Services
                     SaveImages(post.Images));
             }
             if (post.CategoryId != null)
-            { 
+            {
                 await _postCategoriesRepository.AddItemCategoriesAsync(post.CategoryId, result.PostId);
-            }            
+            }
         }
 
         public async Task AddPostCategoriesAsync(PostCategories postCategories)
         {
             var validationResult = await new PostCategoriesValidator().ValidateAsync(postCategories);
-
-            if (!validationResult.IsValid)
-                throw new PostCategoriesValidationException(validationResult.Errors.ToString());
+            ValidationExceptionHelper.ThrowIfInvalid<PostCategoriesValidationException>(validationResult);
 
             await _postCategoriesRepository.AddItemCategoriesAsync(new Guid(postCategories.CategoryId), new Guid(postCategories.PostId));
         }
@@ -72,9 +67,7 @@ namespace Nexify.Service.Services
         {
 
             var validationResult = await new PaginationFilterValidator().ValidateAsync(filter);
-
-            if (!validationResult.IsValid)
-                throw new PaginationValidationException(validationResult.Errors.ToString());
+            ValidationExceptionHelper.ThrowIfInvalid<PostCategoriesValidationException>(validationResult);
 
             var validFilter = filter ?? new PaginationFilter();
             var result = await _postRepository.RetrieveAllAsync(validFilter);
@@ -115,10 +108,7 @@ namespace Nexify.Service.Services
         public async Task UpdatePostAsync(string contentRootPath, PostRequest post)
         {
             var validationResult = await new PostRequestValidator().ValidateAsync(post);
-            if (!validationResult.IsValid)
-            {
-                throw new ProductValidationException(validationResult.Errors.ToString());
-            }
+            ValidationExceptionHelper.ThrowIfInvalid<ProductValidationException>(validationResult);
 
             if (post.Images != null)
             {

@@ -72,6 +72,7 @@ namespace Nexify.Api
             services.AddTransient<IValidator<RequestToken>, RequestTokenValidator>();
             services.AddTransient<IValidator<SubcategoryDto>, SubcategoryValidator>();
             services.AddTransient<IValidator<BlogCategoryDto>, BlogCategoryDtoValidator>();
+            services.AddTransient<IValidator<PagedParams<Post>>, PagedParamsValidator<Post>>();
 
             services.AddSingleton<IUriService>(sp =>
             {

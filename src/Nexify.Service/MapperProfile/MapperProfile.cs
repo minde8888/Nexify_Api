@@ -32,6 +32,7 @@ namespace Nexify.Service.MapperProfile
             CreateMap<Product, CategoryProducts>().ReverseMap();
             CreateMap<BlogCategory, BlogCategoryDto>().ReverseMap();
             CreateMap<PostRequest, Post>().ReverseMap();
+            CreateMap<PostDto, Post>().ReverseMap();
         }
 
     }

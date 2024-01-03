@@ -28,7 +28,7 @@ namespace Nexify.Data.Repositories
                 .Take(validFilter.PageSize)
                 .ToListAsync();
 
-            var totalCount = await _context.Product.CountAsync();
+            var totalCount = await _context.Post.CountAsync();
 
             return new PagedResult<Post> { Items = pagedData, TotalCount = totalCount };
         }

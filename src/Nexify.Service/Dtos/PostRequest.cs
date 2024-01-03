@@ -6,7 +6,7 @@ namespace Nexify.Service.Dtos
     {
         public Guid PostId { get; set; }
         public string Title { get; set; }
-        public string Context { get; set; }
+        public string Content { get; set; }
         public List<IFormFile> Images { get; set; }
         public string ImageName { get; set; } = string.Empty;
         public Guid? CategoryId { get; set; } = null;

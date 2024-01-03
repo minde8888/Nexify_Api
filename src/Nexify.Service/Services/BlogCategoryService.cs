@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Nexify.Data.Helpers;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
@@ -34,15 +35,7 @@ namespace Nexify.Service.Services
             foreach (var categoryDto in categories)
             {
                 var validationResult = await new BlogCategoryDtoValidator().ValidateAsync(categoryDto);
-
-                if (!validationResult.IsValid)
-                {
-                    var validationErrors = validationResult.Errors
-                        .Select(error => $"{error.PropertyName}: {error.ErrorMessage}")
-                        .ToList();
-
-                    throw new CategoryValidationException(string.Join(Environment.NewLine, validationErrors));
-                }
+                ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
 
                 var category = _mapper.Map<BlogCategory>(categoryDto);
 
@@ -84,10 +77,7 @@ namespace Nexify.Service.Services
                 throw new CategoryException($"Invalid GUID: {id}");
 
             var validationResult = await new PaginationFilterValidator().ValidateAsync(filter);
-            if (!validationResult.IsValid)
-            {
-                throw new PaginationValidationException(validationResult.Errors.ToString());
-            }
+            ValidationExceptionHelper.ThrowIfInvalid<PaginationValidationException>(validationResult);
 
             var validFilter = filter ?? new PaginationFilter();
             var category = await _categoryRepository.GetAsync(guidId, validFilter);
@@ -144,9 +134,7 @@ namespace Nexify.Service.Services
         public async Task UpdateCategory(BlogCategoryDto categoryDto, string contentRootPath)
         {
             var validationResult = await new BlogCategoryDtoValidator().ValidateAsync(categoryDto);
-
-            if (!validationResult.IsValid)
-                throw new CategoryValidationException(validationResult.Errors.ToString());
+            ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
 
             var mappedCategory = _mapper.Map<BlogCategory>(categoryDto);
 

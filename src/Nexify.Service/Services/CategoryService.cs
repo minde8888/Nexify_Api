@@ -8,6 +8,7 @@ using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
+using Nexify.Data.Helpers;
 
 namespace Nexify.Service.Services
 {
@@ -37,9 +38,7 @@ namespace Nexify.Service.Services
             foreach (var categoryDto in categories)
             {
                 var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
-
-                if (!validationResult.IsValid)
-                    throw new CategoryValidationException(validationResult.Errors.ToString());
+                ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
 
                 var category = _mapper.Map<Category>(categoryDto);
 
@@ -48,7 +47,7 @@ namespace Nexify.Service.Services
                     foreach (var image in categoryDto.Images)
                     {
                         category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
-                    }                    
+                    }
                 }
 
                 await _categoryRepository.AddAsync(category);
@@ -93,10 +92,7 @@ namespace Nexify.Service.Services
                 throw new CategoryException($"Invalid GUID: {id}");
 
             var validationResult = await new PaginationFilterValidator().ValidateAsync(filter);
-            if (!validationResult.IsValid)
-            {
-                throw new PaginationValidationException(validationResult.Errors.ToString());
-            }
+            ValidationExceptionHelper.ThrowIfInvalid<PaginationValidationException>(validationResult);
 
             var validFilter = filter ?? new PaginationFilter();
             var category = await _categoryRepository.GetAsync(guidId, validFilter);
@@ -153,9 +149,7 @@ namespace Nexify.Service.Services
         public async Task UpdateCategory(CategoryDto categoryDto, string contentRootPath)
         {
             var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
-
-            if (!validationResult.IsValid)
-                throw new CategoryValidationException(validationResult.Errors.ToString());
+            ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
 
             var mappedCategory = _mapper.Map<Category>(categoryDto);
 

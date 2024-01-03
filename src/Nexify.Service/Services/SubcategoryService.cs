@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Nexify.Data.Helpers;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
@@ -29,9 +30,7 @@ namespace Nexify.Service.Services
             foreach (var subcategoryDto in subcategories)
             {
                 var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
-
-                if (!validationResult.IsValid)
-                    throw new SubcategoryValidationException(validationResult.Errors.ToString());
+                ValidationExceptionHelper.ThrowIfInvalid<SubcategoryValidationException>(validationResult);
 
                 var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
                 subcategory.CategoryId = categoryId;
@@ -58,8 +57,7 @@ namespace Nexify.Service.Services
         public async Task UpdateSubCategoryAsync(SubcategoryDto subcategoryDto, string rootPath)
         {
             var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
-            if (!validationResult.IsValid)
-                throw new SubcategoryValidationException(validationResult.Errors.ToString());
+            ValidationExceptionHelper.ThrowIfInvalid<SubcategoryValidationException>(validationResult);
 
             var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
 

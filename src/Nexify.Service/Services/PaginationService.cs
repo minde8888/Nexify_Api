@@ -2,20 +2,17 @@
 using Nexify.Domain.Exceptions;
 using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
+using Nexify.Data.Helpers;
 
 namespace Nexify.Service.Services
 {
     public static class PaginationService
-    {        public static PagedResponse<List<T>> CreatePagedResponse<T>(PagedParams<T> pageParams)
+    {
+        public static PagedResponse<List<T>> CreatePagedResponse<T>(PagedParams<T> pageParams)
         {
-
             var validator = new PagedParamsValidator<T>();
             var validationResult = validator.Validate(pageParams);
-
-            if (!validationResult.IsValid)
-            {
-                throw new PagedResponseException(validationResult.Errors.ToString());
-            }
+            ValidationExceptionHelper.ThrowIfInvalid<PagedResponseException>(validationResult);
 
             var validFilter = pageParams.ValidFilter;
             var pagedData = pageParams.PagedData;

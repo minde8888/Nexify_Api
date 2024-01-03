@@ -6,6 +6,7 @@ using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
+using Nexify.Data.Helpers;
 
 namespace Nexify.Service.Services
 {
@@ -37,9 +38,7 @@ namespace Nexify.Service.Services
         public async Task AddProductAsync(ProductRequest product)
         {
             var validationResult = await new ProductRequestValidator().ValidateAsync(product);
-
-            if (!validationResult.IsValid)
-                throw new ProductValidationException(validationResult.Errors.ToString());
+            ValidationExceptionHelper.ThrowIfInvalid<ProductValidationException>(validationResult);
 
             var result = _mapper.Map<Product>(product);
             result.ProductId = Guid.NewGuid();
@@ -57,9 +56,7 @@ namespace Nexify.Service.Services
         public async Task AddProductCategoriesAsync(ProductCategories productCategories)
         {
             var validationResult = await new ProductCategoriesValidator().ValidateAsync(productCategories);
-
-            if (!validationResult.IsValid)
-                throw new ProductCategoriesValidationException(validationResult.Errors.ToString());
+            ValidationExceptionHelper.ThrowIfInvalid<ProductCategoriesValidationException>(validationResult);
 
             await _productCategoriesRepository.AddItemCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId));
         }
@@ -79,9 +76,7 @@ namespace Nexify.Service.Services
         {
 
             var validationResult = await new PaginationFilterValidator().ValidateAsync(filter);
-
-            if (!validationResult.IsValid)
-                throw new PaginationValidationException(validationResult.Errors.ToString());
+            ValidationExceptionHelper.ThrowIfInvalid<PaginationValidationException>(validationResult);
 
             var validFilter = filter ?? new PaginationFilter();
             var result = await _productsRepository.FetchAllAsync(validFilter);
@@ -125,10 +120,7 @@ namespace Nexify.Service.Services
         public async Task UpdateProductAsync(string contentRootPath, ProductUpdate product)
         {
             var validationResult = await new ProductUpdateValidator().ValidateAsync(product);
-            if (!validationResult.IsValid)
-            {
-                throw new ProductValidationException(validationResult.Errors.ToString());
-            }
+            ValidationExceptionHelper.ThrowIfInvalid<PaginationValidationException>(validationResult);
 
             if (product.Images != null)
             {
