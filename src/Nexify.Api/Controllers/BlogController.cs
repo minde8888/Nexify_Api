@@ -62,10 +62,10 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("id")]
         [AllowAnonymous]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult> DeleteProductAsync(string id)
+        public async Task<ActionResult> DeleteProductAsync([FromQuery] string id)
         {
             await _postService.RemovePostAsync(id);
             return Ok();

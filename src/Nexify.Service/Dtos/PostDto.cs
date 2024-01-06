@@ -10,6 +10,6 @@ namespace Nexify.Service.Dtos
         public ICollection<string> ImageSrc { get; set; }
         public string ImageName { get; set; } = string.Empty;
         public DateTime DateCreated { get; set; }
-        public ICollection<BlogCategory> Categories { get; set; }
+        public ICollection<BlogCategoryDto> Categories { get; set; }
     }
 }

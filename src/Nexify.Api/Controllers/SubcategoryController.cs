@@ -37,9 +37,9 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> Delete([FromQuery]  string id)
         {
             await _subcategoryService.DeleteSubCategoryAsync(id);
             return Ok();

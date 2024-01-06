@@ -8,7 +8,7 @@ namespace Nexify.Service.Validators
         public PaginationFilterValidator()
         {
             RuleFor(x => x.PageNumber).GreaterThan(0);
-            RuleFor(x => x.PageSize).InclusiveBetween(1, 10);
+            RuleFor(x => x.PageSize).InclusiveBetween(1, 100);
         }
     }
 }
