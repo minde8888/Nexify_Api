@@ -4,7 +4,7 @@ namespace Nexify.Domain.Entities.Posts
 {
     public class Post
     {
-        public Guid PostId { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public string ImageName { get; set; } = string.Empty;

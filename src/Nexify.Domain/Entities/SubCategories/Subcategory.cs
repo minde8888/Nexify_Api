@@ -12,6 +12,7 @@ namespace Nexify.Domain.Entities.Subcategories
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
         public List<Product> Products { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DateUpdated { get; set; }
     }

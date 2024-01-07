@@ -56,7 +56,7 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("id")]
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string id)
         {
@@ -64,11 +64,11 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete/subcategory/{id}")]
-        public async Task<ActionResult> DeleteSubcategory(string id)
-        {
-            await _categoryService.RemoveSubcategoryByIdAsync(id);
-            return Ok();
-        }
+        //[HttpDelete("delete/subcategory/{id}")]
+        //public async Task<ActionResult> DeleteSubcategory(string id)
+        //{
+        //    await _categoryService.RemoveSubcategoryByIdAsync(id);
+        //    return Ok();
+        //}
     }
 }

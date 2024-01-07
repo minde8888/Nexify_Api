@@ -48,7 +48,7 @@ namespace Nexify.Service.Services
             }
             if (post.CategoryId != null)
             {
-                await _postCategoriesRepository.AddItemCategoriesAsync(post.CategoryId, result.PostId);
+                await _postCategoriesRepository.AddItemCategoriesAsync(post.CategoryId, result.Id);
             }
         }
 
@@ -154,7 +154,7 @@ namespace Nexify.Service.Services
             var imageUrls = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToList();
             return new PostDto
             {
-                PostId = post.PostId,
+                Id = post.Id,
                 Title = post.Title,
                 Content = post.Content,
                 DateCreated = post.DateCreated,

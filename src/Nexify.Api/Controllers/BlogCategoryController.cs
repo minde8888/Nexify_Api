@@ -55,7 +55,7 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("id")]
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string id)
         {

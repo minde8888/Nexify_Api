@@ -37,7 +37,7 @@ namespace Nexify.Data.Repositories
         public async Task DeleteAsync(Guid id)
         {
             var post = await _context.Post.
-                Where(x => x.PostId == id).FirstOrDefaultAsync();
+                Where(x => x.Id == id).FirstOrDefaultAsync();
 
             post.IsDeleted = true;
             await _context.SaveChangesAsync();
@@ -47,13 +47,13 @@ namespace Nexify.Data.Repositories
         {
             return await _context.Post.
                Include(c => c.Categories).
-               Where(x => x.PostId == id).FirstOrDefaultAsync();
+               Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task ModifyAsync(Post post)
         {
             var currentPost = await _context.Post
-                .FirstOrDefaultAsync(p => p.PostId == post.PostId);
+                .FirstOrDefaultAsync(p => p.Id == post.Id);
 
             currentPost.Title = post.Title;
             currentPost.Content = post.Content;

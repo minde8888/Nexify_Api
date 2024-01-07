@@ -54,7 +54,7 @@ namespace Nexify.Service.Services
 
                 if (categoryDto.Subcategories != null)
                 {
-                    await _subcategoryService.AddSubCategoryAsync(categoryDto.Subcategories, category.CategoryId);
+                    await _subcategoryService.AddSubCategoryAsync(categoryDto.Subcategories, category.Id);
                 }
             }
         }

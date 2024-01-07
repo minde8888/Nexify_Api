@@ -32,7 +32,7 @@ namespace Nexify.Data.Repositories
             var currentProduct = await _context.Subcategory
             .FirstOrDefaultAsync(p => p.SubcategoryId == id);
 
-            _context.Remove(_context.Subcategory.FirstOrDefaultAsync(p => p.SubcategoryId == id));
+            currentProduct.IsDeleted = true;
             _context.SaveChanges();
         }
 

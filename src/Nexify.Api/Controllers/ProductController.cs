@@ -8,7 +8,7 @@ using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductController : Controller
@@ -74,7 +74,7 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("id")]
         [AllowAnonymous]
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteProductAsync(string id)
@@ -91,7 +91,7 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete/subcategory/{id}")]
+        [HttpDelete("subcategory/{id}")]
         [AllowAnonymous]
         public async Task<ActionResult> DeleteProductSubcategoriesAsync(string productId, string subcategoryId)
         {
