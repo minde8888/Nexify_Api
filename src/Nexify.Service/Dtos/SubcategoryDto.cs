@@ -4,10 +4,10 @@ namespace Nexify.Service.Dtos
 {
     public class SubcategoryDto
     {
-        public Guid SubcategoryId { get; set; }
-        public string SubCategoryName { get; set; }
+        public Guid Id { get; set; }
+        public string CategoryName { get; set; }
         public string Description { get; set; }
-        public IFormFile Image { get; set; }
+        public List<IFormFile> Images { get; set; }
         public string ImageName { get; set; } = string.Empty;
         public Guid ProductsId { get; set; }
     }

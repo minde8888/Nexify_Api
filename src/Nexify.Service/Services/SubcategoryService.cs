@@ -35,9 +35,9 @@ namespace Nexify.Service.Services
                 var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
                 subcategory.CategoryId = categoryId;
 
-                if (subcategoryDto.Image != null)
+                if (subcategoryDto.Images != null)
                 {
-                    subcategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { subcategoryDto.Image });
+                    subcategory.ImageName = await _imagesService.SaveImages(subcategoryDto.Images);
                 }
 
                 await _subcategoryRepository.AddAsync(subcategory);               
@@ -61,9 +61,9 @@ namespace Nexify.Service.Services
 
             var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
 
-            if (subcategoryDto.Image != null)
+            if (subcategoryDto.Images != null)
             {
-                subcategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { subcategoryDto.Image });
+                subcategory.ImageName = await _imagesService.SaveImages(subcategoryDto.Images);
                 var imagePath = Path.Combine(rootPath, "Images", subcategoryDto.ImageName);
                 await _imagesService.DeleteImageAsync(imagePath);
             }

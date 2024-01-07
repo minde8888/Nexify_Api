@@ -30,7 +30,7 @@ namespace Nexify.Api.Controllers
         }
 
         [HttpPut("Update")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update([FromForm] SubcategoryDto subcategory)
         {
             await _subcategoryService.UpdateSubCategoryAsync(subcategory, _hostEnvironment.ContentRootPath);
