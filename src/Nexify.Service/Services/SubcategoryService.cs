@@ -51,7 +51,7 @@ namespace Nexify.Service.Services
 
             var subcategory = await _subcategoryRepository.GetAsync(Guid.Parse(id));
 
-            return MapProduct(subcategory, imageSrc);
+            return MapSubcategory(subcategory, imageSrc);
         }
 
         public async Task UpdateSubCategoryAsync(SubcategoryDto subcategoryDto, string rootPath)
@@ -79,7 +79,7 @@ namespace Nexify.Service.Services
             await _subcategoryRepository.RemoveAsync(Guid.Parse(id));
         }
 
-        private SubcategoryResponse MapProduct(Subcategory subcategory, string imageSrc)
+        private SubcategoryResponse MapSubcategory(Subcategory subcategory, string imageSrc)
         {
             if (subcategory.ImageName == null)
                 throw new ProductException("Product image name can't be null");
@@ -90,7 +90,7 @@ namespace Nexify.Service.Services
 
             return new SubcategoryResponse
             {
-                SubCategoryId = subcategory.SubcategoryId,
+                Id = subcategory.SubcategoryId,
                 SubCategoryName = subcategory.SubCategoryName,
                 Description = subcategory.Description,
                 ImageSrc = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToString(),

@@ -42,7 +42,7 @@ namespace Nexify.Data.Repositories
                 .FirstOrDefaultAsync(p => p.SubcategoryId == subcategory.SubcategoryId);
 
             currentProduct.Description = subcategory.Description;
-            currentProduct.SubCategoryName = subcategory.Description;
+            currentProduct.SubCategoryName = subcategory.SubCategoryName;
             currentProduct.ImageName = subcategory.ImageName;
             currentProduct.DateUpdated = DateTime.UtcNow;
 

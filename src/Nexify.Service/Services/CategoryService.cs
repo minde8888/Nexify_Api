@@ -65,15 +65,17 @@ namespace Nexify.Service.Services
 
             foreach (var category in categories)
             {
-                category.ImageName = !string.IsNullOrEmpty(category.ImageName) ?
+                category.ImageName = !string.IsNullOrEmpty(category.ImageName) 
+                    && category.ImageName.ToLower() != "null" ?
                     $"{imageSrc}/Images/{category.ImageName}" :
-                    null;
+                    "";
 
                 foreach (var subcategory in category.Subcategories)
                 {
-                    subcategory.ImageName = !string.IsNullOrEmpty(subcategory.ImageName) ?
+                    subcategory.ImageName = !string.IsNullOrEmpty(subcategory.ImageName) 
+                        && subcategory.ImageName.ToLower() != "null" ?
                         $"{imageSrc}/Images/{subcategory.ImageName}" :
-                        null;
+                        "";
                 }
             }
 
@@ -157,7 +159,7 @@ namespace Nexify.Service.Services
             {
                 foreach (var image in categoryDto.Images)
                 {
-                    categoryDto.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
+                    mappedCategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
                 }
                 var imagePath = Path.Combine(contentRootPath, "Images", categoryDto.ImageName);
                 await _imagesService.DeleteImageAsync(imagePath);

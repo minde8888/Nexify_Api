@@ -34,8 +34,8 @@ namespace Nexify.Api.Controllers
         public async Task<ActionResult<List<CategoryResponse>>> GetAll()
         {
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var productsInCategory = await _categoryService.GetAllCategoriesAsync(imageSrc);
-            return Ok(productsInCategory);
+            var categories = await _categoryService.GetAllCategoriesAsync(imageSrc);
+            return Ok(categories);
         }
 
         [HttpGet("id")]
@@ -44,8 +44,8 @@ namespace Nexify.Api.Controllers
         {
             var route = Request.Path.Value;
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var productsInCategory = await _categoryService.GetCategoryAsync(filter, id, route, imageSrc);
-            return Ok(productsInCategory);
+            var category = await _categoryService.GetCategoryAsync(filter, id, route, imageSrc);
+            return Ok(category);
         }
 
         [HttpPut("update")]
