@@ -1,9 +1,4 @@
 ﻿using Nexify.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nexify.Domain.Entities.Pagination
 {
@@ -27,7 +22,7 @@ namespace Nexify.Domain.Entities.Pagination
             if (pageSize <= 0)
                 throw new PaginationException("Page number must be greater than zero.");
 
-            if (totalPages <= 0)
+            if (totalPages < 0)
                 throw new PaginationException("Total page number must be greater than zero.");
 
             this.PageNumber = pageNumber;

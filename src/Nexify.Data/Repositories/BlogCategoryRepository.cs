@@ -70,6 +70,7 @@ namespace Nexify.Data.Repositories
             categorySave.CategoryName = category.CategoryName;
             categorySave.Description = category.Description;
             categorySave.ImageName = category.ImageName;
+            categorySave.DateUpdated = DateTime.UtcNow;
 
             _context.Entry(categorySave).State = EntityState.Modified;
             await _context.SaveChangesAsync();

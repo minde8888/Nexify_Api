@@ -12,7 +12,13 @@ namespace Nexify.Service.Services
         {
             var validator = new PagedParamsValidator<T>();
             var validationResult = validator.Validate(pageParams);
-            ValidationExceptionHelper.ThrowIfInvalid<PagedResponseException>(validationResult);
+
+            if (!validationResult.IsValid &&
+                !(pageParams.PagedData == null || !pageParams.PagedData.Any()) &&
+                pageParams.TotalRecords > 0)
+            {
+                ValidationExceptionHelper.ThrowIfInvalid<PagedResponseException>(validationResult);
+            }
 
             var validFilter = pageParams.ValidFilter;
             var pagedData = pageParams.PagedData;

@@ -1,5 +1,4 @@
-﻿
-namespace Nexify.Domain.Entities.Pagination
+﻿namespace Nexify.Domain.Entities.Pagination
 {
     public class PagedEntityResult<T>
     {

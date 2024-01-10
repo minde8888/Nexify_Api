@@ -22,11 +22,11 @@ namespace Nexify.Data.Repositories
         }
 
         public async Task<List<Category>> GetAllAsync()
-        {
-            return await _context.Category
-                .Include(s => s.Subcategories)
-                .ToListAsync();
-        }
+           => await _context.Category
+               .Include(s => s.Subcategories)
+               .ToListAsync()
+               .ConfigureAwait(false);
+
 
         public async Task<PagedEntityResult<Category>> GetAsync(Guid id, PaginationFilter validFilter)
         {
@@ -80,6 +80,7 @@ namespace Nexify.Data.Repositories
                     categorySave.CategoryName = category.CategoryName;
                     categorySave.Description = category.Description;
                     categorySave.ImageName = category.ImageName;
+                    categorySave.DateUpdated = DateTime.UtcNow;
 
             _context.Entry(categorySave).State = EntityState.Modified;
             await _context.SaveChangesAsync();
