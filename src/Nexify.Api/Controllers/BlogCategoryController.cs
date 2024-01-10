@@ -48,7 +48,7 @@ namespace Nexify.Api.Controllers
         }
 
         //[Authorize(Roles = "Admin")]
-        [HttpPut("update")]
+        [HttpPut]
         public async Task<ActionResult> Update([FromForm] BlogCategoryDto category)
         {
             await _categoryService.UpdateCategory(category, _hostEnvironment.ContentRootPath);

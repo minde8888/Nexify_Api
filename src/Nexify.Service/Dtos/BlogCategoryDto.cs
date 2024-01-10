@@ -8,6 +8,6 @@ namespace Nexify.Service.Dtos
         public string CategoryName { get; set; }
         public string Description { get; set; }
         public List<IFormFile> Images { get; set; }
-        public string ImageName { get; set; } = string.Empty;
+        public string ImageSrc { get; set; } = string.Empty;
     }
 }

@@ -49,7 +49,7 @@ namespace Nexify.Service.Services
 
             foreach (var category in categories)
             {
-                category.ImageName = _imagesService.ProcessImages(category.ImageName, imageSrc);
+                category.ImageName = _imagesService.ProcessImages(category, imageSrc);
             }
 
             var mappedCategories = _mapper.Map<List<BlogCategoryDto>>(categories);
@@ -129,7 +129,7 @@ namespace Nexify.Service.Services
             var processedCategory = await _imagesService.MapAndProcessObjectAsync<BlogCategoryDto, BlogCategory>(
                   categoryDto,
                   obj => obj.Images,
-                  obj => obj.ImageName,
+                  obj => obj.ImageSrc,
                   (obj, imageName) => Path.Combine("Images", imageName),
                   contentRootPath
               );
