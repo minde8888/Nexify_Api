@@ -2,24 +2,27 @@
 using Microsoft.AspNetCore.Http;
 using Nexify.Service.Dtos;
 
-public class BlogCategoryDtoValidator : AbstractValidator<BlogCategoryDto>
+namespace Nexify.Service.Validators
 {
-    public BlogCategoryDtoValidator()
+    public class BlogCategoryDtoValidator : AbstractValidator<BlogCategoryDto>
     {
-        RuleFor(dto => dto.CategoryName)
-            .NotEmpty().WithMessage("CategoryName is required.")
-            .MaximumLength(255).WithMessage("CategoryName cannot be longer than 255 characters.");
+        public BlogCategoryDtoValidator()
+        {
+            RuleFor(dto => dto.CategoryName)
+                .NotEmpty().WithMessage("CategoryName is required.")
+                .MaximumLength(255).WithMessage("CategoryName cannot be longer than 255 characters.");
 
-        RuleFor(dto => dto.Description)
-            .MaximumLength(1000).WithMessage("Description cannot be longer than 1000 characters.");
+            RuleFor(dto => dto.Description)
+                .MaximumLength(1000).WithMessage("Description cannot be longer than 1000 characters.");
 
-        RuleFor(dto => dto.Image)
-            .Must(HaveAtLeastOneImage).WithMessage("Image is required and must be a valid image file")
-            .When(dto => dto.Image != null);
-    }
+            RuleFor(dto => dto.Images)
+                .Must(HaveAtLeastOneImageOrNull).WithMessage("Image must be a valid image file");
+        }
 
-    private bool HaveAtLeastOneImage(List<IFormFile> images)
-    {
-        return images != null && images.Count > 0;
+        private bool HaveAtLeastOneImageOrNull(List<IFormFile> images)
+        {
+            return images == null || (images.Count > 0 && images.All(image => image != null));
+        }
     }
 }
+

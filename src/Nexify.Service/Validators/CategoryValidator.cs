@@ -23,7 +23,7 @@ namespace Nexify.Service.Validators
 
         }
 
-        private bool HaveAtLeastOneImageOrNull(List<IFormFile>? images)
+        private bool HaveAtLeastOneImageOrNull(List<IFormFile> images)
         {
             return images == null || (images.Count > 0 && images.All(image => image != null));
         }

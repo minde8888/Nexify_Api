@@ -23,7 +23,7 @@ namespace Nexify.Service.Validators
                 .MaximumLength(255).WithMessage("ImageName cannot be longer than 255 characters");
         }
 
-        private bool HaveAtLeastOneImageOrNull(List<IFormFile>? images)
+        private bool HaveAtLeastOneImageOrNull(List<IFormFile> images)
         {
             return images == null || (images.Count > 0 && images.All(image => image != null));
         }

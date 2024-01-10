@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Products;
@@ -40,15 +39,7 @@ namespace Nexify.Service.Services
                 var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
                 ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
 
-                var category = _mapper.Map<Category>(categoryDto);
-
-                if (categoryDto.Images != null)
-                {
-                    foreach (var image in categoryDto.Images)
-                    {
-                        category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
-                    }
-                }
+                var category = await _imagesService.MapAndSaveImages<CategoryDto, Category>(categoryDto, categoryDto.Images);
 
                 await _categoryRepository.AddAsync(category);
 
@@ -65,17 +56,11 @@ namespace Nexify.Service.Services
 
             foreach (var category in categories)
             {
-                category.ImageName = !string.IsNullOrEmpty(category.ImageName) 
-                    && category.ImageName.ToLower() != "null" ?
-                    $"{imageSrc}/Images/{category.ImageName}" :
-                    "";
+                category.ImageName = _imagesService.ProcessImages(category, imageSrc);
 
                 foreach (var subcategory in category.Subcategories)
                 {
-                    subcategory.ImageName = !string.IsNullOrEmpty(subcategory.ImageName) 
-                        && subcategory.ImageName.ToLower() != "null" ?
-                        $"{imageSrc}/Images/{subcategory.ImageName}" :
-                        "";
+                    subcategory.ImageName = _imagesService.ProcessImages(subcategory, imageSrc);
                 }
             }
 
@@ -153,19 +138,15 @@ namespace Nexify.Service.Services
             var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
             ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
 
-            var mappedCategory = _mapper.Map<Category>(categoryDto);
+            var processedCategory = await _imagesService.MapAndProcessObjectAsync<CategoryDto, Category>(
+                categoryDto,
+                obj => obj.Images,
+                obj => obj.ImageName,
+                (obj, imageName) => Path.Combine("Images", imageName),
+                contentRootPath
+            );
 
-            if (categoryDto.Images != null)
-            {
-                foreach (var image in categoryDto.Images)
-                {
-                    mappedCategory.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
-                }
-                var imagePath = Path.Combine(contentRootPath, "Images", categoryDto.ImageName);
-                await _imagesService.DeleteImageAsync(imagePath);
-            }
-
-            await _categoryRepository.UpdateAsync(mappedCategory);
+            await _categoryRepository.UpdateAsync(processedCategory);
         }
 
         public async Task RemoveCategoryAsync(string id)

@@ -37,15 +37,7 @@ namespace Nexify.Service.Services
                 var validationResult = await new BlogCategoryDtoValidator().ValidateAsync(categoryDto);
                 ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
 
-                var category = _mapper.Map<BlogCategory>(categoryDto);
-
-                if (categoryDto.Image != null)
-                {
-                    foreach (var image in categoryDto.Image)
-                    {
-                        category.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
-                    }
-                }
+                var category = await _imagesService.MapAndSaveImages<BlogCategoryDto, BlogCategory>(categoryDto, categoryDto.Images);
 
                 await _categoryRepository.AddAsync(category);
             }
@@ -57,9 +49,7 @@ namespace Nexify.Service.Services
 
             foreach (var category in categories)
             {
-                category.ImageName = !string.IsNullOrEmpty(category.ImageName) ?
-                    $"{imageSrc}/Images/{category.ImageName}" :
-                    null;
+                category.ImageName = _imagesService.ProcessImages(category.ImageName, imageSrc);
             }
 
             var mappedCategories = _mapper.Map<List<BlogCategoryDto>>(categories);
@@ -136,19 +126,15 @@ namespace Nexify.Service.Services
             var validationResult = await new BlogCategoryDtoValidator().ValidateAsync(categoryDto);
             ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
 
-            var mappedCategory = _mapper.Map<BlogCategory>(categoryDto);
+            var processedCategory = await _imagesService.MapAndProcessObjectAsync<BlogCategoryDto, BlogCategory>(
+                  categoryDto,
+                  obj => obj.Images,
+                  obj => obj.ImageName,
+                  (obj, imageName) => Path.Combine("Images", imageName),
+                  contentRootPath
+              );
 
-            if (categoryDto.Image != null)
-            {
-                foreach (var image in categoryDto.Image)
-                {
-                    categoryDto.ImageName = await _imagesService.SaveImages(new List<IFormFile> { image });
-                }
-                var imagePath = Path.Combine(contentRootPath, "Images", categoryDto.ImageName);
-                await _imagesService.DeleteImageAsync(imagePath);
-            }
-
-            await _categoryRepository.UpdateAsync(mappedCategory);
+            await _categoryRepository.UpdateAsync(processedCategory);
         }
 
         public async Task RemoveCategoryAsync(string id)

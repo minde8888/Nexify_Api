@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Nexify.Data.Helpers;
+﻿using Nexify.Data.Helpers;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
@@ -11,16 +9,13 @@ namespace Nexify.Service.Services
 {
     public class SubcategoryService
     {
-        private readonly IMapper _mapper;
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IImagesService _imagesService;
 
         public SubcategoryService(
-                       IMapper mapper,
-                                  ISubcategoryRepository subcategoryRepository,
-                                                    IImagesService imagesService)
+                            ISubcategoryRepository subcategoryRepository,
+                                            IImagesService imagesService)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _subcategoryRepository = subcategoryRepository ?? throw new ArgumentNullException(nameof(subcategoryRepository));
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
         }
@@ -32,15 +27,10 @@ namespace Nexify.Service.Services
                 var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
                 ValidationExceptionHelper.ThrowIfInvalid<SubcategoryValidationException>(validationResult);
 
-                var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
+                var subcategory = await _imagesService.MapAndSaveImages<SubcategoryDto, Subcategory>(subcategoryDto, subcategoryDto.Images);
                 subcategory.CategoryId = categoryId;
 
-                if (subcategoryDto.Images != null)
-                {
-                    subcategory.ImageName = await _imagesService.SaveImages(subcategoryDto.Images);
-                }
-
-                await _subcategoryRepository.AddAsync(subcategory);               
+                await _subcategoryRepository.AddAsync(subcategory);
             }
         }
 
@@ -59,16 +49,14 @@ namespace Nexify.Service.Services
             var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
             ValidationExceptionHelper.ThrowIfInvalid<SubcategoryValidationException>(validationResult);
 
-            var subcategory = _mapper.Map<Subcategory>(subcategoryDto);
-
-            if (subcategoryDto.Images != null)
-            {
-                subcategory.ImageName = await _imagesService.SaveImages(subcategoryDto.Images);
-                var imagePath = Path.Combine(rootPath, "Images", subcategoryDto.ImageName);
-                await _imagesService.DeleteImageAsync(imagePath);
-            }
-
-            await _subcategoryRepository.UpdateAsync(subcategory);
+            var processedSubcategory = await _imagesService.MapAndProcessObjectAsync<SubcategoryDto, Subcategory>(
+                subcategoryDto,
+                obj => obj.Images,
+                obj => obj.ImageName,
+                (obj, imageName) => Path.Combine("Images", imageName),
+                rootPath
+);
+            await _subcategoryRepository.UpdateAsync(processedSubcategory);
         }
 
         public async Task DeleteSubCategoryAsync(string id)

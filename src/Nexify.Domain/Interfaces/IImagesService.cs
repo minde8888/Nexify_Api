@@ -1,11 +1,18 @@
-﻿
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Nexify.Domain.Interfaces
 {
     public interface IImagesService
     {
-        public Task<string> SaveImages(List<IFormFile> imageFiles);
-        public Task DeleteImageAsync(string imagePath);
+        Task<string> SaveImages(List<IFormFile> imageFiles);
+        Task DeleteImageAsync(string imagePath);
+        Task<TDestination> MapAndProcessObjectAsync<TSource, TDestination>(
+            TSource sourceObject,
+            Func<TSource, IEnumerable<IFormFile>> imagePropertySelector,
+            Func<TSource, string> imagePathSelector,
+            Func<TSource, string, string> imagePathProcessor,
+            string contentRootPath);
+        Task<TDestination> MapAndSaveImages<TSource, TDestination>(TSource sourceObject, List<IFormFile> images);
+        string ProcessImages<T>(T obj, string imageSrc);
     }
 }

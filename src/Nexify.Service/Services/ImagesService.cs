@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
 
@@ -6,6 +7,11 @@ namespace Nexify.Service.Services
 {
     public class ImagesService : IImagesService
     {
+        private readonly IMapper _mapper;
+        public ImagesService(IMapper mapper)
+        {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
         public async Task<string> SaveImages(List<IFormFile> imageFiles)
         {
             if (imageFiles == null)
@@ -56,5 +62,84 @@ namespace Nexify.Service.Services
                 await Task.Run(() => File.Delete(imagePath));
             }
         }
+
+        public async Task<TDestination> MapAndProcessObjectAsync<TSource, TDestination>(
+           TSource sourceObject,
+           Func<TSource, IEnumerable<IFormFile>> imagePropertySelector,
+           Func<TSource, string> imagePathSelector,
+           Func<TSource, string, string> imagePathProcessor,
+           string contentRootPath)
+        {
+            var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
+
+            var images = imagePropertySelector(sourceObject);
+
+            if (images != null)
+            {
+                foreach (var image in images)
+                {
+                    var imageName = await SaveImages(new List<IFormFile> { image });
+                    SetImageNameProperty(mappedObject, imageName);
+
+                    if (!string.IsNullOrEmpty(contentRootPath))
+                    {
+                        var fullPath = Path.Combine(contentRootPath, contentRootPath, imageName);
+                        await DeleteImageAsync(fullPath);
+                    }
+                }
+            }
+            return mappedObject;
+        }
+
+        public async Task<TDestination> MapAndSaveImages<TSource, TDestination>(TSource sourceObject, List<IFormFile> images)
+        {
+            var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
+
+            if (images != null)
+            {
+                foreach (var image in images)
+                {
+                    var imageSaveResult = await SaveImages(new List<IFormFile> { image });
+                    SetImageNameProperty(mappedObject, imageSaveResult);
+                }
+            }
+
+            return mappedObject;
+        }
+
+        public string ProcessImages<T>(T obj, string imageSrc) 
+        {
+            var propertyName = "ImageName";
+            var propertyInfo = typeof(T).GetProperty(propertyName);
+
+            if (propertyInfo != null)
+            {
+                var propertyValue = (string)propertyInfo.GetValue(obj);
+                var modifiedUrl = !string.IsNullOrEmpty(propertyValue)
+                    && propertyValue.ToLower() != "null" ?
+                    $"{imageSrc}/Images/{propertyValue}" :
+                    "";
+
+                propertyInfo.SetValue(obj, modifiedUrl);
+
+                return modifiedUrl;
+            }
+
+            return string.Empty;
+        }
+
+        private void SetImageNameProperty<TDestination>(TDestination obj, string imageName)
+        {
+            var property = typeof(TDestination).GetProperty("ImageName");
+            if (property != null && property.PropertyType == typeof(string))
+            {
+                property.SetValue(obj, imageName);
+            }
+            else
+            {
+                throw new FileException("ImageName property not found.");
+            }
+        }
+
     }
 }

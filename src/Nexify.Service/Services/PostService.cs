@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Nexify.Data.Helpers;
+using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Exceptions;
@@ -37,15 +38,9 @@ namespace Nexify.Service.Services
             var validationResult = await new PostRequestValidator().ValidateAsync(post);
             ValidationExceptionHelper.ThrowIfInvalid<PostValidationException>(validationResult);
 
-            var result = _mapper.Map<Post>(post);
+            var result = await _imagesService.MapAndSaveImages<PostRequest, Post>(post, post.Images);
             await _postRepository.AddAsync(result);
 
-            if (post.Images?.Any() == true)
-            {
-                result.ImageName = string.
-                    Join(",", await _imagesService.
-                    SaveImages(post.Images));
-            }
             if (post.CategoryId != null)
             {
                 await _postCategoriesRepository.AddItemCategoriesAsync(post.CategoryId, result.Id);
@@ -110,20 +105,15 @@ namespace Nexify.Service.Services
             var validationResult = await new PostRequestValidator().ValidateAsync(post);
             ValidationExceptionHelper.ThrowIfInvalid<ProductValidationException>(validationResult);
 
-            if (post.Images != null)
-            {
-                var imagesNames = post.ImageName.Split(',');
-                foreach (var imageName in imagesNames)
-                {
-                    var imagePath = Path.Combine(contentRootPath, "Images", imageName);
-                    await _imagesService.DeleteImageAsync(imagePath);
-                }
+            var processedPost = await _imagesService.MapAndProcessObjectAsync<PostRequest, Post>(
+                    post,
+                    obj => obj.Images,
+                    obj => obj.ImageName,
+                    (obj, imageName) => Path.Combine("Images", imageName),
+                    contentRootPath
+                );
 
-                post.ImageName = await _imagesService.SaveImages(post.Images);
-            }
-
-            var result = _mapper.Map<Post>(post);
-            await _postRepository.ModifyAsync(result);
+            await _postRepository.ModifyAsync(processedPost);
         }
 
         public async Task RemovePostAsync(string id)
@@ -168,16 +158,16 @@ namespace Nexify.Service.Services
 
             var result = pagedPosts.Data.Select(post =>
             {
-                var productDto = _mapper.Map<PostDto>(post);
+                var postDto = _mapper.Map<PostDto>(post);
 
                 if (!string.IsNullOrEmpty(post.ImageName))
                 {
                     var imageNames = post.ImageName.Split(',', StringSplitOptions.RemoveEmptyEntries);
                     var imageSrcs = imageNames.Select(name => $"{imageSrc}/Images/{name.Trim()}");
-                    productDto.ImageSrc = imageSrcs.ToList();
+                    postDto.ImageSrc = imageSrcs.ToList();
                 }
 
-                return productDto;
+                return postDto;
             }).ToList();
 
             return result;
