@@ -11,12 +11,12 @@ namespace Nexify.Api.Controllers
     [ApiController]
     public class BlogController : Controller
     {
-        private readonly PostService _postService;
+        private readonly BlogService _blogService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public BlogController(PostService postService, IWebHostEnvironment hostEnvironment)
+        public BlogController(BlogService postService, IWebHostEnvironment hostEnvironment)
         {
-            _postService = postService ?? throw new ArgumentNullException(nameof(postService));
+            _blogService = postService ?? throw new ArgumentNullException(nameof(postService));
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
         }
 
@@ -24,7 +24,7 @@ namespace Nexify.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> AddNewPostAsync([FromForm] PostRequest post)
         {
-            await _postService.AddPostAsync(post);
+            await _blogService.AddPostAsync(post);
             return Ok();
         }
 
@@ -41,7 +41,7 @@ namespace Nexify.Api.Controllers
         {
             var route = Request.Path.Value;
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var response = await _postService.GetAllAsync(filter, imageSrc, route);
+            var response = await _blogService.GetAllAsync(filter, imageSrc, route);
             return Ok(response);
         }
 
@@ -50,7 +50,7 @@ namespace Nexify.Api.Controllers
         public async Task<ActionResult<ProductDto>> GetAsync(string id)
         {
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var product = await _postService.GetPostAsync(id, imageSrc);
+            var product = await _blogService.GetPostAsync(id, imageSrc);
             return Ok(product);
         }
 
@@ -58,7 +58,7 @@ namespace Nexify.Api.Controllers
         [HttpPut("update")]
         public async Task<IActionResult> UpdateAsync([FromForm] PostRequest post)
         {
-            await _postService.UpdatePostAsync(_hostEnvironment.ContentRootPath, post);
+            await _blogService.UpdatePostAsync(_hostEnvironment.ContentRootPath, post);
             return Ok();
         }
 
@@ -67,7 +67,7 @@ namespace Nexify.Api.Controllers
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteProductAsync([FromQuery] string id)
         {
-            await _postService.RemovePostAsync(id);
+            await _blogService.RemovePostAsync(id);
             return Ok();
         }
 
@@ -75,7 +75,7 @@ namespace Nexify.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> DeleteProductCategoriesAsync(string id)
         {
-            await _postService.RemovePostCategoriesAsync(id);
+            await _blogService.RemovePostCategoriesAsync(id);
             return Ok();
         }
     }

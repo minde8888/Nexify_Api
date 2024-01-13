@@ -11,22 +11,22 @@ using Nexify.Service.Validators;
 
 namespace Nexify.Service.Services
 {
-    public class PostService
+    public class BlogService
     {
         private readonly IMapper _mapper;
-        private readonly IPostRepository _postRepository;
+        private readonly IBlogRepository _blogRepository;
         private readonly IImagesService _imagesService;
         private readonly IItemCategoryRepository _postCategoriesRepository;
         private readonly IUriService _uriService;
 
-        public PostService(
-            IPostRepository postRepository,
+        public BlogService(
+            IBlogRepository postRepository,
                 IImagesService imagesService,
                     IMapper mapper,
                         IItemCategoryRepository itemCategoriesRepository,
                             IUriService uriService)
         {
-            _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
+            _blogRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _postCategoriesRepository = itemCategoriesRepository ?? throw new ArgumentNullException(nameof(itemCategoriesRepository));
@@ -39,11 +39,11 @@ namespace Nexify.Service.Services
             ValidationExceptionHelper.ThrowIfInvalid<PostValidationException>(validationResult);
 
             var result = await _imagesService.MapAndSaveImages<PostRequest, Post>(post, post.Images);
-            await _postRepository.AddAsync(result);
+            await _blogRepository.AddAsync(result);
 
-            if (post.CategoryId != null)
+            if (post.Id != null)
             {
-                await _postCategoriesRepository.AddItemCategoriesAsync(post.CategoryId, result.Id);
+                await _postCategoriesRepository.AddItemCategoriesAsync(post.Id, result.Id);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Nexify.Service.Services
             ValidationExceptionHelper.ThrowIfInvalid<PostCategoriesValidationException>(validationResult);
 
             var validFilter = filter ?? new PaginationFilter();
-            var result = await _postRepository.RetrieveAllAsync(validFilter);
+            var result = await _blogRepository.RetrieveAllAsync(validFilter);
 
             var pageParams = new PagedParams<Post>(
                 result.Items,
@@ -95,7 +95,7 @@ namespace Nexify.Service.Services
             if (string.IsNullOrEmpty(id))
                 throw new ProductException("Post id can't by null");
 
-            var post = await _postRepository.GetByIdAsync(Guid.Parse(id));
+            var post = await _blogRepository.GetByIdAsync(Guid.Parse(id));
 
             return MapPost(post, imageSrc);
         }
@@ -113,7 +113,7 @@ namespace Nexify.Service.Services
                     contentRootPath
                 );
 
-            await _postRepository.ModifyAsync(processedPost);
+            await _blogRepository.ModifyAsync(processedPost);
         }
 
         public async Task RemovePostAsync(string id)
@@ -121,7 +121,7 @@ namespace Nexify.Service.Services
             if (string.IsNullOrEmpty(id))
                 throw new PostException("Post id can't by null");
 
-            await _postRepository.DeleteAsync(Guid.Parse(id));
+            await _blogRepository.DeleteAsync(Guid.Parse(id));
         }
 
         public async Task RemovePostCategoriesAsync(string id)

@@ -21,9 +21,9 @@ namespace Nexify.Service.Validators
             RuleFor(request => request.ImageName)
                 .MaximumLength(255).WithMessage("ImageName cannot be longer than 255 characters");
 
-            RuleFor(request => request.CategoryId)
+            RuleFor(request => request.Id)
                 .Must(id => id == null || id != Guid.Empty).WithMessage("CategoryId must not be empty.")
-                .When(request => request.CategoryId.HasValue);
+                .When(request => request.Id.HasValue);
         }
 
         private bool HaveAtLeastOneImage(List<IFormFile> images)

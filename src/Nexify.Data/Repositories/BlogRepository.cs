@@ -6,11 +6,11 @@ using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
 {
-    public class PostRepository : IPostRepository
+    public class BlogRepository : IBlogRepository
     {
         private readonly AppDbContext _context;
 
-        public PostRepository(AppDbContext context)
+        public BlogRepository(AppDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

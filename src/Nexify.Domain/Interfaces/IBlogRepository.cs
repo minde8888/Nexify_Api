@@ -3,7 +3,7 @@ using Nexify.Domain.Entities.Posts;
 
 namespace Nexify.Domain.Interfaces
 {
-    public interface IPostRepository
+    public interface IBlogRepository
     {
         public Task AddAsync(Post post);
         public Task DeleteAsync(Guid id);
