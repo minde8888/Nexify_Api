@@ -26,7 +26,8 @@ namespace Nexify.Service.MapperProfile
                 .ReverseMap();
 
             CreateMap<Subcategory, SubcategoryResponse>()
-                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
+                .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.SubCategoryName))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SubcategoryId))
                 .ReverseMap();
 

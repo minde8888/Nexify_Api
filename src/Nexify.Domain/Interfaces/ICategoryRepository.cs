@@ -7,7 +7,7 @@ namespace Nexify.Domain.Interfaces
     {
         public Task AddAsync(Category category);
         public Task<List<Category>> GetAllAsync();
-        public Task<PagedEntityResult<Category>> GetAsync(Guid id, PaginationFilter validFilter);
+        public Task<Category> GetAsync(Guid id);
         public Task RemoveAsync(Guid id);
         public Task RemoveSubcategoryAsync(Guid id);
         public Task UpdateAsync(Category category);

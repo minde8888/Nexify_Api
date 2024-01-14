@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Nexify.Service.Dtos;
-using System.Collections.Generic;
 
 namespace Nexify.Service.Validators
 {
     public class SubcategoryValidator : AbstractValidator<SubcategoryDto>
-    {
+    {                                                     
         public SubcategoryValidator()
         {
             RuleFor(dto => dto.CategoryName)

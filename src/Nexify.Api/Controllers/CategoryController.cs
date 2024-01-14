@@ -38,16 +38,6 @@ namespace Nexify.Api.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("id")]
-        [AllowAnonymous]
-        public async Task<ActionResult<CategoryResponse>> Get([FromQuery] PaginationFilter filter, string id)
-        {
-            var route = Request.Path.Value;
-            var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var category = await _categoryService.GetCategoryAsync(filter, id, route, imageSrc);
-            return Ok(category);
-        }
-
         [HttpPut("update")]
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update([FromForm] CategoryDto category)
@@ -63,12 +53,5 @@ namespace Nexify.Api.Controllers
             await _categoryService.RemoveCategoryAsync(id);
             return Ok();
         }
-
-        //[HttpDelete("delete/subcategory/{id}")]
-        //public async Task<ActionResult> DeleteSubcategory(string id)
-        //{
-        //    await _categoryService.RemoveSubcategoryByIdAsync(id);
-        //    return Ok();
-        //}
     }
 }

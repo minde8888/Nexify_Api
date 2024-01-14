@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexify.Data.Context;
 using Nexify.Domain.Entities.Categories;
-using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
@@ -21,43 +20,19 @@ namespace Nexify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Category>> GetAllAsync()
-           => await _context.Category
+        public async Task<List<Category>> GetAllAsync() => await _context.Category
                .Include(s => s.Subcategories)
                .ToListAsync()
                .ConfigureAwait(false);
 
 
-        public async Task<PagedEntityResult<Category>> GetAsync(Guid id, PaginationFilter validFilter)
-        {
-            var category = await _context.Category
-                .Include(c => c.Products)
+        public async Task<Category> GetAsync(Guid id) => await _context.Category
+                .Include(c => c.Subcategories)
                 .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (category != null && category.Products != null)
-            {
-                var totalCount = category.Products.Count;
-
-                var pagedProducts = category.Products
-                    .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                    .Take(validFilter.PageSize);
-
-                return new PagedEntityResult<Category>
-                {
-                    Items = category,
-                    TotalCount = totalCount
-                };
-            }
-
-            return new PagedEntityResult<Category> { Items = new Category(), TotalCount = 0 };
-        }
 
         public async Task RemoveAsync(Guid id)
         {
             var category = await _context.Category.FirstOrDefaultAsync(x => x.Id == id);
-
-            var categoriesProducts = await _context.CategoriesProducts.FirstOrDefaultAsync(x => x.CategoriesId == id);
-            _context.CategoriesProducts.Remove(categoriesProducts);
 
             category.IsDeleted = true;
             await _context.SaveChangesAsync();
@@ -68,6 +43,7 @@ namespace Nexify.Data.Repositories
             var subcategory = await _context.Subcategory.FirstOrDefaultAsync(x => x.SubcategoryId == id);
 
             subcategory.CategoryId = Guid.Empty;
+            subcategory.IsDeleted = true;
             _context.Entry(subcategory).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
@@ -77,10 +53,10 @@ namespace Nexify.Data.Repositories
         {
             var categorySave = await _context.Category
                 .FirstOrDefaultAsync(x => x.Id == category.Id);
-                    categorySave.CategoryName = category.CategoryName;
-                    categorySave.Description = category.Description;
-                    categorySave.ImageName = category.ImageName;
-                    categorySave.DateUpdated = DateTime.UtcNow;
+            categorySave.CategoryName = category.CategoryName;
+            categorySave.Description = category.Description;
+            categorySave.ImageName = category.ImageName;
+            categorySave.DateUpdated = DateTime.UtcNow;
 
             _context.Entry(categorySave).State = EntityState.Modified;
             await _context.SaveChangesAsync();

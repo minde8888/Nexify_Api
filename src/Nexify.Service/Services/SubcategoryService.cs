@@ -24,14 +24,19 @@ namespace Nexify.Service.Services
         {
             foreach (var subcategoryDto in subcategories)
             {
-                var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);
-                ValidationExceptionHelper.ThrowIfInvalid<SubcategoryValidationException>(validationResult);
+                await ValidateSubcategoryDto(subcategoryDto);
 
                 var subcategory = await _imagesService.MapAndSaveImages<SubcategoryDto, Subcategory>(subcategoryDto, subcategoryDto.Images);
                 subcategory.CategoryId = categoryId;
 
                 await _subcategoryRepository.AddAsync(subcategory);
             }
+        }
+
+        private async Task ValidateSubcategoryDto(SubcategoryDto subcategories)
+        {
+            var validationResult = await new SubcategoryValidator().ValidateAsync(subcategories);
+            ValidationExceptionHelper.ThrowIfInvalid<SubcategoryValidationException>(validationResult);
         }
 
         public async Task<SubcategoryResponse> GetSubCategoryAsync(string id, string imageSrc)
@@ -79,7 +84,7 @@ namespace Nexify.Service.Services
             return new SubcategoryResponse
             {
                 Id = subcategory.SubcategoryId,
-                SubCategoryName = subcategory.SubCategoryName,
+                CategoryName = subcategory.SubCategoryName,
                 Description = subcategory.Description,
                 ImageSrc = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToString(),
                 //Products = _mapper.Map<List<ProductDto>>(subcategory.Products)

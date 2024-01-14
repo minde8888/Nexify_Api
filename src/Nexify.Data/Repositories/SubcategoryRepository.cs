@@ -29,24 +29,24 @@ namespace Nexify.Data.Repositories
 
         public async Task RemoveAsync(Guid id)
         {
-            var currentProduct = await _context.Subcategory
+            var reesult = await _context.Subcategory
             .FirstOrDefaultAsync(p => p.SubcategoryId == id);
 
-            currentProduct.IsDeleted = true;
+            reesult.IsDeleted = true;
             _context.SaveChanges();
         }
 
         public async Task UpdateAsync(Subcategory subcategory)
         {
-            var currentProduct = await _context.Subcategory
+            var reesult = await _context.Subcategory
                 .FirstOrDefaultAsync(p => p.SubcategoryId == subcategory.SubcategoryId);
 
-            currentProduct.Description = subcategory.Description;
-            currentProduct.SubCategoryName = subcategory.SubCategoryName;
-            currentProduct.ImageName = subcategory.ImageName;
-            currentProduct.DateUpdated = DateTime.UtcNow;
+            reesult.Description = subcategory.Description;
+            reesult.SubCategoryName = subcategory.SubCategoryName;
+            reesult.ImageName = subcategory.ImageName;
+            reesult.DateUpdated = DateTime.UtcNow;
 
-            _context.Entry(currentProduct).State = EntityState.Modified;
+            _context.Entry(reesult).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }
