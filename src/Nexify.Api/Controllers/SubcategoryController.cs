@@ -20,6 +20,14 @@ namespace Nexify.Api.Controllers
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
         }
 
+        [HttpPost]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddNewCategory([FromForm] List<SubcategoryDto> subcategor)
+        {
+            await _subcategoryService.AddSubCategoryAsync(subcategor);
+            return Ok();
+        }
+
         [HttpGet("id")]
         [AllowAnonymous]
         public async Task<ActionResult<SubcategoryResponse>> Get([FromQuery] string id)

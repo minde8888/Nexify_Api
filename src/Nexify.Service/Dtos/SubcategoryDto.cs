@@ -9,6 +9,7 @@ namespace Nexify.Service.Dtos
         public string Description { get; set; }
         public List<IFormFile> Images { get; set; }
         public string ImageName { get; set; } = string.Empty;
+        public string CategoryId { get; set;} 
         public Guid ProductsId { get; set; }
     }
 }

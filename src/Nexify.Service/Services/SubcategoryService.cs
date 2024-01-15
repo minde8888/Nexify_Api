@@ -20,14 +20,13 @@ namespace Nexify.Service.Services
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
         }
 
-        public async Task AddSubCategoryAsync(List<SubcategoryDto> subcategories, Guid categoryId)
+        public async Task AddSubCategoryAsync(List<SubcategoryDto> subcategories)
         {
             foreach (var subcategoryDto in subcategories)
             {
                 await ValidateSubcategoryDto(subcategoryDto);
 
                 var subcategory = await _imagesService.MapAndSaveImages<SubcategoryDto, Subcategory>(subcategoryDto, subcategoryDto.Images);
-                subcategory.CategoryId = categoryId;
 
                 await _subcategoryRepository.AddAsync(subcategory);
             }
@@ -87,7 +86,6 @@ namespace Nexify.Service.Services
                 CategoryName = subcategory.SubCategoryName,
                 Description = subcategory.Description,
                 ImageSrc = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToString(),
-                //Products = _mapper.Map<List<ProductDto>>(subcategory.Products)
             };
         }
     }
