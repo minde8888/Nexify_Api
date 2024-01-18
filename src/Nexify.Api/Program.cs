@@ -53,9 +53,13 @@ public class Program
 
         app.UseStaticFiles(new StaticFileOptions
         {
-            FileProvider = new PhysicalFileProvider(
-                  Path.Combine(Directory.GetCurrentDirectory(), "Images")),
-            RequestPath = "/Images"
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+            RequestPath = "/Images",
+            OnPrepareResponse = ctx =>
+            {
+                ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:3000");
+                ctx.Context.Response.Headers.Append("Access-Control-Allow-Methods", "GET");
+            }
         });
 
         app.UseMiddleware<ExceptionMiddleware>();
@@ -64,13 +68,13 @@ public class Program
 
         app.UseRouting();
 
+        app.UseCors();
+
         app.UseAuthentication();
 
         app.UseAuthorization();
 
-        app.MapControllers();
-
-        app.UseCors();
+        app.MapControllers();    
 
         app.Run();
     }

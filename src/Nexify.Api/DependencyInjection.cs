@@ -129,11 +129,13 @@ namespace Nexify.Api
                 options.AddDefaultPolicy(builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:3000", "https://localhost:9002")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
+                        .WithOrigins("http://localhost:3000") // Frontend URL
+                        .WithMethods("GET", "POST", "PUT", "DELETE") // Specify HTTP methods
+                        .WithHeaders("Content-Type", "Authorization") // Specify headers
+                        .AllowCredentials();
                 });
             });
+
         }
     }
 }

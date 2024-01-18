@@ -5,6 +5,7 @@ using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Data.Helpers;
+using Nexify.Domain.Entities.Subcategories;
 
 namespace Nexify.Service.Services
 {
@@ -26,26 +27,21 @@ namespace Nexify.Service.Services
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
             _subcategoryService = subcategoryService ?? throw new ArgumentNullException(nameof(subcategoryService));
         }
-        public async Task AddCategoryAsync(List<CategoryDto> categories)
+        public async Task AddCategoryAsync(List<AddCategories> categories)
         {
-            foreach (var categoryDto in categories)
+            foreach (var category in categories)
             {
-                await ValidateCategoryDto(categoryDto);
+                await ValidateAddCategory(category);
 
-                var category = await MapAndSaveCategoryImages(categoryDto);
-                await _categoryRepository.AddAsync(category);
+                var result = _mapper.Map<Category>(category);
+                await _categoryRepository.AddAsync(result);
             }
         }
 
-        private async Task ValidateCategoryDto(CategoryDto categoryDto)
+        private async Task ValidateAddCategory(AddCategories category)
         {
-            var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
+            var validationResult = await new AddCategoriesValidator().ValidateAsync(category);
             ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
-        }
-
-        private async Task<Category> MapAndSaveCategoryImages(CategoryDto categoryDto)
-        {
-            return await _imagesService.MapAndSaveImages<CategoryDto, Category>(categoryDto, categoryDto.Images);
         }
 
         public async Task<List<CategoryResponse>> GetAllCategoriesAsync(string imageSrc)
@@ -77,10 +73,9 @@ namespace Nexify.Service.Services
 
         public async Task UpdateCategory(CategoryDto categoryDto, string contentRootPath)
         {
-            var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
-            ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
+            await ValidateCategoryDto(categoryDto);
 
-            var processedCategory = await _imagesService.MapAndProcessObjectAsync<CategoryDto, Category>(
+             var processedCategory = await _imagesService.MapAndProcessObjectAsync<CategoryDto, Category>(
                 categoryDto,
                 obj => obj.Images,
                 obj => obj.ImageName,
@@ -89,6 +84,12 @@ namespace Nexify.Service.Services
             );
 
             await _categoryRepository.UpdateAsync(processedCategory);
+        }
+
+        private async Task ValidateCategoryDto(CategoryDto categoryDto)
+        {
+            var validationResult = await new CategoryValidator().ValidateAsync(categoryDto);
+            ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
         }
 
         public async Task RemoveCategoryAsync(string id)

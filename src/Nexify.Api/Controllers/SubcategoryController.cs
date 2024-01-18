@@ -22,9 +22,9 @@ namespace Nexify.Api.Controllers
 
         [HttpPost]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddNewCategory([FromForm] List<SubcategoryDto> subcategor)
+        public async Task<IActionResult> AddNewCategory([FromForm] List<AddSubcategory> categories)
         {
-            await _subcategoryService.AddSubCategoryAsync(subcategor);
+            await _subcategoryService.AddSubCategoryAsync(categories);
             return Ok();
         }
 
