@@ -27,29 +27,6 @@ namespace Nexify.Data.Repositories
             return await _context.BlogCategory
                 .ToListAsync();
         }
-        public async Task<PagedEntityResult<BlogCategory>> GetAsync(Guid id, PaginationFilter validFilter)
-        {
-            var category = await _context.BlogCategory
-                .Include(c => c.Posts)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (category != null && category.Posts != null)
-            {
-                var totalCount = category.Posts.Count;
-
-                var pagedProducts = category.Posts
-                    .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                    .Take(validFilter.PageSize);
-
-                return new PagedEntityResult<BlogCategory>
-                {
-                    Items = category,
-                    TotalCount = totalCount
-                };
-            }
-
-            return new PagedEntityResult<BlogCategory> { Items = new BlogCategory(), TotalCount = 0 };
-        }
 
         public async Task RemoveAsync(Guid id)
         {

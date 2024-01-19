@@ -28,16 +28,7 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        [HttpGet("id")]
-        [AllowAnonymous]
-        public async Task<ActionResult<SubcategoryResponse>> Get([FromQuery] string id)
-        {
-            var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var productsInCategory = await _subcategoryService.GetSubCategoryAsync(id, imageSrc);
-            return Ok(productsInCategory);
-        }
-
-        [HttpPut("Update")]
+        [HttpPut("update")]
         //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update([FromForm] SubcategoryDto subcategory)
         {

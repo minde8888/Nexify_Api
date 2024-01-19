@@ -41,16 +41,6 @@ namespace Nexify.Service.Services
             ValidationExceptionHelper.ThrowIfInvalid<SubcategoryValidationException>(validationResult);
         }
 
-        public async Task<SubcategoryResponse> GetSubCategoryAsync(string id, string imageSrc)
-        {
-            if (string.IsNullOrEmpty(id))
-                throw new SubcategoryException("Subcategory id can't by null");
-
-            var subcategory = await _subcategoryRepository.GetAsync(Guid.Parse(id));
-
-            return MapSubcategory(subcategory, imageSrc);
-        }
-
         public async Task UpdateSubCategoryAsync(SubcategoryDto subcategoryDto, string rootPath)
         {
             var validationResult = await new SubcategoryValidator().ValidateAsync(subcategoryDto);

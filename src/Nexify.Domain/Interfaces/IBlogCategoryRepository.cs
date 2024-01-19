@@ -7,7 +7,6 @@ namespace Nexify.Domain.Interfaces
     {
         public Task AddAsync(BlogCategory category);
         public Task<List<BlogCategory>> GetAllAsync();
-        public Task<PagedEntityResult<BlogCategory>> GetAsync(Guid id, PaginationFilter validFilter);
         public Task RemoveAsync(Guid id);
         public Task UpdateAsync(BlogCategory category);
     }

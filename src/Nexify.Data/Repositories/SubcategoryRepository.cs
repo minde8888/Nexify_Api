@@ -20,11 +20,6 @@ namespace Nexify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Subcategory> GetAsync(Guid id) =>
-           await _context.Subcategory
-               .Include(c => c.Products)
-               .FirstOrDefaultAsync(x => x.SubcategoryId == id);
-
         public async Task RemoveAsync(Guid id)
         {
             var reesult = await _context.Subcategory

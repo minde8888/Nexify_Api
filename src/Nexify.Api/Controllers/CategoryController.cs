@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nexify.Domain.Entities.Pagination;
 using Nexify.Service.Dtos;
 using Nexify.Service.Services;
 

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nexify.Domain.Entities.Pagination;
 using Nexify.Service.Dtos;
 using Nexify.Service.Services;
 
@@ -30,25 +29,15 @@ namespace Nexify.Api.Controllers
 
         [HttpGet]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<BlogCategoryDto>>> GetAll()
+        public async Task<ActionResult<List<BlogCategoryResponse>>> GetAll()
         {
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
             var productsInCategory = await _categoryService.GetAllCategoriesAsync(imageSrc);
             return Ok(productsInCategory);
         }
 
-        [HttpGet("id")]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult<CategoryResponse>> Get([FromQuery] PaginationFilter filter, string id)
-        {
-            var route = Request.Path.Value;
-            var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var productsInCategory = await _categoryService.GetCategoryAsync(filter, id, route, imageSrc);
-            return Ok(productsInCategory);
-        }
-
-        //[Authorize(Roles = "Admin")]
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<ActionResult> Update([FromForm] BlogCategoryDto category)
         {
             await _categoryService.UpdateCategory(category, _hostEnvironment.ContentRootPath);
