@@ -1,34 +1,37 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Nexify.Service.Dtos;
 
 namespace Nexify.Service.Validators
 {
     public class PostRequestValidator : AbstractValidator<PostRequest>
     {
+        private const int MaxTitleLength = 255;
+        private const int MaxContentLength = 10000;
+        private const int MaxImageNameLength = 255;
+
         public PostRequestValidator()
         {
             RuleFor(request => request.Title)
                 .NotEmpty().WithMessage("Title is required")
-                .MaximumLength(255).WithMessage("Title cannot be longer than 255 characters");
+                .MaximumLength(MaxTitleLength).WithMessage($"Title cannot be longer than {MaxTitleLength} characters");
 
             RuleFor(request => request.Content)
-                .MaximumLength(10000).WithMessage("Content cannot be longer than 10000 characters");
+                .MaximumLength(MaxContentLength).WithMessage($"Content cannot be longer than {MaxContentLength} characters");
 
             RuleFor(request => request.Images)
-                .Must(HaveAtLeastOneImage).When(request => request.Images != null).WithMessage("At least one image is required");
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty().WithMessage("At least one image is required")
+                .Must(images => images?.Any() == true).WithMessage("At least one image is required")
+                .ForEach(imageRule =>
+                {
+                    imageRule.Must(image => image != null && image.Length > 0).WithMessage("Invalid image file");
+                });
 
             RuleFor(request => request.ImageName)
-                .MaximumLength(255).WithMessage("ImageName cannot be longer than 255 characters");
+                .MaximumLength(MaxImageNameLength).WithMessage($"ImageName cannot be longer than {MaxImageNameLength} characters");
 
-            RuleFor(request => request.Id)
-                .Must(id => id == null || id != Guid.Empty).WithMessage("CategoryId must not be empty.")
-                .When(request => request.Id.HasValue);
-        }
-
-        private bool HaveAtLeastOneImage(List<IFormFile> images)
-        {
-            return images != null && images.Count > 0;
+            RuleFor(request => request.CategoryId)
+                .Must(categoryIds => categoryIds != null && categoryIds.All(id => id != Guid.Empty)).WithMessage("All CategoryId entries must be valid GUIDs");
         }
     }
 }

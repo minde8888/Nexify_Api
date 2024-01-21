@@ -29,7 +29,7 @@ namespace Nexify.Api.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<CategoryResponse>>> GetAll()
         {
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";

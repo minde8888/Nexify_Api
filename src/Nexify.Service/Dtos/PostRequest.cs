@@ -8,6 +8,6 @@ namespace Nexify.Service.Dtos
         public string Content { get; set; }
         public List<IFormFile> Images { get; set; }
         public string ImageName { get; set; } = string.Empty;
-        public Guid? Id { get; set; } = null;
+        public List<Guid> CategoryId { get; set; } = new List<Guid>();
     }
 }

@@ -18,9 +18,8 @@ namespace Nexify.Api.Controllers
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
         }
 
-
-        //[Authorize(Roles = "Admin")]
         [HttpPost]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddNewCategory([FromForm] List<BlogCategoryDto> categories)
         {
             await _categoryService.AddCategoryAsync(categories);
@@ -35,9 +34,9 @@ namespace Nexify.Api.Controllers
             var productsInCategory = await _categoryService.GetAllCategoriesAsync(imageSrc);
             return Ok(productsInCategory);
         }
-
-        //[Authorize(Roles = "Admin")]
+     
         [HttpPut("update")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update([FromForm] BlogCategoryDto category)
         {
             await _categoryService.UpdateCategory(category, _hostEnvironment.ContentRootPath);

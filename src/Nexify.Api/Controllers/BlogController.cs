@@ -28,13 +28,6 @@ namespace Nexify.Api.Controllers
             return Ok();
         }
 
-        //[AllowAnonymous]
-        //public async Task<ActionResult> PostCategoriesAsync([FromForm] PostCategories postCategories)
-        //{
-        //    await _postService.AddPostCategoriesAsync(postCategories);
-        //    return Ok();
-        //}
-
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<PostsResponse>> GetAllPostsAsync([FromQuery] PaginationFilter filter)

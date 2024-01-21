@@ -13,7 +13,7 @@ namespace Nexify.Data.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddItemCategoriesAsync(Guid? categoryId, Guid postId)
+        public async Task AddPostCategoriesAsync(Guid? categoryId, Guid postId)
         {
             var categoriesProducts = new BlogCategoryPost { PostId = postId, CategoriesId = (Guid)categoryId };
             _context.BlogCategoryPost.Add(categoriesProducts);

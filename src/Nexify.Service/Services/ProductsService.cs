@@ -58,7 +58,7 @@ namespace Nexify.Service.Services
             var validationResult = await new ProductCategoriesValidator().ValidateAsync(productCategories);
             ValidationExceptionHelper.ThrowIfInvalid<ProductCategoriesValidationException>(validationResult);
 
-            await _productCategoriesRepository.AddItemCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId));
+            await _productCategoriesRepository.AddPostCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId));
         }
 
         public async Task AddProductSubcategoriesByIdAsync(string productId, string subcategoryId)

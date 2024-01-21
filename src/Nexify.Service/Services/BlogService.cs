@@ -41,9 +41,12 @@ namespace Nexify.Service.Services
             var result = await _imagesService.MapAndSaveImages<PostRequest, Post>(post, post.Images);
             await _blogRepository.AddAsync(result);
 
-            if (post.Id != null)
+            if (post.CategoryId != null && post.CategoryId.Any())
             {
-                await _postCategoriesRepository.AddItemCategoriesAsync(post.Id, result.Id);
+                foreach (var categoryId in post.CategoryId)
+                {
+                    await _postCategoriesRepository.AddPostCategoriesAsync(categoryId, result.Id);
+                }
             }
         }
 
@@ -52,7 +55,7 @@ namespace Nexify.Service.Services
             var validationResult = await new PostCategoriesValidator().ValidateAsync(postCategories);
             ValidationExceptionHelper.ThrowIfInvalid<PostCategoriesValidationException>(validationResult);
 
-            await _postCategoriesRepository.AddItemCategoriesAsync(new Guid(postCategories.CategoryId), new Guid(postCategories.PostId));
+            await _postCategoriesRepository.AddPostCategoriesAsync(new Guid(postCategories.CategoryId), new Guid(postCategories.PostId));
         }
 
         public async Task<PostsResponse> GetAllAsync(
@@ -114,6 +117,15 @@ namespace Nexify.Service.Services
                 );
 
             await _blogRepository.ModifyAsync(processedPost);
+
+
+            if (post.CategoryId != null && post.CategoryId.Any())
+            {
+                foreach (var categoryId in post.CategoryId)
+                {
+                    await _postCategoriesRepository.AddPostCategoriesAsync(categoryId, processedPost.Id);
+                }
+            }
         }
 
         public async Task RemovePostAsync(string id)
