@@ -16,14 +16,14 @@ namespace Nexify.Service.Services
         private readonly IMapper _mapper;
         private readonly IBlogRepository _blogRepository;
         private readonly IImagesService _imagesService;
-        private readonly IItemCategoryRepository _postCategoriesRepository;
+        private readonly IPostCategoryRepository _postCategoriesRepository;
         private readonly IUriService _uriService;
 
         public BlogService(
             IBlogRepository postRepository,
                 IImagesService imagesService,
                     IMapper mapper,
-                        IItemCategoryRepository itemCategoriesRepository,
+                        IPostCategoryRepository itemCategoriesRepository,
                             IUriService uriService)
         {
             _blogRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
@@ -41,9 +41,9 @@ namespace Nexify.Service.Services
             var result = await _imagesService.MapAndSaveImages<PostRequest, Post>(post, post.Images);
             await _blogRepository.AddAsync(result);
 
-            if (post.CategoryId != null && post.CategoryId.Any())
+            if (post.CategoriesIds != null && post.CategoriesIds.Any())
             {
-                foreach (var categoryId in post.CategoryId)
+                foreach (var categoryId in post.CategoriesIds)
                 {
                     await _postCategoriesRepository.AddPostCategoriesAsync(categoryId, result.Id);
                 }
@@ -119,9 +119,9 @@ namespace Nexify.Service.Services
             await _blogRepository.ModifyAsync(processedPost);
 
 
-            if (post.CategoryId != null && post.CategoryId.Any())
+            if (post.CategoriesIds != null && post.CategoriesIds.Any())
             {
-                foreach (var categoryId in post.CategoryId)
+                foreach (var categoryId in post.CategoriesIds)
                 {
                     await _postCategoriesRepository.AddPostCategoriesAsync(categoryId, processedPost.Id);
                 }

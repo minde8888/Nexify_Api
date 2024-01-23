@@ -5,20 +5,25 @@ using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
 {
-    public class ItemCategoryRepository : IItemCategoryRepository
+    public class PostCategoryRepository : IPostCategoryRepository
     {
         private readonly AppDbContext _context;
-        public ItemCategoryRepository(AppDbContext context)
+        public PostCategoryRepository(AppDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddPostCategoriesAsync(Guid? categoryId, Guid postId)
+        public async Task AddPostCategoriesAsync(Guid categoryId, Guid postId)
         {
-            var categoriesProducts = new BlogCategoryPost { PostId = postId, CategoriesId = (Guid)categoryId };
-            _context.BlogCategoryPost.Add(categoriesProducts);
+            var existingEntry = await _context.BlogCategoryPost
+                .FirstOrDefaultAsync(bcp => bcp.PostId == postId && bcp.CategoriesId == categoryId);
+            if (existingEntry != null)
+            {
+                var categoriesProducts = new BlogCategoryPost { PostId = postId, CategoriesId = categoryId };
+                _context.BlogCategoryPost.Add(categoriesProducts);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteCategoriesItemAsync(Guid id)

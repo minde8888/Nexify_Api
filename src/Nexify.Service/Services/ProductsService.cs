@@ -15,14 +15,14 @@ namespace Nexify.Service.Services
         private readonly IMapper _mapper;
         private readonly IImagesService _imagesService;
         private readonly IProductsRepository _productsRepository;
-        private readonly IItemCategoryRepository _productCategoriesRepository;
+        private readonly IPostCategoryRepository _productCategoriesRepository;
         private readonly IUriService _uriService;
         private readonly DiscountService _discountService;
 
         public ProductsService(
             IImagesService imagesService,
                 IProductsRepository productsRepository,
-                    IItemCategoryRepository productCategoriesRepository,
+                    IPostCategoryRepository productCategoriesRepository,
                         IMapper mapper,
                             IUriService uriService,
                                 DiscountService discountService)

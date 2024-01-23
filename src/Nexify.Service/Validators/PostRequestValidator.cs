@@ -11,6 +11,9 @@ namespace Nexify.Service.Validators
 
         public PostRequestValidator()
         {
+            RuleFor(request => request.Id)
+            .NotEmpty().WithMessage("Id is required");
+
             RuleFor(request => request.Title)
                 .NotEmpty().WithMessage("Title is required")
                 .MaximumLength(MaxTitleLength).WithMessage($"Title cannot be longer than {MaxTitleLength} characters");
@@ -30,7 +33,7 @@ namespace Nexify.Service.Validators
             RuleFor(request => request.ImageName)
                 .MaximumLength(MaxImageNameLength).WithMessage($"ImageName cannot be longer than {MaxImageNameLength} characters");
 
-            RuleFor(request => request.CategoryId)
+            RuleFor(request => request.CategoriesIds)
                 .Must(categoryIds => categoryIds != null && categoryIds.All(id => id != Guid.Empty)).WithMessage("All CategoryId entries must be valid GUIDs");
         }
     }

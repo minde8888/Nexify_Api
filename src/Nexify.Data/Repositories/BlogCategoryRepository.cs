@@ -44,10 +44,10 @@ namespace Nexify.Data.Repositories
         {
             var categorySave = await _context.BlogCategory
                 .FirstOrDefaultAsync(x => x.Id == category.Id);
-            categorySave.CategoryName = category.CategoryName;
-            categorySave.Description = category.Description;
-            categorySave.ImageName = category.ImageName;
-            categorySave.DateUpdated = DateTime.UtcNow;
+                    categorySave.CategoryName = category.CategoryName;
+                    categorySave.Description = category.Description;
+                    categorySave.ImageName = category.ImageName;
+                    categorySave.DateUpdated = DateTime.UtcNow;
 
             _context.Entry(categorySave).State = EntityState.Modified;
             await _context.SaveChangesAsync();
