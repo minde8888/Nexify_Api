@@ -108,7 +108,7 @@ namespace Nexify.Service.Services
             var validationResult = await new PostUpdateRequestValidator().ValidateAsync(post);
             ValidationExceptionHelper.ThrowIfInvalid<ProductValidationException>(validationResult);
 
-            var processedPost = await _imagesService.MapAndProcessObjectAsync<PostUpdateRequest, Post>(
+            var processedPost = await _imagesService.MapAndProcessObjectListAsync<PostUpdateRequest, Post>(
                 post,
                 obj => obj.Images,
                 obj => string.Join(",", obj.ImageNames),

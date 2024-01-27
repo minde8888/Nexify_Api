@@ -91,6 +91,34 @@ namespace Nexify.Service.Services
             return mappedObject;
         }
 
+        public async Task<TDestination> MapAndProcessObjectListAsync<TSource, TDestination>(
+           TSource sourceObject,
+           Func<TSource, IEnumerable<IFormFile>> imagePropertySelector,
+           Func<TSource, string> imagePathSelector,
+           Func<TSource, string, string> imagePathProcessor,
+           string contentRootPath)
+        {
+            var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
+
+            var images = imagePropertySelector(sourceObject);
+
+            if (images != null)
+            {
+                foreach (var image in images)
+                {
+                    var imageName = await SaveImages(new List<IFormFile> { image });
+                    SetImageNameProperty(mappedObject, imageName);
+
+                    if (!string.IsNullOrEmpty(contentRootPath))
+                    {
+                        var fullPath = Path.Combine(contentRootPath, contentRootPath, imageName);
+                        await DeleteImageAsync(fullPath);
+                    }
+                }
+            }
+            return mappedObject;
+        }
+
         public async Task<TDestination> MapAndSaveImages<TSource, TDestination>(TSource sourceObject, List<IFormFile> images)
         {
             var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
@@ -100,7 +128,7 @@ namespace Nexify.Service.Services
                 foreach (var image in images)
                 {
                     var imageSaveResult = await SaveImages(new List<IFormFile> { image });
-                    SetImageNameProperty(mappedObject, imageSaveResult); 
+                    SetImageNameProperty(mappedObject, imageSaveResult);
                 }
             }
 
@@ -130,16 +158,14 @@ namespace Nexify.Service.Services
 
         private void SetImageNameProperty<TDestination>(TDestination obj, string imageName)
         {
-            var property = typeof(TDestination).GetProperty("ImageNames");
-            if (property != null && property.PropertyType == typeof(List<string>)) // Check for List<string>
+            var property = typeof(TDestination).GetProperty("ImageName");
+            if (property != null && property.PropertyType == typeof(string))
             {
-                var imageNames = (List<string>)property.GetValue(obj) ?? new List<string>(); // Get existing list or create new one
-                imageNames.Add(imageName); // Add new image name
-                property.SetValue(obj, imageNames); // Set the updated list back to the property
+                property.SetValue(obj, imageName);
             }
             else
             {
-                throw new FileException("ImageName property not found or not a List<string>.");
+                throw new FileException("ImageName property not found.");
             }
         }
 

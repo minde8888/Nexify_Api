@@ -27,7 +27,6 @@ namespace Nexify.Service.Validators
                 .When(request => request.ImageNames != null)
                 .WithMessage("All ImageNames must not be empty");
 
-
             RuleFor(request => request.CategoriesIds)
                 .Must(categoryIds => categoryIds == null || categoryIds.All(id => id != Guid.Empty))
                 .WithMessage("All CategoryId entries must be valid GUIDs or null");

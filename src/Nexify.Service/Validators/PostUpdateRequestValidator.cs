@@ -26,7 +26,8 @@ namespace Nexify.Service.Validators
                 .WithMessage("Invalid image file");
 
             RuleFor(request => request.ImageNames)
-                .Must(names => names != null && names.All(name => !string.IsNullOrWhiteSpace(name)))
+                .Must(names => names == null || names.All(name => !string.IsNullOrWhiteSpace(name)))
+                .When(request => request.ImageNames != null)
                 .WithMessage("All ImageNames must not be empty");
 
             RuleFor(request => request.CategoriesIds)
