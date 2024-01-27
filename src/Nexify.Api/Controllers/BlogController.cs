@@ -49,7 +49,7 @@ namespace Nexify.Api.Controllers
 
         //[Authorize(Roles = "Admin")]
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateAsync([FromForm] PostRequest post)
+        public async Task<IActionResult> UpdateAsync([FromForm] PostUpdateRequest post)
         {
             await _blogService.UpdatePostAsync(_hostEnvironment.ContentRootPath, post);
             return Ok();

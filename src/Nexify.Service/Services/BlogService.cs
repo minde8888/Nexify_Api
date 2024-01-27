@@ -103,18 +103,19 @@ namespace Nexify.Service.Services
             return MapPost(post, imageSrc);
         }
 
-        public async Task UpdatePostAsync(string contentRootPath, PostRequest post)
+        public async Task UpdatePostAsync(string contentRootPath, PostUpdateRequest post)
         {
-            var validationResult = await new PostRequestValidator().ValidateAsync(post);
+            var validationResult = await new PostUpdateRequestValidator().ValidateAsync(post);
             ValidationExceptionHelper.ThrowIfInvalid<ProductValidationException>(validationResult);
 
-            var processedPost = await _imagesService.MapAndProcessObjectAsync<PostRequest, Post>(
-                    post,
-                    obj => obj.Images,
-                    obj => obj.ImageName,
-                    (obj, imageName) => Path.Combine("Images", imageName),
-                    contentRootPath
-                );
+            var processedPost = await _imagesService.MapAndProcessObjectAsync<PostUpdateRequest, Post>(
+                post,
+                obj => obj.Images,
+                obj => string.Join(",", obj.ImageNames),
+                (obj, imageName) => Path.Combine("Images", imageName),
+                contentRootPath
+            );
+
 
             await _blogRepository.ModifyAsync(processedPost);
 
@@ -146,11 +147,11 @@ namespace Nexify.Service.Services
 
         private PostDto MapPost(Post post, string imageSrc)
         {
-            if (post.ImageName == null)
+            if (post.ImageNames == null)
                 throw new PostException("Popst image name can't be null");
 
-            var imageNames = post.ImageName.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            if (imageNames.Length == 0)
+            var imageNames = post.ImageNames;
+            if (imageNames.Count == 0)
                 throw new PostException("There are no images for the post.");
 
             var imageUrls = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToList();
@@ -172,11 +173,14 @@ namespace Nexify.Service.Services
             {
                 var postDto = _mapper.Map<PostDto>(post);
 
-                if (!string.IsNullOrEmpty(post.ImageName))
+                if (postDto.ImageNames.Count != 0)
                 {
-                    var imageNames = post.ImageName.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    var imageSrcs = imageNames.Select(name => $"{imageSrc}/Images/{name.Trim()}");
-                    postDto.ImageSrc = imageSrcs.ToList();
+                    foreach( var imageName in postDto.ImageNames)
+                    {
+                        var imageNames = post.ImageNames;
+                        var imageSrcs = imageNames.Select(name => $"{imageSrc}/Images/{name.Trim()}");
+                        postDto.ImageSrc = imageSrcs.ToList();
+                    }           
                 }
 
                 return postDto;

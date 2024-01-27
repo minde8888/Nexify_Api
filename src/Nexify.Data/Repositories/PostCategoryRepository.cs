@@ -17,7 +17,8 @@ namespace Nexify.Data.Repositories
         {
             var existingEntry = await _context.BlogCategoryPost
                 .FirstOrDefaultAsync(bcp => bcp.PostId == postId && bcp.CategoriesId == categoryId);
-            if (existingEntry != null)
+
+            if (existingEntry == null)
             {
                 var categoriesProducts = new BlogCategoryPost { PostId = postId, CategoriesId = categoryId };
                 _context.BlogCategoryPost.Add(categoriesProducts);

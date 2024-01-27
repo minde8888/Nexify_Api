@@ -100,7 +100,7 @@ namespace Nexify.Service.Services
                 foreach (var image in images)
                 {
                     var imageSaveResult = await SaveImages(new List<IFormFile> { image });
-                    SetImageNameProperty(mappedObject, imageSaveResult);
+                    SetImageNameProperty(mappedObject, imageSaveResult); 
                 }
             }
 
@@ -130,14 +130,16 @@ namespace Nexify.Service.Services
 
         private void SetImageNameProperty<TDestination>(TDestination obj, string imageName)
         {
-            var property = typeof(TDestination).GetProperty("ImageName");
-            if (property != null && property.PropertyType == typeof(string))
+            var property = typeof(TDestination).GetProperty("ImageNames");
+            if (property != null && property.PropertyType == typeof(List<string>)) // Check for List<string>
             {
-                property.SetValue(obj, imageName);
+                var imageNames = (List<string>)property.GetValue(obj) ?? new List<string>(); // Get existing list or create new one
+                imageNames.Add(imageName); // Add new image name
+                property.SetValue(obj, imageNames); // Set the updated list back to the property
             }
             else
             {
-                throw new FileException("ImageName property not found.");
+                throw new FileException("ImageName property not found or not a List<string>.");
             }
         }
 

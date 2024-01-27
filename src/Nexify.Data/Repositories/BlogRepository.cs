@@ -57,7 +57,7 @@ namespace Nexify.Data.Repositories
 
             currentPost.Title = post.Title;
             currentPost.Content = post.Content;
-            currentPost.ImageName = post.ImageName;
+            currentPost.ImageNames = post.ImageNames;
             currentPost.DateUpdated = DateTime.UtcNow;
 
             _context.Entry(currentPost).State = EntityState.Modified;

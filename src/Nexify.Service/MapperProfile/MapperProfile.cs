@@ -47,8 +47,10 @@ namespace Nexify.Service.MapperProfile
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
                 .ReverseMap();
 
-            CreateMap<PostRequest, Post>().ReverseMap();
+            CreateMap<PostUpdateRequest, Post>().ReverseMap();
             CreateMap<PostDto, Post>().ReverseMap();
+            CreateMap<PostRequest, Post>().ReverseMap();
+            CreateMap<PostUpdateRequest, Post>().ReverseMap();
         }
 
     }

@@ -65,7 +65,7 @@ namespace Nexify.Api
             services.AddTransient<IValidator<PagedParams<Product>>, PagedParamsValidator<Product>>();
             services.AddTransient<IValidator<PaginationFilter>, PaginationFilterValidator>();
             services.AddTransient<IValidator<PostCategories>, PostCategoriesValidator>();
-            services.AddTransient<IValidator<PostRequest>, PostRequestValidator>();
+            services.AddTransient<IValidator<PostUpdateRequest>, PostUpdateRequestValidator>();
             services.AddTransient<IValidator<ProductCategories>, ProductCategoriesValidator>();
             services.AddTransient<IValidator<ProductRequest>, ProductRequestValidator>();
             services.AddTransient<IValidator<ProductUpdate>, ProductUpdateValidator>();

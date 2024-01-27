@@ -7,7 +7,7 @@ namespace Nexify.Service.Dtos
         public string Title { get; set; }
         public string Content { get; set; }
         public ICollection<string> ImageSrc { get; set; }
-        public string ImageName { get; set; } = string.Empty;
+        public List<string> ImageNames{ get; set; }
         public DateTime DateCreated { get; set; }
         public ICollection<BlogCategoryDto> Categories { get; set; }
     }
