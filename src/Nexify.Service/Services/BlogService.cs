@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Nexify.Data.Helpers;
-using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Exceptions;
@@ -93,16 +92,6 @@ namespace Nexify.Service.Services
             };
         }
 
-        public async Task<PostDto> GetPostAsync(string id, string imageSrc)
-        {
-            if (string.IsNullOrEmpty(id))
-                throw new ProductException("Post id can't by null");
-
-            var post = await _blogRepository.GetByIdAsync(Guid.Parse(id));
-
-            return MapPost(post, imageSrc);
-        }
-
         public async Task UpdatePostAsync(string contentRootPath, PostUpdateRequest post)
         {
             var validationResult = await new PostUpdateRequestValidator().ValidateAsync(post);
@@ -137,34 +126,6 @@ namespace Nexify.Service.Services
             await _blogRepository.DeleteAsync(Guid.Parse(id));
         }
 
-        public async Task RemovePostCategoriesAsync(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                throw new PostException("Post id can't by null");
-
-            await _postCategoriesRepository.DeleteCategoriesItemAsync(new Guid(id));
-        }
-
-        private PostDto MapPost(Post post, string imageSrc)
-        {
-            if (post.ImageNames == null)
-                throw new PostException("Popst image name can't be null");
-
-            var imageNames = post.ImageNames;
-            if (imageNames.Count == 0)
-                throw new PostException("There are no images for the post.");
-
-            var imageUrls = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToList();
-            return new PostDto
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Content = post.Content,
-                DateCreated = post.DateCreated,
-                ImageSrc = imageUrls,
-            };
-        }
-
         private List<PostDto> MapPagedPost(PagedParams<Post> pageParams, string imageSrc)
         {
             var pagedPosts = PaginationService.CreatePagedResponse(pageParams);
@@ -175,12 +136,12 @@ namespace Nexify.Service.Services
 
                 if (postDto.ImageNames.Count != 0)
                 {
-                    foreach( var imageName in postDto.ImageNames)
+                    foreach (var imageName in postDto.ImageNames)
                     {
                         var imageNames = post.ImageNames;
                         var imageSrcs = imageNames.Select(name => $"{imageSrc}/Images/{name.Trim()}");
                         postDto.ImageSrc = imageSrcs.ToList();
-                    }           
+                    }
                 }
 
                 return postDto;

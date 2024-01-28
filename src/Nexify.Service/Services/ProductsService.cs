@@ -155,7 +155,7 @@ namespace Nexify.Service.Services
 
             Guid newId = new(id);
 
-            await _productCategoriesRepository.DeleteCategoriesItemAsync(newId);
+            await _productCategoriesRepository.DeleteCategoriesPostAsync(newId);
         }
 
         public async Task RemoveProductSubcategoriesAsync(string productId, string subcategoryId)

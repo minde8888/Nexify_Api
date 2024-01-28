@@ -25,7 +25,6 @@ namespace Nexify.Data.Repositories
                .ToListAsync()
                .ConfigureAwait(false);
 
-
         public async Task<Category> GetAsync(Guid id) => await _context.Category
                 .Include(c => c.Subcategories)
                 .FirstOrDefaultAsync(x => x.Id == id);

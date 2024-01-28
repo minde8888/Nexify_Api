@@ -43,13 +43,6 @@ namespace Nexify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Post> GetByIdAsync(Guid id)
-        {
-            return await _context.Post.
-               Include(c => c.Categories).
-               Where(x => x.Id == id).FirstOrDefaultAsync();
-        }
-
         public async Task ModifyAsync(Post post)
         {
             var currentPost = await _context.Post

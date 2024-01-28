@@ -27,7 +27,7 @@ namespace Nexify.Data.Repositories
             }
         }
 
-        public async Task DeleteCategoriesItemAsync(Guid id)
+        public async Task DeleteCategoriesPostAsync(Guid id)
         {
             var existingCategories = await _context.CategoriesProducts
                 .Where(cp => cp.ProductsId == id)

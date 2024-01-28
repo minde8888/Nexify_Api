@@ -62,23 +62,5 @@ namespace Nexify.Service.Services
 
             await _subcategoryRepository.RemoveAsync(Guid.Parse(id));
         }
-
-        private SubcategoryResponse MapSubcategory(Subcategory subcategory, string imageSrc)
-        {
-            if (subcategory.ImageName == null)
-                throw new ProductException("Product image name can't be null");
-
-            var imageNames = subcategory.ImageName;
-            if (imageNames.Length == 0)
-                throw new ProductException("There are no images for the product.");
-
-            return new SubcategoryResponse
-            {
-                Id = subcategory.SubcategoryId,
-                CategoryName = subcategory.SubCategoryName,
-                Description = subcategory.Description,
-                ImageSrc = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToString(),
-            };
-        }
     }
 }

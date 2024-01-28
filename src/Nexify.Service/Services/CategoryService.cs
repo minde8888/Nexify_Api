@@ -5,7 +5,6 @@ using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Data.Helpers;
-using Nexify.Domain.Entities.Subcategories;
 
 namespace Nexify.Service.Services
 {

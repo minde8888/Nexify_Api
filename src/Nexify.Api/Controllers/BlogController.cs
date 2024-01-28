@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nexify.Domain.Entities.Pagination;
-using Nexify.Domain.Entities.Posts;
 using Nexify.Service.Dtos;
 using Nexify.Service.Services;
 
@@ -38,15 +37,6 @@ namespace Nexify.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("id")]
-        [AllowAnonymous]
-        public async Task<ActionResult<ProductDto>> GetAsync(string id)
-        {
-            var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-            var product = await _blogService.GetPostAsync(id, imageSrc);
-            return Ok(product);
-        }
-
         //[Authorize(Roles = "Admin")]
         [HttpPut("update")]
         public async Task<IActionResult> UpdateAsync([FromForm] PostUpdateRequest post)
@@ -58,17 +48,9 @@ namespace Nexify.Api.Controllers
         [HttpDelete("id")]
         [AllowAnonymous]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult> DeleteProductAsync([FromQuery] string id)
+        public async Task<ActionResult> DeleteAsync([FromQuery] string id)
         {
             await _blogService.RemovePostAsync(id);
-            return Ok();
-        }
-
-        [HttpDelete("delete/category/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult> DeleteProductCategoriesAsync(string id)
-        {
-            await _blogService.RemovePostCategoriesAsync(id);
             return Ok();
         }
     }

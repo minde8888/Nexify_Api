@@ -1,5 +1,4 @@
 ﻿using Nexify.Domain.Entities.Categories;
-using Nexify.Domain.Entities.Pagination;
 
 namespace Nexify.Domain.Interfaces
 {

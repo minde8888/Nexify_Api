@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexify.Data.Context;
 using Nexify.Domain.Entities.Categories;
-using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Interfaces;
 
 
@@ -22,11 +21,7 @@ namespace Nexify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<BlogCategory>> GetAllAsync()
-        {
-            return await _context.BlogCategory
-                .ToListAsync();
-        }
+        public async Task<List<BlogCategory>> GetAllAsync() => await _context.BlogCategory.ToListAsync();
 
         public async Task RemoveAsync(Guid id)
         {
@@ -44,10 +39,10 @@ namespace Nexify.Data.Repositories
         {
             var categorySave = await _context.BlogCategory
                 .FirstOrDefaultAsync(x => x.Id == category.Id);
-                    categorySave.CategoryName = category.CategoryName;
-                    categorySave.Description = category.Description;
-                    categorySave.ImageName = category.ImageName;
-                    categorySave.DateUpdated = DateTime.UtcNow;
+            categorySave.CategoryName = category.CategoryName;
+            categorySave.Description = category.Description;
+            categorySave.ImageName = category.ImageName;
+            categorySave.DateUpdated = DateTime.UtcNow;
 
             _context.Entry(categorySave).State = EntityState.Modified;
             await _context.SaveChangesAsync();
