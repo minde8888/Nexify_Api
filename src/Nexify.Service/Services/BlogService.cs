@@ -105,9 +105,8 @@ namespace Nexify.Service.Services
                 contentRootPath
             );
 
-
             await _blogRepository.ModifyAsync(processedPost);
-
+            await _postCategoriesRepository.DeleteRangePostCategories(processedPost.Id);
 
             if (post.CategoriesIds != null && post.CategoriesIds.Any())
             {

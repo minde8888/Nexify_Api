@@ -135,9 +135,9 @@ namespace Nexify.Service.Services
             return mappedObject;
         }
 
-        public string ProcessImages<T>(T obj, string imageSrc) 
+        public string ProcessImages<T>(T obj, string imageSrc)
         {
-            var propertyName = "ImageName";
+            var propertyName = "ImageNames";
             var propertyInfo = typeof(T).GetProperty(propertyName);
 
             if (propertyInfo != null)
@@ -158,14 +158,20 @@ namespace Nexify.Service.Services
 
         private void SetImageNameProperty<TDestination>(TDestination obj, string imageName)
         {
-            var property = typeof(TDestination).GetProperty("ImageName");
-            if (property != null && property.PropertyType == typeof(string))
+            var property = typeof(TDestination).GetProperty("ImageNames");
+            if (property != null && property.PropertyType == typeof(List<string>))
             {
-                property.SetValue(obj, imageName);
+                var imageNamesList = (List<string>)property.GetValue(obj) ?? new List<string>();
+
+                imageNamesList.Clear();
+
+                imageNamesList.Add(imageName);
+
+                property.SetValue(obj, imageNamesList);
             }
             else
             {
-                throw new FileException("ImageName property not found.");
+                throw new FileException("ImageNames property is not a List<string>.");
             }
         }
 

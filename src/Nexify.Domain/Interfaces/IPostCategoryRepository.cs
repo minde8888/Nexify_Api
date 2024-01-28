@@ -5,5 +5,6 @@ namespace Nexify.Domain.Interfaces
     {
         public Task AddPostCategoriesAsync(Guid categoryId, Guid productId);
         public Task DeleteCategoriesPostAsync(Guid id);
+        public Task DeleteRangePostCategories(Guid postId);
     }
 }

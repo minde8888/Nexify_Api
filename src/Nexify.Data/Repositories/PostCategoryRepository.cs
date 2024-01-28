@@ -27,13 +27,25 @@ namespace Nexify.Data.Repositories
             }
         }
 
+        public async Task DeleteRangePostCategories(Guid postId)
+        {
+            var entitiesToRemove = await _context.BlogCategoryPost
+                                                 .Where(bc => bc.PostId == postId)
+                                                 .ToListAsync();
+
+            _context.BlogCategoryPost.RemoveRange(entitiesToRemove);
+
+            await _context.SaveChangesAsync();
+        }
+
+
         public async Task DeleteCategoriesPostAsync(Guid id)
         {
-            var existingCategories = await _context.CategoriesProducts
-                .Where(cp => cp.ProductsId == id)
+            var existingCategories = await _context.BlogCategoryPost
+                .Where(cp => cp.PostId == id)
                 .ToListAsync();
 
-            _context.CategoriesProducts.RemoveRange(existingCategories);
+            _context.BlogCategoryPost.RemoveRange(existingCategories);
         }
     }
 }
