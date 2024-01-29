@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Nexify.Data.Helpers;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
@@ -37,7 +38,7 @@ namespace Nexify.Service.Services
             var validationResult = await new PostRequestValidator().ValidateAsync(post);
             ValidationExceptionHelper.ThrowIfInvalid<PostValidationException>(validationResult);
 
-            var result = await _imagesService.MapAndSaveImages<PostRequest, Post>(post, post.Images);
+            var result = await _imagesService.MapAndSaveImages<PostRequest, Post>(post, post.Images, "ImageNames");
             await _blogRepository.AddAsync(result);
 
             if (post.CategoriesIds != null && post.CategoriesIds.Any())
@@ -78,7 +79,7 @@ namespace Nexify.Service.Services
 
             var pagedProducts = PaginationService.CreatePagedResponse(pageParams);
 
-            var postDtos = MapPagedPost(pageParams, imageSrc);
+            var postDtos = MapPagedPost(pageParams, imageSrc);           
 
             return new PostsResponse
             {
@@ -100,9 +101,8 @@ namespace Nexify.Service.Services
             var processedPost = await _imagesService.MapAndProcessObjectListAsync<PostUpdateRequest, Post>(
                 post,
                 obj => obj.Images,
-                obj => string.Join(",", obj.ImageNames),
-                (obj, imageName) => Path.Combine("Images", imageName),
-                contentRootPath
+                contentRootPath,
+                "ImageNames"
             );
 
             await _blogRepository.ModifyAsync(processedPost);

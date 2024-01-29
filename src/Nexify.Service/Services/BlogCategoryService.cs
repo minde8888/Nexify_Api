@@ -30,7 +30,7 @@ namespace Nexify.Service.Services
                 var validationResult = await new BlogCategoryDtoValidator().ValidateAsync(categoryDto);
                 ValidationExceptionHelper.ThrowIfInvalid<CategoryValidationException>(validationResult);
 
-                var category = await _imagesService.MapAndSaveImages<BlogCategoryDto, BlogCategory>(categoryDto, categoryDto.Images);
+                var category = await _imagesService.MapAndSaveImages<BlogCategoryDto, BlogCategory>(categoryDto, categoryDto.Images, "ImageName");
 
                 await _categoryRepository.AddAsync(category);
             }
@@ -42,7 +42,7 @@ namespace Nexify.Service.Services
 
             foreach (var category in categories)
             {
-                category.ImageName = _imagesService.ProcessImages(category, imageSrc);
+                category.ImageName = _imagesService.ProcessImages(category, imageSrc, "ImageName");
             }
 
             var mappedCategories = _mapper.Map<List<BlogCategoryResponse>>(categories);
@@ -60,7 +60,8 @@ namespace Nexify.Service.Services
                   obj => obj.Images,
                   obj => obj.ImageName,
                   (obj, imageName) => Path.Combine("Images", imageName),
-                  contentRootPath
+                  contentRootPath,
+                  "ImageName"
               );
 
             await _categoryRepository.UpdateAsync(processedCategory);

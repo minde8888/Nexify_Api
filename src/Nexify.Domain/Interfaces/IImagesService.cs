@@ -11,14 +11,14 @@ namespace Nexify.Domain.Interfaces
             Func<TSource, IEnumerable<IFormFile>> imagePropertySelector,
             Func<TSource, string> imagePathSelector,
             Func<TSource, string, string> imagePathProcessor,
-            string contentRootPath);
+            string contentRootPath,
+            string propertyName);
         Task<TDestination> MapAndProcessObjectListAsync<TSource, TDestination>(
-            TSource sourceObject,
-            Func<TSource, IEnumerable<IFormFile>> imagePropertySelector,
-            Func<TSource, string> imagePathSelector,
-            Func<TSource, string, string> imagePathProcessor,
-            string contentRootPath);        
-        Task<TDestination> MapAndSaveImages<TSource, TDestination>(TSource sourceObject, List<IFormFile> images);
-        string ProcessImages<T>(T obj, string imageSrc);
+           TSource sourceObject,
+           Func<TSource, IEnumerable<IFormFile>> imagePropertySelector,
+           string contentRootPath,
+           string propertyName);
+        Task<TDestination> MapAndSaveImages<TSource, TDestination>(TSource sourceObject, List<IFormFile> images, string propertyName);
+        string ProcessImages<T>(T obj, string imageSrc, string propertyName);
     }
 }

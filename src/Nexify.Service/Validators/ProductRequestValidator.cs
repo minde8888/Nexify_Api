@@ -14,7 +14,7 @@ namespace Nexify.Service.Validators
 
             RuleFor(request => request.Content)
                 .NotEmpty().WithMessage("Description is required")
-                .MaximumLength(1000).WithMessage("Description cannot be longer than 1000 characters");
+                .MaximumLength(10000).WithMessage("Description cannot be longer than 10000 characters");
 
             RuleFor(request => request.Price)
                 .NotEmpty().WithMessage("Price is required")

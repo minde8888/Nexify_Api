@@ -47,25 +47,22 @@ namespace Nexify.Service.Services
         {
             var categories = await _categoryRepository.GetAllAsync();
 
-            ProcessImagesForCategories(categories, imageSrc);
+            ProcessImagesForCategories(categories, imageSrc, "ImageName");
 
             var mappedCategories = _mapper.Map<List<CategoryResponse>>(categories);
-
-            PropertySorter.SortDescendingByProperty(mappedCategories, category => category.DateCreated);
-            PropertySorter.SortAscendingBySubproperty(mappedCategories, category => category.DateCreated, "Subcategories");
 
             return mappedCategories;
         }
 
-        private void ProcessImagesForCategories(IEnumerable<Category> categories, string imageSrc)
+        private void ProcessImagesForCategories(IEnumerable<Category> categories, string imageSrc, string propertyName)
         {
             foreach (var category in categories)
             {
-                category.ImageName = _imagesService.ProcessImages(category, imageSrc);
+                category.ImageName = _imagesService.ProcessImages(category, imageSrc, propertyName);
 
                 foreach (var subcategory in category.Subcategories)
                 {
-                    subcategory.ImageName = _imagesService.ProcessImages(subcategory, imageSrc);
+                    subcategory.ImageName = _imagesService.ProcessImages(subcategory, imageSrc, propertyName);
                 }
             }
         }
@@ -79,7 +76,8 @@ namespace Nexify.Service.Services
                 obj => obj.Images,
                 obj => obj.ImageName,
                 (obj, imageName) => Path.Combine("Images", imageName),
-                contentRootPath
+                contentRootPath,
+                "ImageName"
             );
 
             await _categoryRepository.UpdateAsync(processedCategory);

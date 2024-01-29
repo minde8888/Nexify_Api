@@ -13,7 +13,7 @@ namespace Nexify.Service.Validators
                 .MaximumLength(255).WithMessage("CategoryName cannot be longer than 255 characters.");
 
             RuleFor(dto => dto.Description)
-                .MaximumLength(1000).WithMessage("Description cannot be longer than 1000 characters.");
+                .MaximumLength(10000).WithMessage("Description cannot be longer than 10000 characters.");
 
             RuleFor(dto => dto.Images)
                 .Must(HaveAtLeastOneImageOrNull).WithMessage("Image must be a valid image file");

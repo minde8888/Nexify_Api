@@ -21,9 +21,11 @@ namespace Nexify.Data.Repositories
         }
 
         public async Task<List<Category>> GetAllAsync() => await _context.Category
-               .Include(s => s.Subcategories)
-               .ToListAsync()
-               .ConfigureAwait(false);
+            .OrderByDescending(c => c.DateCreated)
+            .Include(c => c.Subcategories.OrderBy(s => s.DateCreated))
+            .ToListAsync()
+            .ConfigureAwait(false);
+
 
         public async Task<Category> GetAsync(Guid id) => await _context.Category
                 .Include(c => c.Subcategories)

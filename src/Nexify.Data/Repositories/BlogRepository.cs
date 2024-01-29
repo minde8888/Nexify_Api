@@ -24,6 +24,7 @@ namespace Nexify.Data.Repositories
         public async Task<PagedResult<Post>> RetrieveAllAsync(PaginationFilter validFilter)
         {
             var pagedData = await _context.Post
+                .OrderByDescending(p => p.DateCreated)
                 .Include(c => c.Categories)
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Take(validFilter.PageSize)

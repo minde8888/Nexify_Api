@@ -51,7 +51,8 @@ namespace Nexify.Service.Services
                 obj => obj.Images,
                 obj => obj.ImageName,
                 (obj, imageName) => Path.Combine("Images", imageName),
-                rootPath);
+                rootPath,
+                "ImageName");
             await _subcategoryRepository.UpdateAsync(processedSubcategory);
         }
 

@@ -12,7 +12,7 @@ namespace Nexify.Service.Validators
                 .Length(2, 100).WithMessage("Category name must be between 2 and 100 characters.");
 
             RuleFor(category => category.Description)
-                .MaximumLength(500).WithMessage("Description can't be more than 500 characters.");
+                .MaximumLength(10000).WithMessage("Description can't be more than 10000 characters.");
 
             RuleFor(category => category.ImageSrc)
                 .Must(BeAValidUrl).WithMessage("Image source must be a valid URL.")
