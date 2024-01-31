@@ -8,7 +8,7 @@ namespace Nexify.Domain.Entities.Pagination
         public PaginationFilter()
         {
             PageNumber = 1;
-            PageSize = 3;
+            PageSize = 10;
         }
         public PaginationFilter(int pageNumber, int pageSize)
         {

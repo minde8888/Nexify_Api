@@ -11,7 +11,7 @@ namespace Nexify.Domain.Entities.Categories
         public string Description { get; set; }
         public string ImageName { get; set; }
         public IList<Post> Posts { get; set; }
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
         public bool IsDeleted { get; set; } = false;
     }

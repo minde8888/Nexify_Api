@@ -17,11 +17,13 @@ namespace Nexify.Data.Repositories
 
         public async Task AddAsync(BlogCategory category)
         {
+            category.DateCreated = DateTime.UtcNow;
             _context.BlogCategory.Add(category);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<BlogCategory>> GetAllAsync() => await _context.BlogCategory.ToListAsync();
+        public async Task<List<BlogCategory>> GetAllAsync() => 
+            await _context.BlogCategory.OrderByDescending(p => p.DateCreated).ToListAsync();
 
         public async Task RemoveAsync(Guid id)
         {
