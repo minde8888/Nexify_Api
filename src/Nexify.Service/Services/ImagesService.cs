@@ -186,5 +186,9 @@ namespace Nexify.Service.Services
             }
         }
 
+        public Task SaveImage(object value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
