@@ -19,8 +19,8 @@ jobs:
         with:
           dotnet-version: 7.0.x
       - name: Restore dependencies
-        run: dotnet restore Shop.sln
+        run: dotnet restore Nexify.sln
       - name: Build
-        run: dotnet build --no-restore src/Shop.Api/Shop.Api.csproj
+        run: dotnet build --no-restore src/Nexify.Api/Nexify.Api.csproj
       - name: Test
         run: dotnet test WebApiIntegrationTesting/Tests/Tests.csproj
