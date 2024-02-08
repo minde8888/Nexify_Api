@@ -185,10 +185,5 @@ namespace Nexify.Service.Services
                 throw new FileException("ImageName property not found.");
             }
         }
-
-        public Task SaveImage(object value)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

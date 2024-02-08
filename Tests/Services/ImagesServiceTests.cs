@@ -1,11 +1,7 @@
-﻿using Xunit;
-using Moq;
-using Microsoft.AspNetCore.Http;
+﻿using Moq;
 using Nexify.Service.Services;
 using Nexify.Domain.Exceptions;
 using AutoMapper;
-using Microsoft.AspNetCore.Http.Internal;
-using System.Reflection;
 
 namespace Nexify.Service.UnitTests.Services
 {
@@ -20,38 +16,37 @@ namespace Nexify.Service.UnitTests.Services
             _imagesService = new ImagesService(_mapperMock.Object);
         }
 
-        //[Fact]
-        //public async Task SaveImages_ValidImageFiles_ReturnsImageNames()
-        //{
-        //    // Arrange
-        //    var tempDirectory = Path.Combine("D:\\#C\\Nexify\\Nexify.Aip\\Images"); // Update this path to the correct one
-        //    Directory.CreateDirectory(tempDirectory);
-
-        //    var imageFiles = new List<IFormFile>
-        //    {
-        //        new FormFile(new MemoryStream(new byte[1]), 0, 1, "image1", "image1.jpg"),
-        //        new FormFile(new MemoryStream(new byte[1]), 0, 1, "image2", "image2.jpg")
-        //    };
-
-        //    // Act
-        //    var result = await _imagesService.SaveImages(imageFiles);
-
-        //    // Assert
-        //    Assert.NotEmpty(result);
-        //    Assert.Equal(2, result.Split(',').Length);
-
-        //    // Clean up
-        //    Directory.Delete(tempDirectory, true);
-        //}
-
-
         [Fact]
         public async Task SaveImages_NullImageFiles_ThrowsException()
         {
             // Arrange & Act & Assert
             await Assert.ThrowsAsync<FileException>(() => _imagesService.SaveImages(null));
         }
+        [Fact]
+        public async Task DeleteImageAsync_FileExists_DeletesFile()
+        {
+            // Arrange
+            var fileName = Path.GetRandomFileName();
+            var path = Path.Combine(Path.GetTempPath(), fileName);
+            await File.WriteAllTextAsync(path, "dummy content");
 
-    
+            // Act
+            await _imagesService.DeleteImageAsync(path);
+
+            // Assert
+            Assert.False(File.Exists(path));
+        }
+
+        [Fact]
+        public async Task DeleteImageAsync_FileDoesNotExist_DoesNotThrowException()
+        {
+            // Arrange
+            var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            // Act & Assert
+            await _imagesService.DeleteImageAsync(path);
+        }
+
+
     }
 }
