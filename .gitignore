@@ -374,9 +374,6 @@ Images/
 # Properties directory (assuming it contains project-specific properties)
 Properties/
 
-# Docker file
-Dockerfile
-
 # Docker Compose
 docker-compose.override.yml
 docker-compose.debug.yml
