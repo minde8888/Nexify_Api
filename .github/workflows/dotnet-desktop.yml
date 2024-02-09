@@ -20,16 +20,13 @@ jobs:
       with:
         dotnet-version: '7.0.x'
     
-    - name: Restore dependencies
+    - name: Restore and Build API Project
       run: |
-        # Assuming the docker-compose issue is resolved, directly restore the solution
-        dotnet restore Nexify.sln --ignore-failed-sources
-
-    - name: Build
-      run: dotnet build Nexify.sln --no-restore
+        dotnet restore src/Nexify.Api/Nexify.Api.csproj
+        dotnet build src/Nexify.Api/Nexify.Api.csproj --no-restore
 
     - name: Run Unit Tests
-      run: dotnet test WebApiTesting/Tests/Tests.csproj
+      run: dotnet test Tests/Tests.csproj
 
     - name: Run Integration Tests
-      run: dotnet test WebApiTesting/IntegrationTests/IntegrationTestsTests.csproj
+      run: dotnet test IntegrasjonTests/IntegrationTestsTests.csproj
