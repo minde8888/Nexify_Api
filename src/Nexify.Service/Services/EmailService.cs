@@ -2,6 +2,7 @@
 using Nexify.Domain.Entities.Email;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
+using Nexify.Service.Interfaces;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -10,12 +11,12 @@ namespace Nexify.Service.Services
     public class EmailService : IEmailService
     {
         private readonly EmailSettings _emailSettings;
-        private readonly SendGridClient _sendGridClient;
+        private readonly ISendGridClientWrapper _sendGridClientWrapper;
 
-        public EmailService(IOptions<EmailSettings> emailSettings)
+        public EmailService(IOptions<EmailSettings> emailSettings, ISendGridClientWrapper sendGridClientWrapper)
         {
             _emailSettings = emailSettings.Value;
-            _sendGridClient = new SendGridClient(_emailSettings.ApiKey);
+            _sendGridClientWrapper = sendGridClientWrapper;
         }
 
         public async Task<bool> SendEmailAsync(string email, string subject, string htmlMessage, string plainTextContent)
@@ -26,7 +27,7 @@ namespace Nexify.Service.Services
 
             try
             {
-                var response = await _sendGridClient.SendEmailAsync(msg);
+                var response = await _sendGridClientWrapper.SendEmailAsync(msg);
 
                 if (response.IsSuccessStatusCode)
                 {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nexify.Service.Dtos;
+using Nexify.Service.Interfaces;
 using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers
@@ -11,10 +12,10 @@ namespace Nexify.Api.Controllers
     [ApiController]
     public class SubcategoryController : Controller
     {
-        private readonly SubcategoryService _subcategoryService;
+        private readonly ISubcategoryService _subcategoryService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public SubcategoryController(SubcategoryService subCategoryService, IWebHostEnvironment hostEnvironment)
+        public SubcategoryController(ISubcategoryService subCategoryService, IWebHostEnvironment hostEnvironment)
         {
             _subcategoryService = subCategoryService ?? throw new ArgumentNullException(nameof(subCategoryService));
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));

@@ -53,6 +53,7 @@ namespace Nexify.Api
             services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IBlogCategoryRepository, BlogCategoryRepository>();
+            services.AddTransient<ISendGridClientWrapper, SendGridClientWrapper>();
 
             services.AddTransient<UserManager<ApplicationUser>>();
 
