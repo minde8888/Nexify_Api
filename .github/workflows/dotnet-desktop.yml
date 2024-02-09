@@ -26,7 +26,7 @@ jobs:
         dotnet build src/Nexify.Api/Nexify.Api.csproj --no-restore
 
     - name: Run Unit Tests
-      run: dotnet test WebApiTesting/Tests/Tests.csproj
+      run: dotnet test WebApiTesting/Tests.csproj
 
     - name: Run Integration Tests
-      run: dotnet test WebApiTesting/IntegrationTests/IntegrationTestsTests.csproj
+      run: dotnet test WebApiTesting/IntegrationTestsTests.csproj
