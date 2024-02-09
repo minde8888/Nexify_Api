@@ -5,6 +5,7 @@ using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Data.Helpers;
+using Nexify.Service.Interfaces;
 
 namespace Nexify.Service.Services
 {
@@ -13,13 +14,13 @@ namespace Nexify.Service.Services
         private readonly IMapper _mapper;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IImagesService _imagesService;
-        private readonly SubcategoryService _subcategoryService;
+        private readonly ISubcategoryService _subcategoryService;
 
         public CategoryService(
             IMapper mapper,
                 ICategoryRepository categoryRepository,
                     IImagesService imagesService,
-                        SubcategoryService subcategoryService)
+                        ISubcategoryService subcategoryService)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));

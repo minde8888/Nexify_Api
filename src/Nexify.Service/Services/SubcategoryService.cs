@@ -4,11 +4,12 @@ using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
+using Nexify.Service.Interfaces;
 using Nexify.Service.Validators;
 
 namespace Nexify.Service.Services
 {
-    public class SubcategoryService
+    public class SubcategoryService : ISubcategoryService
     {
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IImagesService _imagesService;

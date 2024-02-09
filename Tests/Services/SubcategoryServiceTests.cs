@@ -13,15 +13,13 @@ namespace Nexify.Service.UnitTests.Services
 {
     public class SubcategoryServiceTests
     {
-        private readonly InlineValidator<AddSubcategory> _subcategoryValidator;
         private readonly Mock<ISubcategoryRepository> _subcategoryRepositoryMock;
         private readonly Mock<IImagesService> _imagesServiceMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly SubcategoryService _service;
 
         public SubcategoryServiceTests()
-        {
-            _subcategoryValidator = new InlineValidator<AddSubcategory>();
+        {  
             _subcategoryRepositoryMock = new Mock<ISubcategoryRepository>();
             _imagesServiceMock = new Mock<IImagesService>();
             _mapperMock = new Mock<IMapper>();

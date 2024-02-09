@@ -32,8 +32,7 @@ namespace Nexify.Api
             services.AddTransient<CategoryService>();
             services.AddTransient<DiscountService>();
             services.AddTransient<BlogService>();
-            services.AddTransient<ProductsService>();
-            services.AddTransient<SubcategoryService>();
+            services.AddTransient<ProductsService>();     
             services.AddTransient<BlogCategoryService>();
 
             services.AddTransient<IImagesService, ImagesService>();
@@ -45,6 +44,7 @@ namespace Nexify.Api
             services.AddTransient<ITokenServiceWrap, TokenServiceWrap>();
             services.AddTransient<IAuthServiceWrap, AuthServiceWrap>();
 
+            services.AddTransient<ISubcategoryService, SubcategoryService>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IPostCategoryRepository, PostCategoryRepository>();
             services.AddTransient<IBlogRepository, BlogRepository>();

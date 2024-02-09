@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Nexify.Data.Helpers;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
