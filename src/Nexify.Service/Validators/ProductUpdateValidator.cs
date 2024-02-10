@@ -8,7 +8,7 @@ namespace Nexify.Service.Validators
     {
         public ProductUpdateValidator()
         {
-            RuleFor(update => update.ProductsId)
+            RuleFor(update => update.ProductId)
                 .NotEmpty().WithMessage("ProductsId is required")
                 .NotEqual(Guid.Empty).WithMessage("ProductsId cannot be empty");
 
@@ -24,8 +24,14 @@ namespace Nexify.Service.Validators
             RuleFor(update => update.Images)
                 .Must(HaveAtLeastOneImage).WithMessage("At least one image is required");
 
-            RuleFor(update => update.ImageName)
-                .MaximumLength(255).WithMessage("ImageName cannot be longer than 255 characters");
+            RuleFor(request => request.ImagesNames)
+                .Must(names => names == null || names.All(name => !string.IsNullOrWhiteSpace(name)))
+                .When(request => request.ImagesNames != null)
+                .WithMessage("All ImageNames must not be empty");
+
+            RuleFor(request => request.CategoriesIds)
+                .Must(categoryIds => categoryIds == null || categoryIds.All(id => id != Guid.Empty))
+                .WithMessage("All CategoryId entries must be valid GUIDs or null");
         }
 
         private bool BeAValidPrice(string price)

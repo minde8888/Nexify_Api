@@ -5,13 +5,16 @@ namespace Nexify.Domain.Entities.Products
 {
     public class Product
     {
-        public Guid ProductId { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public string Price { get; set; }
         public string Discount { get; set; }
+        public string Size { get; set; }       
         public string Stock { get; set; }
-        public string ImageName { get; set; } = string.Empty;
+        public string Location { get; set; }
+        public List<string> ImagesNames { get; set; }
+        public List<string> ItemsImagesNames { get; set; }
         public bool IsDeleted { get; set; } = false;
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DateUpdated { get; set; }

@@ -104,11 +104,12 @@ namespace Nexify.Service.Services
                 "ImageNames"
             );
 
-            await _blogRepository.ModifyAsync(processedPost);
-            await _postCategoriesRepository.DeleteRangePostCategories(processedPost.Id);
+            await _blogRepository.ModifyAsync(processedPost);            
 
             if (post.CategoriesIds != null && post.CategoriesIds.Any())
             {
+                await _postCategoriesRepository.DeleteRangePostCategories(processedPost.Id);
+                
                 foreach (var categoryId in post.CategoriesIds)
                 {
                     await _postCategoriesRepository.AddPostCategoriesAsync(categoryId, processedPost.Id);

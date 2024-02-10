@@ -7,6 +7,7 @@ using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
 using Nexify.Data.Helpers;
+using Nexify.Domain.Entities.Categories;
 
 namespace Nexify.Service.Services
 {
@@ -15,21 +16,21 @@ namespace Nexify.Service.Services
         private readonly IMapper _mapper;
         private readonly IImagesService _imagesService;
         private readonly IProductsRepository _productsRepository;
-        private readonly IPostCategoryRepository _productCategoriesRepository;
+        private readonly IProductCategoryRepository _categoriesRepository;
         private readonly IUriService _uriService;
         private readonly DiscountService _discountService;
 
         public ProductsService(
             IImagesService imagesService,
                 IProductsRepository productsRepository,
-                    IPostCategoryRepository productCategoriesRepository,
+                    IProductCategoryRepository categoriesRepository,
                         IMapper mapper,
                             IUriService uriService,
                                 DiscountService discountService)
         {
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
             _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(productsRepository));
-            _productCategoriesRepository = productCategoriesRepository ?? throw new ArgumentNullException(nameof(productCategoriesRepository));
+            _categoriesRepository = categoriesRepository ?? throw new ArgumentNullException(nameof(categoriesRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _uriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
             _discountService = discountService ?? throw new ArgumentException(nameof(discountService));
@@ -40,33 +41,24 @@ namespace Nexify.Service.Services
             var validationResult = await new ProductRequestValidator().ValidateAsync(product);
             ValidationExceptionHelper.ThrowIfInvalid<ProductValidationException>(validationResult);
 
-            var result = _mapper.Map<Product>(product);
-            result.ProductId = Guid.NewGuid();
-
-            if (product.Images?.Any() == true)
-            {
-                result.ImageName = string.
-                    Join(",", await _imagesService.
-                    SaveImages(product.Images));
-            }
-
+            var result = await _imagesService.MapAndSaveImages<ProductRequest, Product>(product, product.Images, "ImagesNames");
             await _productsRepository.AddAsync(result);
+
+            if (product.CategoriesIds != null && product.CategoriesIds.Any())
+            {
+                foreach (var categoryId in product.CategoriesIds)
+                {
+                    await _categoriesRepository.AddProductCategoriesAsync(categoryId, result.Id);
+                }
+            }
         }
 
-        public async Task AddProductCategoriesAsync(ProductCategories productCategories)
+        public async Task AddProductSubcategoriesByIdAsync(CategoryItems productCategories)
         {
-            var validationResult = await new ProductCategoriesValidator().ValidateAsync(productCategories);
+            var validationResult = await new CategoryItemsValidator().ValidateAsync(productCategories);
             ValidationExceptionHelper.ThrowIfInvalid<ProductCategoriesValidationException>(validationResult);
 
-            await _productCategoriesRepository.AddPostCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId));
-        }
-
-        public async Task AddProductSubcategoriesByIdAsync(string productId, string subcategoryId)
-        {
-            if (string.IsNullOrEmpty(productId) || string.IsNullOrEmpty(subcategoryId))
-                throw new ProductException("Product id or subcategory id can't by null");
-
-            await _productsRepository.AddProductSubcategoriesAsync(new Guid(productId), new Guid(subcategoryId));
+            await _categoriesRepository.AddProductCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId));
         }
 
         public async Task<ProductsResponse> GetAllProductsAsync(
@@ -74,7 +66,6 @@ namespace Nexify.Service.Services
                 string imageSrc,
                     string route)
         {
-
             var validationResult = await new PaginationFilterValidator().ValidateAsync(filter);
             ValidationExceptionHelper.ThrowIfInvalid<PaginationValidationException>(validationResult);
 
@@ -104,38 +95,34 @@ namespace Nexify.Service.Services
             };
         }
 
-        public async Task<ProductDto> GetProductAsync(string id, string imageSrc)
+        public async Task UpdateProductAsync(string contentRootPath, ProductUpdate product)
         {
-            if (string.IsNullOrEmpty(id))
-                throw new ProductException("Product id can't by null");
+            await ValidateProductUpdate(product);
 
-            var product = await _productsRepository.RetrieveAsync(Guid.Parse(id));
+            var processedPost = await _imagesService.MapAndProcessObjectListAsync<ProductUpdate, Product>(
+                product,
+                obj => obj.Images,
+                contentRootPath,
+                "ImageNames"
+            );
 
-            if (product.Discount != null)
-                product.Price = _discountService.DiscountCounter(product.Discount, product.Price);
+            await _productsRepository.ModifyAsync(processedPost);
 
-            return MapProduct(product, imageSrc);
+            if (product.CategoriesIds != null && product.CategoriesIds.Any())
+            {
+                await _categoriesRepository.DeleteRangeProductCategories(processedPost.Id);
+
+                foreach (var categoryId in product.CategoriesIds)
+                {
+                    await _categoriesRepository.AddProductCategoriesAsync(categoryId, processedPost.Id);
+                }
+            }
         }
 
-        public async Task UpdateProductAsync(string contentRootPath, ProductUpdate product)
+        private async Task ValidateProductUpdate(ProductUpdate product)
         {
             var validationResult = await new ProductUpdateValidator().ValidateAsync(product);
             ValidationExceptionHelper.ThrowIfInvalid<PaginationValidationException>(validationResult);
-
-            if (product.Images != null)
-            {
-                var imagesNames = product.ImageName.Split(',');
-                foreach (var imageName in imagesNames)
-                {
-                    var imagePath = Path.Combine(contentRootPath, "Images", imageName);
-                    await _imagesService.DeleteImageAsync(imagePath);
-                }
-
-                product.ImageName = await _imagesService.SaveImages(product.Images);
-            }
-
-            var result = _mapper.Map<Product>(product);
-            await _productsRepository.ModifyAsync(result);
         }
 
         public async Task RemoveProductsAsync(string id)
@@ -146,44 +133,6 @@ namespace Nexify.Service.Services
             Guid newId = new(id);
 
             await _productsRepository.RemoveAsync(newId);
-        }
-
-        public async Task RemoveProductCategoriesAsync(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                throw new ProductException("Product id can't by null");
-
-            Guid newId = new(id);
-
-            await _productCategoriesRepository.DeleteCategoriesPostAsync(newId);
-        }
-
-        public async Task RemoveProductSubcategoriesAsync(string productId, string subcategoryId)
-        {
-            if (string.IsNullOrEmpty(productId) || string.IsNullOrEmpty(subcategoryId))
-                throw new ProductException("Product id or subcategory id can't by null");
-
-            await _productsRepository.DeleteSubcategoriesProductAsync(new Guid(productId), new Guid(subcategoryId));
-        }
-
-        private ProductDto MapProduct(Product product, string imageSrc)
-        {
-            if (product.ImageName == null)
-                throw new ProductException("Product image name can't be null");
-
-            var imageNames = product.ImageName.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            if (imageNames.Length == 0)
-                throw new ProductException("There are no images for the product.");
-
-            var imageUrls = imageNames.Select(imageName => $"{imageSrc}/Images/{imageName}").ToList();
-            return new ProductDto
-            {
-                Id = product.ProductId,
-                Title = product.Title,
-                Content = product.Content,
-                Price = product.Price,
-                ImageSrc = imageUrls
-            };
         }
 
         private List<ProductDto> MapPagedProducts(PagedParams<Product> pageParams, string imageSrc)
@@ -197,9 +146,9 @@ namespace Nexify.Service.Services
 
                 var productDto = _mapper.Map<ProductDto>(product);
 
-                if (!string.IsNullOrEmpty(product.ImageName))
+                if (productDto.ImageNames.Count != 0)
                 {
-                    var imageNames = product.ImageName.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    var imageNames = product.ImagesNames;
                     var imageSrcs = imageNames.Select(name => $"{imageSrc}/Images/{name.Trim()}");
                     productDto.ImageSrc = imageSrcs.ToList();
                 }

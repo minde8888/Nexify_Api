@@ -12,6 +12,7 @@ namespace Nexify.Service.Dtos
         public string Stock { get; set; }
         public List<IFormFile> Images { get; set; }
         public string ImageName { get; set; }
+        public List<Guid> CategoriesIds { get; set; }
 
     }
 }

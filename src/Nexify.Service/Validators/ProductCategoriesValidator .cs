@@ -1,18 +1,18 @@
 ﻿using FluentValidation;
-using Nexify.Domain.Entities.Products;
+using Nexify.Domain.Entities.Categories;
 namespace Nexify.Service.Validators
 {
-    public class ProductCategoriesValidator : AbstractValidator<ProductCategories>
+    public class CategoryItemsValidator : AbstractValidator<CategoryItems>
     {
-        public ProductCategoriesValidator()
+        public CategoryItemsValidator()
         {
             RuleFor(pc => pc.ProductId)
-                .NotEmpty().WithMessage("ProductId is required")
-                .MaximumLength(36).WithMessage("ProductId cannot be longer than 36 characters");
+                .NotEmpty().WithMessage("ProductsId is required")
+                .MaximumLength(36).WithMessage("ProductsId cannot be longer than 36 characters");
 
             RuleFor(pc => pc.CategoryId)
-                .NotEmpty().WithMessage("CategoryId is required")
-                .MaximumLength(36).WithMessage("CategoryId cannot be longer than 36 characters");
+                .NotEmpty().WithMessage("CategoriesId is required")
+                .MaximumLength(36).WithMessage("CategoriesId cannot be longer than 36 characters");
         }
     }
 }

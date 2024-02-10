@@ -23,7 +23,7 @@ namespace Nexify.Data.Repositories
         public async Task AddProductSubcategoriesAsync(Guid productId, Guid subcategoryId)
         {
             var product = await _context.Product
-                .FirstOrDefaultAsync(p => p.ProductId == productId);
+                .FirstOrDefaultAsync(p => p.Id == productId);
             product.SubcategoriesId = subcategoryId;
 
             _context.Entry(product).State = EntityState.Modified;
@@ -42,22 +42,16 @@ namespace Nexify.Data.Repositories
             return new PagedResult<Product> { Items = pagedData, TotalCount = totalCount };
         }
 
-        public async Task<Product> RetrieveAsync(Guid id)
-        {
-            return await _context.Product.
-                Include(c => c.Categories).
-                Where(x => x.ProductId == id).FirstOrDefaultAsync();
-        }
-
         public async Task ModifyAsync(Product product)
         {
             var currentProduct = await _context.Product
-                .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+                .FirstOrDefaultAsync(p => p.Id == product.Id);
 
             currentProduct.Title = product.Title;
             currentProduct.Content = product.Content;
-            currentProduct.ImageName = product.ImageName;
+            currentProduct.ImagesNames = product.ImagesNames;
             currentProduct.Price = product.Price;
+            currentProduct.Discount = product.Discount;
             currentProduct.DateUpdated = DateTime.UtcNow;
 
             _context.Entry(currentProduct).State = EntityState.Modified;
@@ -67,7 +61,7 @@ namespace Nexify.Data.Repositories
         public async Task RemoveAsync(Guid id)
         {
             var product = await _context.Product.
-                Where(x => x.ProductId == id).FirstOrDefaultAsync();
+                Where(x => x.Id == id).FirstOrDefaultAsync();
 
             product.IsDeleted = true;
             await _context.SaveChangesAsync();
@@ -76,7 +70,7 @@ namespace Nexify.Data.Repositories
         public async Task DeleteSubcategoriesProductAsync(Guid productId, Guid subcategoryId)
         {
             var product = await _context.Product
-              .FirstOrDefaultAsync(p => p.ProductId == productId);
+              .FirstOrDefaultAsync(p => p.Id == productId);
             product.SubcategoriesId = Guid.Empty;
 
             _context.Entry(product).State = EntityState.Modified;

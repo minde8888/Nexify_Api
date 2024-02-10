@@ -9,7 +9,8 @@
         public string Discount { get; set; }
         public string Stok { get; set; }
         public DateTime DateCreated { get; set; }
-        public ICollection<string> ImageSrc { get; set; }
+        public List<string> ImageNames { get; set; }
+        public List<string> ImageSrc { get; set; }
 
     }
 }

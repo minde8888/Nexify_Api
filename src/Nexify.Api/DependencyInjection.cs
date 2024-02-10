@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Nexify.Data.Configuration;
 using Nexify.Data.Context;
 using Nexify.Data.Repositories;
 using Nexify.Domain.Entities.Auth;
+using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Email;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
@@ -32,7 +34,7 @@ namespace Nexify.Api
             services.AddTransient<CategoryService>();
             services.AddTransient<DiscountService>();
             services.AddTransient<BlogService>();
-            services.AddTransient<ProductsService>();     
+            services.AddTransient<ProductsService>();
             services.AddTransient<BlogCategoryService>();
 
             services.AddTransient<IImagesService, ImagesService>();
@@ -49,6 +51,7 @@ namespace Nexify.Api
             services.AddTransient<IPostCategoryRepository, PostCategoryRepository>();
             services.AddTransient<IBlogRepository, BlogRepository>();
             services.AddTransient<IProductsRepository, ProductRepository>();
+            services.AddTransient<IProductCategoryRepository, ProductCategoryRepository>();
             services.AddTransient<ISubcategoryRepository, SubcategoryRepository>();
             services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
@@ -67,7 +70,7 @@ namespace Nexify.Api
             services.AddTransient<IValidator<PaginationFilter>, PaginationFilterValidator>();
             services.AddTransient<IValidator<PostCategories>, PostCategoriesValidator>();
             services.AddTransient<IValidator<PostUpdateRequest>, PostUpdateRequestValidator>();
-            services.AddTransient<IValidator<ProductCategories>, ProductCategoriesValidator>();
+            services.AddTransient<IValidator<CategoryItems>, CategoryItemsValidator>();
             services.AddTransient<IValidator<ProductRequest>, ProductRequestValidator>();
             services.AddTransient<IValidator<ProductUpdate>, ProductUpdateValidator>();
             services.AddTransient<IValidator<RequestToken>, RequestTokenValidator>();
