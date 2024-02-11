@@ -34,7 +34,11 @@ namespace Tests.Services
                 new BlogCategoryDto { CategoryName = "Test Category" }
             };
 
-            _imagesServiceMock.Setup(x => x.MapAndSaveImages<BlogCategoryDto, BlogCategory>(It.IsAny<BlogCategoryDto>(), It.IsAny<List<IFormFile>>(), It.IsAny<string>()))
+            _imagesServiceMock.Setup(
+                x => x.MapAndSaveImages<BlogCategoryDto, BlogCategory>
+                (It.IsAny<BlogCategoryDto>(), 
+                It.IsAny<List<IFormFile>>(), It.IsAny<string>(),
+                It.IsAny<List<IFormFile>>(), It.IsAny<string>()))
                               .ReturnsAsync(new BlogCategory());
 
             _categoryRepositoryMock.Setup(x => x.AddAsync(It.IsAny<BlogCategory>()))

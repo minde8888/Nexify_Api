@@ -18,7 +18,12 @@ namespace Nexify.Domain.Interfaces
            Func<TSource, IEnumerable<IFormFile>> imagePropertySelector,
            string contentRootPath,
            string propertyName);
-        Task<TDestination> MapAndSaveImages<TSource, TDestination>(TSource sourceObject, List<IFormFile> images, string propertyName);
+        Task<TDestination> MapAndSaveImages<TSource, TDestination>(
+            TSource sourceObject,
+            List<IFormFile> images,
+            string propertyName,
+            List<IFormFile> itemsImages = null,            
+            string propertyItemsNames = "");
         string ProcessImages<T>(T obj, string imageSrc, string propertyName);
     }
 }

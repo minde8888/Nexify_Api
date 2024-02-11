@@ -18,27 +18,44 @@ namespace Nexify.Service.Validators
 
             RuleFor(request => request.Price)
                 .NotEmpty().WithMessage("Price is required")
-                .Must(BeAValidPrice).WithMessage("Price must be a valid numerical value");
+                .Matches(@"^\d+(\.\d{1,2})?$").WithMessage("Price must be a valid amount with up to 2 decimal places");
+
+            RuleFor(request => request.Discount)
+                .NotEmpty()
+                .Matches(@"^\d+(\.\d{1,2})?$").WithMessage("Discount must be a valid amount with up to 2 decimal places");
+
+            RuleFor(request => request.Stock)
+                .NotEmpty().WithMessage("Stock is required")
+                .Matches(@"^\d+$").WithMessage("Stock must be a valid integer");
 
             RuleFor(request => request.Images)
-                .Must(HaveAtLeastOneImage).WithMessage("At least one image is required");
+                .Cascade(CascadeMode.Stop)
+                .Must(images => images == null || images.Any(image => image != null && image.Length > 0))
+                .WithMessage("Invalid image file");
 
-            RuleFor(request => request.ImageName)
-                .MaximumLength(255).WithMessage("ImageName cannot be longer than 255 characters");
-        }
+            RuleFor(request => request.ImagesNames)
+                .Must(names => names == null || names.All(name => !string.IsNullOrWhiteSpace(name)))
+                .When(request => request.ImagesNames != null)
+                .WithMessage("All ImageNames must not be empty");
 
-        private bool BeAValidPrice(string price)
-        {
-            if (!decimal.TryParse(price, out _))
-            {
-                return false;
-            }
-            return true;
-        }
+            RuleFor(request => request.ItemsImages)
+                .Cascade(CascadeMode.Stop)
+                .Must(images => images == null || images.Any(image => image != null && image.Length > 0))
+                .WithMessage("Invalid item image file")
+                .When(request => request.ItemsImages != null);
 
-        private bool HaveAtLeastOneImage(List<IFormFile> images)
-        {
-            return images != null && images.Count > 0;
+            RuleFor(request => request.ItemsNames)
+                .Must(names => names == null || names.All(name => !string.IsNullOrWhiteSpace(name)))
+                .When(request => request.ItemsNames != null)
+                .WithMessage("All ItemNames must not be empty");
+
+            RuleFor(request => request.CategoriesIds)
+                .Must(categoryIds => categoryIds == null || categoryIds.All(id => id != Guid.Empty))
+                .WithMessage("All CategoryId entries must be valid GUIDs or null");
+
+            RuleFor(request => request.SubcategoriesIds)
+                .Must(subcategoryIds => subcategoryIds == null || subcategoryIds.All(id => id != Guid.Empty))
+                .WithMessage("All SubcategoryId entries must be valid GUIDs or null");
         }
     }
 }

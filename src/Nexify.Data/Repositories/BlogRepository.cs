@@ -49,12 +49,9 @@ namespace Nexify.Data.Repositories
             var currentPost = await _context.Post
                 .FirstOrDefaultAsync(p => p.Id == post.Id);
 
-            currentPost.Title = post.Title;
-            currentPost.Content = post.Content;
-            currentPost.ImageNames = post.ImageNames;
+            _context.Entry(currentPost).CurrentValues.SetValues(post);
             currentPost.DateUpdated = DateTime.UtcNow;
 
-            _context.Entry(currentPost).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 

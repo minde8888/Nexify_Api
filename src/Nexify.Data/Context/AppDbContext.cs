@@ -27,6 +27,7 @@ namespace Nexify.Data.Context
         public DbSet<Subcategory> Subcategory { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<CategoriesProducts> CategoriesProducts { get; set; }
+        public DbSet<SubcategoriesProducts> SubcategoriesProducts { get; set; }        
         public DbSet<BlogCategory> BlogCategory { get; set; }
         public DbSet<BlogCategoryPost> BlogCategoryPost { get; set; }
         public DbSet<Post> Posts { get; set; }

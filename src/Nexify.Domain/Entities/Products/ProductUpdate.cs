@@ -13,5 +13,6 @@ namespace Nexify.Domain.Entities.Products
         public List<IFormFile> Images { get; set; }
         public List<string> ImagesNames { get; set; }
         public List<Guid> CategoriesIds { get; set; } = new List<Guid>();
+        public List<Guid> SubcategoriesIds { get; set; } = new List<Guid>();
     }
 }

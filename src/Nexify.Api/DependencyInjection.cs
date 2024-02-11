@@ -53,6 +53,7 @@ namespace Nexify.Api
             services.AddTransient<IProductsRepository, ProductRepository>();
             services.AddTransient<IProductCategoryRepository, ProductCategoryRepository>();
             services.AddTransient<ISubcategoryRepository, SubcategoryRepository>();
+            services.AddTransient<IProductSubcategoryRepository, ProductSubcategoryRepository>();
             services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IBlogCategoryRepository, BlogCategoryRepository>();

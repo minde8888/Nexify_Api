@@ -20,16 +20,6 @@ namespace Nexify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddProductSubcategoriesAsync(Guid productId, Guid subcategoryId)
-        {
-            var product = await _context.Product
-                .FirstOrDefaultAsync(p => p.Id == productId);
-            product.SubcategoriesId = subcategoryId;
-
-            _context.Entry(product).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<PagedResult<Product>> FetchAllAsync(PaginationFilter validFilter)
         {
             var pagedData = await _context.Product
@@ -47,14 +37,9 @@ namespace Nexify.Data.Repositories
             var currentProduct = await _context.Product
                 .FirstOrDefaultAsync(p => p.Id == product.Id);
 
-            currentProduct.Title = product.Title;
-            currentProduct.Content = product.Content;
-            currentProduct.ImagesNames = product.ImagesNames;
-            currentProduct.Price = product.Price;
-            currentProduct.Discount = product.Discount;
+            _context.Entry(currentProduct).CurrentValues.SetValues(product);
             currentProduct.DateUpdated = DateTime.UtcNow;
 
-            _context.Entry(currentProduct).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
@@ -64,16 +49,6 @@ namespace Nexify.Data.Repositories
                 Where(x => x.Id == id).FirstOrDefaultAsync();
 
             product.IsDeleted = true;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteSubcategoriesProductAsync(Guid productId, Guid subcategoryId)
-        {
-            var product = await _context.Product
-              .FirstOrDefaultAsync(p => p.Id == productId);
-            product.SubcategoriesId = Guid.Empty;
-
-            _context.Entry(product).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }

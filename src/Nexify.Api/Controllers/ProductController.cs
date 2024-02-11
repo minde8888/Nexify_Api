@@ -22,7 +22,6 @@ namespace Nexify.Api.Controllers
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
         }
-
       
         [HttpPost]
         //[Authorize(Roles = "Admin")]
@@ -31,7 +30,6 @@ namespace Nexify.Api.Controllers
             await _productService.AddProductAsync(product);
             return Ok();
         }
-
 
         [HttpGet]
         //[Authorize(Roles = "Admin")]

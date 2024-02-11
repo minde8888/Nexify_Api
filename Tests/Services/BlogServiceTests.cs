@@ -50,7 +50,10 @@ namespace Tests.Services
             };
             var post = new Post();
 
-            _imagesServiceMock.Setup(s => s.MapAndSaveImages<PostRequest, Post>(It.IsAny<PostRequest>(), It.IsAny<List<IFormFile>>(), It.IsAny<string>()))
+            _imagesServiceMock.Setup(
+                s => s.MapAndSaveImages<PostRequest, Post>(It.IsAny<PostRequest>(),
+                It.IsAny<List<IFormFile>>(), It.IsAny<string>(),
+                It.IsAny<List<IFormFile>>(), It.IsAny<string>()))
                 .ReturnsAsync(post);
 
             _blogRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Post>()))
@@ -76,7 +79,7 @@ namespace Tests.Services
                 CategoryId = Guid.NewGuid().ToString(),
                 PostId = Guid.NewGuid().ToString()
             };
-            var validationResult = new ValidationResult(); 
+            var validationResult = new ValidationResult();
 
             _postCategoriesRepositoryMock.Setup(repo => repo.AddPostCategoriesAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
                                          .Returns(Task.CompletedTask);
@@ -94,7 +97,7 @@ namespace Tests.Services
             // Arrange
             var postCategories = new PostCategories
             {
-                CategoryId = "", 
+                CategoryId = "",
                 PostId = ""
             };
 

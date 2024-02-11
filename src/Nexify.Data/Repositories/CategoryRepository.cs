@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexify.Data.Context;
 using Nexify.Domain.Entities.Categories;
+using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
@@ -54,12 +55,10 @@ namespace Nexify.Data.Repositories
         {
             var categorySave = await _context.Category
                 .FirstOrDefaultAsync(x => x.Id == category.Id);
-            categorySave.CategoryName = category.CategoryName;
-            categorySave.Description = category.Description;
-            categorySave.ImageName = category.ImageName;
+
+            _context.Entry(categorySave).CurrentValues.SetValues(category);
             categorySave.DateUpdated = DateTime.UtcNow;
 
-            _context.Entry(categorySave).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }

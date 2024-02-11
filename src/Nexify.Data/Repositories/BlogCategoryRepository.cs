@@ -40,14 +40,12 @@ namespace Nexify.Data.Repositories
 
         public async Task UpdateAsync(BlogCategory category)
         {
-            var categorySave = await _context.BlogCategory
+            var currentCategory = await _context.BlogCategory
                 .FirstOrDefaultAsync(x => x.Id == category.Id);
-            categorySave.CategoryName = category.CategoryName;
-            categorySave.Description = category.Description;
-            categorySave.ImageName = category.ImageName;
-            categorySave.DateUpdated = DateTime.UtcNow;
 
-            _context.Entry(categorySave).State = EntityState.Modified;
+            _context.Entry(currentCategory).CurrentValues.SetValues(category);
+            currentCategory.DateUpdated = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
         }
     }

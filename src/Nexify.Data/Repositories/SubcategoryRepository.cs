@@ -34,12 +34,9 @@ namespace Nexify.Data.Repositories
             var reesult = await _context.Subcategory
                 .FirstOrDefaultAsync(p => p.SubcategoryId == subcategory.SubcategoryId);
 
-            reesult.Description = subcategory.Description;
-            reesult.SubCategoryName = subcategory.SubCategoryName;
-            reesult.ImageName = subcategory.ImageName;
+            _context.Entry(reesult).CurrentValues.SetValues(subcategory);
             reesult.DateUpdated = DateTime.UtcNow;
 
-            _context.Entry(reesult).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }

@@ -7,7 +7,6 @@ using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
 using Nexify.Data.Helpers;
-using Nexify.Domain.Entities.Categories;
 
 namespace Nexify.Service.Services
 {
@@ -17,6 +16,7 @@ namespace Nexify.Service.Services
         private readonly IImagesService _imagesService;
         private readonly IProductsRepository _productsRepository;
         private readonly IProductCategoryRepository _categoriesRepository;
+        private readonly IProductSubcategoryRepository _subcategoryRepository;
         private readonly IUriService _uriService;
         private readonly DiscountService _discountService;
 
@@ -24,13 +24,15 @@ namespace Nexify.Service.Services
             IImagesService imagesService,
                 IProductsRepository productsRepository,
                     IProductCategoryRepository categoriesRepository,
-                        IMapper mapper,
-                            IUriService uriService,
-                                DiscountService discountService)
+                        IProductSubcategoryRepository subcategoryRepository,
+                            IMapper mapper,
+                                IUriService uriService,
+                                    DiscountService discountService)
         {
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
             _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(productsRepository));
             _categoriesRepository = categoriesRepository ?? throw new ArgumentNullException(nameof(categoriesRepository));
+            _subcategoryRepository = subcategoryRepository ?? throw new ArgumentNullException(nameof(subcategoryRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _uriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
             _discountService = discountService ?? throw new ArgumentException(nameof(discountService));
@@ -41,7 +43,13 @@ namespace Nexify.Service.Services
             var validationResult = await new ProductRequestValidator().ValidateAsync(product);
             ValidationExceptionHelper.ThrowIfInvalid<ProductValidationException>(validationResult);
 
-            var result = await _imagesService.MapAndSaveImages<ProductRequest, Product>(product, product.Images, "ImagesNames");
+            var result = await _imagesService.MapAndSaveImages<ProductRequest, Product>(
+                product,
+                product.Images,
+                "ImagesNames",
+                product.ItemsImages,
+                "ItemsNames");
+
             await _productsRepository.AddAsync(result);
 
             if (product.CategoriesIds != null && product.CategoriesIds.Any())
@@ -53,14 +61,6 @@ namespace Nexify.Service.Services
             }
         }
 
-        public async Task AddProductSubcategoriesByIdAsync(CategoryItems productCategories)
-        {
-            var validationResult = await new CategoryItemsValidator().ValidateAsync(productCategories);
-            ValidationExceptionHelper.ThrowIfInvalid<ProductCategoriesValidationException>(validationResult);
-
-            await _categoriesRepository.AddProductCategoriesAsync(new Guid(productCategories.CategoryId), new Guid(productCategories.ProductId));
-        }
-
         public async Task<ProductsResponse> GetAllProductsAsync(
             PaginationFilter filter,
                 string imageSrc,
@@ -69,15 +69,9 @@ namespace Nexify.Service.Services
             var validationResult = await new PaginationFilterValidator().ValidateAsync(filter);
             ValidationExceptionHelper.ThrowIfInvalid<PaginationValidationException>(validationResult);
 
-            var validFilter = filter ?? new PaginationFilter();
-            var result = await _productsRepository.FetchAllAsync(validFilter);
+            var result = await _productsRepository.FetchAllAsync(filter ?? new PaginationFilter());
 
-            var pageParams = new PagedParams<Product>(
-                result.Items,
-                validFilter,
-                result.TotalCount,
-                _uriService,
-                route);
+            var pageParams = new PagedParams<Product>(result.Items, filter, result.TotalCount, _uriService, route);
 
             var pagedProducts = PaginationService.CreatePagedResponse(pageParams);
 
@@ -115,6 +109,16 @@ namespace Nexify.Service.Services
                 foreach (var categoryId in product.CategoriesIds)
                 {
                     await _categoriesRepository.AddProductCategoriesAsync(categoryId, processedPost.Id);
+                }
+            }
+
+            if (product.SubcategoriesIds != null && product.SubcategoriesIds.Any())
+            {
+                await _subcategoryRepository.DeleteRangeProductSubcategories(processedPost.Id);
+
+                foreach (var categoryId in product.CategoriesIds)
+                {
+                    await _subcategoryRepository.AddProductSubcategoriesAsync(categoryId, processedPost.Id);
                 }
             }
         }

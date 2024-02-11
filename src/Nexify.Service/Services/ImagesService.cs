@@ -17,15 +17,15 @@ namespace Nexify.Service.Services
             if (imageFiles == null)
                 throw new FileException("Image file cannot be null.");
 
-            var imageNames = new List<string>();
+            var imagesNames = new List<string>();
 
             foreach (var file in imageFiles)
             {
                 var imageName = await SaveImage(file);
-                imageNames.Add(imageName);
+                imagesNames.Add(imageName);
             }
 
-            return string.Join(",", imageNames);
+            return string.Join(",", imagesNames);
         }
 
         private async Task<string> SaveImage(IFormFile imageFile)
@@ -119,16 +119,29 @@ namespace Nexify.Service.Services
             return mappedObject;
         }
 
-        public async Task<TDestination> MapAndSaveImages<TSource, TDestination>(TSource sourceObject, List<IFormFile> images, string propertyName)
+        public async Task<TDestination> MapAndSaveImages<TSource, TDestination>(
+              TSource sourceObject,
+            List<IFormFile> images,
+            string propertyName,
+            List<IFormFile> itemsImages = null,
+            string propertyItemsNames = "")
         {
             var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
 
-            if (images != null)
+            if (images?.Any() == true)
             {
                 foreach (var image in images)
                 {
                     var imageSaveResult = await SaveImages(new List<IFormFile> { image });
                     SetImageNamePropertyList(mappedObject, imageSaveResult, propertyName);
+                }
+            }
+            if (itemsImages?.Any() == true)
+            {
+                foreach (var image in images)
+                {
+                    var imageSaveResult = await SaveImages(new List<IFormFile> { image });
+                    SetImageNamePropertyList(mappedObject, imageSaveResult, propertyItemsNames);
                 }
             }
             return mappedObject;
