@@ -13,7 +13,7 @@ namespace Nexify.Service.Validators
                 .MaximumLength(255).WithMessage("Title cannot be longer than 255 characters");
 
             RuleFor(request => request.Content)
-                .NotEmpty().WithMessage("Description is required")
+                .NotEmpty()
                 .MaximumLength(10000).WithMessage("Description cannot be longer than 10000 characters");
 
             RuleFor(request => request.Price)
@@ -44,9 +44,9 @@ namespace Nexify.Service.Validators
                 .WithMessage("Invalid item image file")
                 .When(request => request.ItemsImages != null);
 
-            RuleFor(request => request.ItemsNames)
+            RuleFor(request => request.ItemsImagesNames)
                 .Must(names => names == null || names.All(name => !string.IsNullOrWhiteSpace(name)))
-                .When(request => request.ItemsNames != null)
+                .When(request => request.ItemsImagesNames != null)
                 .WithMessage("All ItemNames must not be empty");
 
             RuleFor(request => request.CategoriesIds)

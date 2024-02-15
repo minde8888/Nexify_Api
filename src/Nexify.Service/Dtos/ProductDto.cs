@@ -8,7 +8,7 @@
         public string Price { get; set; }
         public string Discount { get; set; }
         public string Size { get; set; }
-        public string Stok { get; set; }
+        public string Stock { get; set; }
         public string Location { get; set; }
         public List<string> ImageNames { get; set; }
         public List<string> ImageSrc { get; set; }

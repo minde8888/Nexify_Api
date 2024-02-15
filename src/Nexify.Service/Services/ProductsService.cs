@@ -48,7 +48,7 @@ namespace Nexify.Service.Services
                 product.Images,
                 "ImagesNames",
                 product.ItemsImages,
-                "ItemsNames");
+                "ItemsImagesNames");
 
             await _productsRepository.AddAsync(result);
 
