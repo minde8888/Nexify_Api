@@ -10,11 +10,9 @@
         public string Size { get; set; }
         public string Stock { get; set; }
         public string Location { get; set; }
-        public List<string> ImageNames { get; set; }
-        public List<string> ImageSrc { get; set; }
-        public List<string> ItemsImagesNames { get; set; }
-        public List<string> ItemSrc { get; set; }
+        public List<string> ImageSrc { get; set; } = new List<string>();
+        public List<string> ItemSrc { get; set; } = new List<string>();
         public DateTime DateCreated { get; set; }
-        public List<CategoryResponse> Catrgories { get; set; }       
+        public List<CategoryResponse> Categories { get; set; }
     }
 }

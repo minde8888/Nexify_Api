@@ -139,28 +139,47 @@ namespace Nexify.Service.Services
             await _productsRepository.RemoveAsync(newId);
         }
 
-        private List<ProductDto> MapPagedProducts(PagedParams<Product> pageParams, string imageSrc)
+        public List<ProductDto> MapPagedProducts(PagedParams<Product> pageParams, string imageSrc)
         {
             var pagedProducts = PaginationService.CreatePagedResponse(pageParams);
+            var productDtos = _mapper.Map<List<ProductDto>>(pagedProducts.Data);
 
-            var result = pagedProducts.Data.Select(product =>
+            productDtos.ForEach(dto => ApplyDiscountIfAny(dto));
+
+            productDtos.ForEach(dto =>
             {
-                if (product.Discount != null)
-                    product.Price = _discountService.DiscountCounter(product.Discount, product.Price);
-
-                var productDto = _mapper.Map<ProductDto>(product);
-
-                if (productDto.ImageNames.Count != 0)
+                var correspondingProduct = pagedProducts.Data.FirstOrDefault(p => p.Id == dto.Id);
+                if (correspondingProduct != null)
                 {
-                    var imageNames = product.ImagesNames;
-                    var imageSrcs = imageNames.Select(name => $"{imageSrc}/Images/{name.Trim()}");
-                    productDto.ImageSrc = imageSrcs.ToList();
+                    SetImageSourcesForDto(dto, correspondingProduct, imageSrc);
                 }
+            });
 
-                return productDto;
-            }).ToList();
-
-            return result;
+            return productDtos;
         }
+
+        private void ApplyDiscountIfAny(ProductDto productDto)
+        {
+            if (!string.IsNullOrEmpty(productDto.Discount))
+            {
+                productDto.Price = _discountService.DiscountCounter(productDto.Discount, productDto.Price);
+            }
+        }
+
+        private void SetImageSourcesForDto(ProductDto dto, Product product, string baseImageSrc)
+        {
+            var imagesNames = product.ImagesNames ?? new List<string>();
+            var itemsImagesNames = product.ItemsImagesNames ?? new List<string>();
+
+            var allImageNames = imagesNames.Concat(itemsImagesNames)
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Distinct()
+                .Select(name => $"{baseImageSrc}/Images/{name.Trim()}")
+                .ToList();
+
+            dto.ImageSrc = allImageNames;
+            dto.ItemSrc = allImageNames; 
+        }
+
     }
 }
