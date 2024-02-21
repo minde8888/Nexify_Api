@@ -12,7 +12,7 @@ namespace Nexify.Service.Services
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<string> SaveImages(List<IFormFile> imageFiles)
+        public async Task<string> SaveImagesAsync(List<IFormFile> imageFiles)
         {
             if (imageFiles == null)
                 throw new FileException("Image file cannot be null.");
@@ -21,14 +21,14 @@ namespace Nexify.Service.Services
 
             foreach (var file in imageFiles)
             {
-                var imageName = await SaveImage(file);
+                var imageName = await SaveImageAsync(file);
                 imagesNames.Add(imageName);
             }
 
             return string.Join(",", imagesNames);
         }
 
-        private async Task<string> SaveImage(IFormFile imageFile)
+        private async Task<string> SaveImageAsync(IFormFile imageFile)
         {
             if (imageFile == null || imageFile.Length == 0)
             {
@@ -79,7 +79,7 @@ namespace Nexify.Service.Services
             {
                 foreach (var image in images)
                 {
-                    var imageName = await SaveImages(new List<IFormFile> { image });
+                    var imageName = await SaveImagesAsync(new List<IFormFile> { image });
                     SetImageNameProperty(mappedObject, imageName, porpertyName);
 
                     if (!string.IsNullOrEmpty(contentRootPath))
@@ -94,29 +94,50 @@ namespace Nexify.Service.Services
 
         public async Task<TDestination> MapAndProcessObjectListAsync<TSource, TDestination>(
            TSource sourceObject,
-           Func<TSource, IEnumerable<IFormFile>> imagePropertySelector,
            string contentRootPath,
-           string propertyName)
+           string propertyName1,
+           string propertyName2 = "")
         {
             var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
 
-            var images = imagePropertySelector(sourceObject);
+            var itemsImagesProperty = typeof(TSource).GetProperty("ItemsImages");
+            var imagesProperty = typeof(TSource).GetProperty("Images");
+
+            var itemsImages = itemsImagesProperty?.GetValue(sourceObject) as List<IFormFile>;
+            var images = imagesProperty?.GetValue(sourceObject) as List<IFormFile>;
+
+            if (itemsImages != null)
+            {
+                await ProcessImagesAsync(mappedObject, itemsImages, contentRootPath, propertyName2);
+            }
 
             if (images != null)
             {
-                foreach (var image in images)
-                {
-                    var imageName = await SaveImages(new List<IFormFile> { image });
-                    SetImageNamePropertyList(mappedObject, imageName, propertyName);
+                await ProcessImagesAsync(mappedObject, images, contentRootPath, propertyName1);
+            }
 
-                    if (!string.IsNullOrEmpty(contentRootPath))
-                    {
-                        var fullPath = Path.Combine(contentRootPath, contentRootPath, imageName);
-                        await DeleteImageAsync(fullPath);
-                    }
+            return mappedObject;
+        }
+
+        private async Task ProcessImagesAsync<TDestination>(
+            TDestination mappedObject,
+            IEnumerable<IFormFile> images,
+            string contentRootPath,
+            string propertyName)
+        {
+            var imageNamesList = new List<string>();
+
+            foreach (var image in images)
+            {
+                var imageName = await SaveImageAsync(image);
+                imageNamesList.Add(imageName);
+                SetImageNamePropertyList(mappedObject, imageName, propertyName);
+                if (!string.IsNullOrEmpty(contentRootPath))
+                {
+                    var fullPath = Path.Combine(contentRootPath, imageName);
+                    await DeleteImageAsync(fullPath);
                 }
             }
-            return mappedObject;
         }
 
         public async Task<TDestination> MapAndSaveImages<TSource, TDestination>(
@@ -132,7 +153,7 @@ namespace Nexify.Service.Services
             {
                 foreach (var image in images)
                 {
-                    var imageSaveResult = await SaveImages(new List<IFormFile> { image });
+                    var imageSaveResult = await SaveImagesAsync(new List<IFormFile> { image });
                     SetImageNamePropertyList(mappedObject, imageSaveResult, propertyName);
                 }
             }
@@ -140,7 +161,7 @@ namespace Nexify.Service.Services
             {
                 foreach (var image in images)
                 {
-                    var imageSaveResult = await SaveImages(new List<IFormFile> { image });
+                    var imageSaveResult = await SaveImagesAsync(new List<IFormFile> { image });
                     SetImageNamePropertyList(mappedObject, imageSaveResult, propertyItemsNames);
                 }
             }
@@ -195,7 +216,7 @@ namespace Nexify.Service.Services
             }
             else
             {
-                throw new FileException("ImageName property not found.");
+                throw new FileException($"{porpertyName} property not found.");
             }
         }
     }

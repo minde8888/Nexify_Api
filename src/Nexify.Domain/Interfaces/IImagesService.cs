@@ -4,7 +4,7 @@ namespace Nexify.Domain.Interfaces
 {
     public interface IImagesService
     {
-        Task<string> SaveImages(List<IFormFile> imageFiles);
+        Task<string> SaveImagesAsync(List<IFormFile> imageFiles);
         Task DeleteImageAsync(string imagePath);
         Task<TDestination> MapAndProcessObjectAsync<TSource, TDestination>(
             TSource sourceObject,
@@ -15,14 +15,14 @@ namespace Nexify.Domain.Interfaces
             string propertyName);
         Task<TDestination> MapAndProcessObjectListAsync<TSource, TDestination>(
            TSource sourceObject,
-           Func<TSource, IEnumerable<IFormFile>> imagePropertySelector,
            string contentRootPath,
-           string propertyName);
+           string propertyName1,
+           string propertyName2 = "");
         Task<TDestination> MapAndSaveImages<TSource, TDestination>(
             TSource sourceObject,
             List<IFormFile> images,
             string propertyName,
-            List<IFormFile> itemsImages = null,            
+            List<IFormFile> itemsImages = null,
             string propertyItemsNames = "");
         string ProcessImages<T>(T obj, string imageSrc, string propertyName);
     }

@@ -95,9 +95,9 @@ namespace Nexify.Service.Services
 
             var processedPost = await _imagesService.MapAndProcessObjectListAsync<ProductUpdate, Product>(
                 product,
-                obj => obj.Images,
                 contentRootPath,
-                "ImageNames"
+                "ImagesNames",
+                "ItemsImagesNames"
             );
 
             await _productsRepository.ModifyAsync(processedPost);
@@ -168,18 +168,14 @@ namespace Nexify.Service.Services
 
         private void SetImageSourcesForDto(ProductDto dto, Product product, string baseImageSrc)
         {
-            var imagesNames = product.ImagesNames ?? new List<string>();
-            var itemsImagesNames = product.ItemsImagesNames ?? new List<string>();
-
-            var allImageNames = imagesNames.Concat(itemsImagesNames)
+            Func<List<string>, List<string>> transformNamesToUrls = names => names
                 .Where(name => !string.IsNullOrWhiteSpace(name))
                 .Distinct()
                 .Select(name => $"{baseImageSrc}/Images/{name.Trim()}")
                 .ToList();
 
-            dto.ImageSrc = allImageNames;
-            dto.ItemSrc = allImageNames; 
+            dto.ImageSrc = transformNamesToUrls(product.ImagesNames ?? new List<string>());
+            dto.ItemSrc = transformNamesToUrls(product.ItemsImagesNames ?? new List<string>());
         }
-
     }
 }

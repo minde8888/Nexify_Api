@@ -99,7 +99,6 @@ namespace Nexify.Service.Services
 
             var processedPost = await _imagesService.MapAndProcessObjectListAsync<PostUpdateRequest, Post>(
                 post,
-                obj => obj.Images,
                 contentRootPath,
                 "ImageNames"
             );

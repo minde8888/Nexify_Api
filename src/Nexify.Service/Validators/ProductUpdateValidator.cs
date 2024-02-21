@@ -1,51 +1,60 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using Nexify.Domain.Entities.Products;
+using System;
+using System.Collections.Generic;
 
-namespace Nexify.Service.Validators
+namespace Nexify.Domain.Entities.Products
 {
     public class ProductUpdateValidator : AbstractValidator<ProductUpdate>
     {
         public ProductUpdateValidator()
         {
-            RuleFor(update => update.ProductId)
-                .NotEmpty().WithMessage("ProductsId is required")
-                .NotEqual(Guid.Empty).WithMessage("ProductsId cannot be empty");
+            RuleFor(p => p.ProductId).NotEmpty().WithMessage("Product ID is required.");
 
-            RuleFor(update => update.Title)
-                .MaximumLength(255).WithMessage("Title cannot be longer than 255 characters");
+            RuleFor(p => p.Title)
+                .NotEmpty().WithMessage("Title is required.")
+                .Length(1, 100).WithMessage("Title must be between 1 and 100 characters.");
 
-            RuleFor(update => update.Content)
-                .MaximumLength(10000).WithMessage("Description cannot be longer than 10000 characters");
+            RuleFor(p => p.Content)
+                .NotEmpty().WithMessage("Content is required.");
 
-            RuleFor(update => update.Price)
-                .Must(BeAValidPrice).WithMessage("Price must be a valid numerical value");
+            RuleFor(p => p.Price)
+                .NotEmpty().WithMessage("Price is required.")
+                .Matches(@"^\d+(\.\d{1,2})?$").WithMessage("Price must be a valid decimal number with up to two decimal places.");
 
-            RuleFor(update => update.Images)
-                .Must(HaveAtLeastOneImage).WithMessage("At least one image is required");
+            RuleFor(p => p.Discount)
+                .Matches(@"^\d+(\.\d{1,2})?$").When(p => !string.IsNullOrEmpty(p.Discount)).WithMessage("Discount must be a valid decimal number with up to two decimal places.")
+                .Must((model, discount) => string.IsNullOrEmpty(discount) || (decimal.TryParse(discount, out var discountValue) && discountValue >= 0 && discountValue <= 100)).When(p => !string.IsNullOrEmpty(p.Discount)).WithMessage("Discount must be between 0 and 100 if provided.");
 
-            RuleFor(request => request.ImagesNames)
-                .Must(names => names == null || names.All(name => !string.IsNullOrWhiteSpace(name)))
-                .When(request => request.ImagesNames != null)
-                .WithMessage("All ImageNames must not be empty");
+            RuleFor(p => p.Size)
+                .Length(0, 50).When(p => !string.IsNullOrEmpty(p.Size)).WithMessage("Size must be between 0 and 50 characters if provided.");
 
-            RuleFor(request => request.CategoriesIds)
-                .Must(categoryIds => categoryIds == null || categoryIds.All(id => id != Guid.Empty))
-                .WithMessage("All CategoryId entries must be valid GUIDs or null");
+            RuleFor(p => p.Stock)
+                .NotEmpty().WithMessage("Stock is required.")
+                .Matches("^[0-9]+$").WithMessage("Stock must be a valid integer.");
+
+            RuleFor(p => p.Location)
+                .Length(0, 100).When(p => !string.IsNullOrEmpty(p.Location)).WithMessage("Location must be between 0 and 100 characters if provided.");
+
+            RuleFor(p => p.Images)
+                .Must(images => images == null || images.Count <= 10).WithMessage("You can upload up to 10 images.");
+
+            RuleForEach(p => p.Images).SetValidator(new FileValidator());
+
+            RuleFor(p => p.CategoriesIds)
+                .Must(ids => ids != null && ids.Count > 0).WithMessage("At least one category is required.");
+
+            RuleFor(p => p.SubcategoriesIds)
+                .Must(ids => ids != null && ids.Count > 0).WithMessage("At least one subcategory is required.");
         }
+    }
 
-        private bool BeAValidPrice(string price)
+    public class FileValidator : AbstractValidator<IFormFile>
+    {
+        public FileValidator()
         {
-            if (!string.IsNullOrWhiteSpace(price) && !decimal.TryParse(price, out _))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private bool HaveAtLeastOneImage(List<IFormFile> images)
-        {
-            return images != null && images.Count > 0;
+            RuleFor(file => file.Length).LessThanOrEqualTo(10 * 1024 * 1024).WithMessage("File size must be less than 10MB");
+            RuleFor(file => file.ContentType).Must(type => type.StartsWith("image/")).WithMessage("Only images are allowed");
         }
     }
 }

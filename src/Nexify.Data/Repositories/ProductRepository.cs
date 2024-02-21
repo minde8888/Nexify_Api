@@ -23,6 +23,8 @@ namespace Nexify.Data.Repositories
         public async Task<PagedResult<Product>> FetchAllAsync(PaginationFilter validFilter)
         {
             var pagedData = await _context.Product
+                .Include(p => p.Categories)
+                .ThenInclude(p => p.Subcategories)
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Take(validFilter.PageSize)
                 .ToListAsync();

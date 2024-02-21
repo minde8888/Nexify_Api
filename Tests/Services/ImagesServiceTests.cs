@@ -20,7 +20,7 @@ namespace Nexify.Service.UnitTests.Services
         public async Task SaveImages_NullImageFiles_ThrowsException()
         {
             // Arrange & Act & Assert
-            await Assert.ThrowsAsync<FileException>(() => _imagesService.SaveImages(null));
+            await Assert.ThrowsAsync<FileException>(() => _imagesService.SaveImagesAsync(null));
         }
         [Fact]
         public async Task DeleteImageAsync_FileExists_DeletesFile()
