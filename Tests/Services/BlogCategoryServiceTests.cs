@@ -57,7 +57,7 @@ namespace Tests.Services
             // Arrange
             var categories = new List<BlogCategory>
             {
-                new BlogCategory { CategoryName = "Test Category" }
+                new BlogCategory { Title = "Test Category" }
             };
 
                     var categoryResponses = new List<BlogCategoryResponse>

@@ -61,7 +61,7 @@ namespace IntegrasjonTests.ControllerTests
             var category = new BlogCategory
             {
                 Id = Guid.NewGuid(),
-                CategoryName = "Test Category Name",
+                Title = "Test Category Name",
                 Description = "Test Description"
             };
 
@@ -91,7 +91,7 @@ namespace IntegrasjonTests.ControllerTests
             var category = new BlogCategory
             {
                 Id = Guid.NewGuid(),
-                CategoryName = "Test Category Name",
+                Title = "Test Category Name",
                 Description = "Test Description"
             };
 

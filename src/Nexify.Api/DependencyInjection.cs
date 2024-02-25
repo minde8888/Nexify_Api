@@ -36,6 +36,7 @@ namespace Nexify.Api
             services.AddTransient<BlogService>();
             services.AddTransient<ProductsService>();
             services.AddTransient<BlogCategoryService>();
+            services.AddTransient<AttributesServices>();
 
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<ITokenService, TokenService>();
@@ -58,7 +59,7 @@ namespace Nexify.Api
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IBlogCategoryRepository, BlogCategoryRepository>();
             services.AddTransient<ISendGridClientWrapper, SendGridClientWrapper>();
-            services.AddTransient<IAttributesReposutory,  AttributesReposutory>();
+            services.AddTransient<IAttributesRepository,  AttributesRepository>();
 
             services.AddTransient<UserManager<ApplicationUser>>();
 

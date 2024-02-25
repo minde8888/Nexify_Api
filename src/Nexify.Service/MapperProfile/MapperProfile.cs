@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Nexify.Domain.Entities.Attributes;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Entities.Products;
@@ -54,7 +55,7 @@ namespace Nexify.Service.MapperProfile
             CreateMap<PostRequest, Post>().ReverseMap();
             CreateMap<PostUpdateRequest, Post>().ReverseMap();
 
-            CreateMap<AttributesRequest, Domain.Entities.Attributes.Attribute>().ReverseMap();
+            CreateMap<AttributesRequest, Attributes>().ReverseMap();
         }
 
     }

@@ -32,7 +32,7 @@ namespace Nexify.Data.Context
         public DbSet<BlogCategory> BlogCategory { get; set; }
         public DbSet<BlogCategoryPost> BlogCategoryPost { get; set; }
         public DbSet<Post> Posts { get; set; }
-        public DbSet<Domain.Entities.Attributes.Attribute> Attributes { get; set; }
+        public DbSet<Domain.Entities.Attributes.Attributes> Attributes { get; set; }
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

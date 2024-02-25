@@ -6,12 +6,12 @@ namespace Nexify.Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class AttributController : Controller
+    public class AttributeController : Controller
     {
         private readonly AttributesServices _attributesService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public AttributController(AttributesServices attributesService, IWebHostEnvironment hostEnvironment)
+        public AttributeController(AttributesServices attributesService, IWebHostEnvironment hostEnvironment)
         {
             _attributesService = attributesService ?? throw new ArgumentNullException(nameof(attributesService));
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
@@ -19,9 +19,10 @@ namespace Nexify.Api.Controllers
 
         [HttpPost]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult> AddNewAttributesAsync([FromForm] AttributesRequest attributes)
+        public async Task<ActionResult> AddNewAttributesAsync([FromForm] List<AttributesRequest> attributes)
         {
             await _attributesService.AddAttributesAsync(attributes);
+
             return Ok();
         }
     }
