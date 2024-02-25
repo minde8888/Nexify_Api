@@ -7,7 +7,7 @@ namespace Nexify.Service.Validators
     {
         public BlogCategoryResponseValidator()
         {
-            RuleFor(category => category.CategoryName)
+            RuleFor(category => category.Title)
                 .NotEmpty().WithMessage("Category name is required.")
                 .Length(2, 100).WithMessage("Category name must be between 2 and 100 characters.");
 

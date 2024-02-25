@@ -8,6 +8,7 @@ using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.User;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Entities.Posts;
+using Nexify.Domain.Entities.Attributes;
 
 namespace Nexify.Data.Context
 {
@@ -27,10 +28,12 @@ namespace Nexify.Data.Context
         public DbSet<Subcategory> Subcategory { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<CategoriesProducts> CategoriesProducts { get; set; }
-        public DbSet<SubcategoriesProducts> SubcategoriesProducts { get; set; }        
+        public DbSet<SubcategoriesProducts> SubcategoriesProducts { get; set; }
         public DbSet<BlogCategory> BlogCategory { get; set; }
         public DbSet<BlogCategoryPost> BlogCategoryPost { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Domain.Entities.Attributes.Attribute> Attributes { get; set; }
+        public DbSet<ProductAttribute> ProductAttributes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -83,7 +86,7 @@ namespace Nexify.Data.Context
                 .HasMany(bc => bc.Posts)
                 .WithMany(p => p.Categories)
                 .UsingEntity<BlogCategoryPost>(
-                    j => j.HasOne(bcp => bcp.Posts)  
+                    j => j.HasOne(bcp => bcp.Posts)
                           .WithMany()
                           .HasForeignKey(bcp => bcp.PostId),
                     j => j.HasOne(bcp => bcp.Categories)

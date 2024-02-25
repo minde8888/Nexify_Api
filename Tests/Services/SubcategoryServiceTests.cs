@@ -68,7 +68,7 @@ namespace Nexify.Service.UnitTests.Services
             var subcategoryDto = new SubcategoryDto
             {
                 Id = Guid.NewGuid(),
-                CategoryName = "TestCategory",
+                Title = "TestCategory",
                 Description = "Test description",
                 Images = new List<IFormFile>
             {

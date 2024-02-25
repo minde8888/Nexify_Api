@@ -19,15 +19,15 @@ namespace Nexify.Service.MapperProfile
             CreateMap<Product, CategoryProducts>().ReverseMap();
 
             CreateMap<Subcategory, SubcategoryDto>()
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.SubCategoryName))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SubcategoryId))
                 .ReverseMap();
             CreateMap<Subcategory, AddSubcategory>()
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.SubCategoryName))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Title))
                 .ReverseMap();
             CreateMap<Subcategory, SubcategoryResponse>()
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.SubCategoryName))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SubcategoryId))
                 .ReverseMap();
 
@@ -38,7 +38,7 @@ namespace Nexify.Service.MapperProfile
                 .ReverseMap();
             CreateMap<Category, CategoriesResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.CategoryName))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
                 .ReverseMap();
             CreateMap<Category, AddCategories>().ReverseMap();
@@ -53,6 +53,8 @@ namespace Nexify.Service.MapperProfile
             CreateMap<PostDto, Post>().ReverseMap();
             CreateMap<PostRequest, Post>().ReverseMap();
             CreateMap<PostUpdateRequest, Post>().ReverseMap();
+
+            CreateMap<AttributesRequest, Domain.Entities.Attributes.Attribute>().ReverseMap();
         }
 
     }

@@ -31,7 +31,7 @@ namespace Tests.Services
             // Arrange
             var categoriesDto = new List<BlogCategoryDto>
             {
-                new BlogCategoryDto { CategoryName = "Test Category" }
+                new BlogCategoryDto { Title = "Test Category" }
             };
 
             _imagesServiceMock.Setup(
@@ -62,7 +62,7 @@ namespace Tests.Services
 
                     var categoryResponses = new List<BlogCategoryResponse>
             {
-                new BlogCategoryResponse { CategoryName = "Test Category", ImageSrc = "http://example.com/test.jpg" }
+                new BlogCategoryResponse { Title = "Test Category", ImageSrc = "http://example.com/test.jpg" }
             };
 
             _categoryRepositoryMock.Setup(x => x.GetAllAsync())
@@ -85,7 +85,7 @@ namespace Tests.Services
             // Arrange
             var categoryDto = new BlogCategoryDto
             {
-                CategoryName = "Test Category"
+                Title = "Test Category"
             };
 
             _imagesServiceMock.Setup(x => x.MapAndProcessObjectAsync<BlogCategoryDto, BlogCategory>(

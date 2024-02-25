@@ -57,16 +57,16 @@ namespace Nexify.Service.UnitTests.Services
             {
                 new Category
                 {
-                    CategoryName = "Test Category",
+                    Title = "Test Category",
                     Subcategories = new List<Subcategory>
                     {
-                        new Subcategory { SubCategoryName = "Test Subcategory" }
+                        new Subcategory { Title = "Test Subcategory" }
                     }
                 }
             };
 
             _mapperMock.Setup(m => m.Map<Category>(It.IsAny<AddCategories>()))
-                .Returns((AddCategories source) => new Category { CategoryName = source.CategoryName });
+                .Returns((AddCategories source) => new Category { Title = source.CategoryName });
 
             _categoryRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Category>()))
                 .Returns(Task.CompletedTask);
@@ -87,11 +87,11 @@ namespace Nexify.Service.UnitTests.Services
         {
             new Category
             {
-                CategoryName = "Electronics",
+                Title = "Electronics",
                 ImageName = "electronics.jpg",
                 Subcategories = new List<Subcategory>
                 {
-                    new Subcategory { SubCategoryName = "Smartphones", ImageName = "smartphones.jpg" }
+                    new Subcategory { Title = "Smartphones", ImageName = "smartphones.jpg" }
                 }
             }
         };
@@ -99,7 +99,7 @@ namespace Nexify.Service.UnitTests.Services
         {
             new CategoryResponse
             {
-                CategoryName = "Electronics",
+                Title = "Electronics",
                 ImageSrc = "https://example.com/electronics.jpg"
             }
         };
@@ -119,7 +119,7 @@ namespace Nexify.Service.UnitTests.Services
             _mapperMock.Verify(mapper => mapper.Map<List<CategoryResponse>>(It.IsAny<List<Category>>()), Times.Once);
             Assert.NotNull(result);
             Assert.Equal(categoryResponses.Count, result.Count);
-            Assert.Equal(categoryResponses[0].CategoryName, result[0].CategoryName);
+            Assert.Equal(categoryResponses[0].Title, result[0].Title);
             Assert.Equal("https://example.com/electronics.jpg", result[0].ImageSrc);
         }
 
@@ -129,13 +129,13 @@ namespace Nexify.Service.UnitTests.Services
             // Arrange
             var categoryDto = new CategoryDto
             {
-                CategoryName = "Test Category Name",
+                Title = "Test Category Name",
                 Images = new List<IFormFile> { Mock.Of<IFormFile>() },
                 ImageName = "test.jpg"
             };
             var category = new Category()
             {
-                CategoryName = "Test Category Name",
+                Title = "Test Category Name",
             };
 
 

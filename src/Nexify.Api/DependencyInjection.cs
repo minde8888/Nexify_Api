@@ -58,6 +58,7 @@ namespace Nexify.Api
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IBlogCategoryRepository, BlogCategoryRepository>();
             services.AddTransient<ISendGridClientWrapper, SendGridClientWrapper>();
+            services.AddTransient<IAttributesReposutory,  AttributesReposutory>();
 
             services.AddTransient<UserManager<ApplicationUser>>();
 
@@ -78,6 +79,7 @@ namespace Nexify.Api
             services.AddTransient<IValidator<SubcategoryDto>, SubcategoryValidator>();
             services.AddTransient<IValidator<BlogCategoryDto>, BlogCategoryDtoValidator>();
             services.AddTransient<IValidator<PagedParams<Post>>, PagedParamsValidator<Post>>();
+            services.AddTransient<IValidator<AttributesRequest>, AttributesRequestValidator>();
 
             services.AddSingleton<IUriService>(sp =>
             {

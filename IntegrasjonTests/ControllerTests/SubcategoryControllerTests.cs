@@ -61,7 +61,7 @@ namespace IntegrasjonTests.ControllerTests
             var formData = new MultipartFormDataContent
             {
                 { new StringContent(guid), nameof(SubcategoryDto.Id) },
-                { new StringContent("Updated Title"), nameof(SubcategoryDto.CategoryName) },
+                { new StringContent("Updated Title"), nameof(SubcategoryDto.Title) },
                 { new StringContent("This is updated content."), nameof(SubcategoryDto.Description) }
             };
 

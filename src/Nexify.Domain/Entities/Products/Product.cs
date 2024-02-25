@@ -1,4 +1,5 @@
-﻿using Nexify.Domain.Entities.Categories;
+﻿using Nexify.Domain.Entities.Attributes;
+using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Subcategories;
 
 namespace Nexify.Domain.Entities.Products
@@ -20,5 +21,6 @@ namespace Nexify.Domain.Entities.Products
         public DateTime DateUpdated { get; set; }
         public ICollection<Category> Categories { get; set; }
         public ICollection<Subcategory> Subcategories { get; set; }
+        public ProductAttribute ProductAttribute { get; set; }
     }
 }

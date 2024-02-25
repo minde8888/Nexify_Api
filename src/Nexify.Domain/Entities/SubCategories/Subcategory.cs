@@ -6,7 +6,7 @@ namespace Nexify.Domain.Entities.Subcategories
     public class Subcategory
     {
         public Guid SubcategoryId { get; set; }
-        public string SubCategoryName { get; set; }
+        public string Title { get; set; }
         public string Description { get; set; }
         public string ImageName { get; set; }
         public Guid CategoryId { get; set; }
