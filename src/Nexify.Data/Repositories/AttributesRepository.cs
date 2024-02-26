@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexify.Data.Context;
 using Nexify.Domain.Entities.Attributes;
-using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
@@ -20,6 +19,15 @@ namespace Nexify.Data.Repositories
         }
 
         public async Task<List<Attributes>> GetAllAsync() => await _context.Attributes.ToListAsync();
+
+        public async Task RemoveAsync(Guid id)
+        {
+            var attribute = await _context.Attributes.
+                Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            _context.Attributes.Remove(attribute);
+            await _context.SaveChangesAsync();
+        }
 
     }
 }

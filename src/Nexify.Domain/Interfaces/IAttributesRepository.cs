@@ -6,5 +6,6 @@ namespace Nexify.Domain.Interfaces
     {
         public Task AddAsync(Attributes attributes);
         public Task<List<Attributes>> GetAllAsync();
+        public Task RemoveAsync(Guid id);
     }
 }

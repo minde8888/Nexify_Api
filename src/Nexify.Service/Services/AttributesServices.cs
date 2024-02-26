@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Nexify.Data.Helpers;
+using Nexify.Data.Repositories;
 using Nexify.Domain.Entities.Attributes;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
@@ -58,6 +59,14 @@ namespace Nexify.Service.Services
 
                 }
             }
+        }
+
+        public async Task RemovePostAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new AttributesException("Attributes id can't by null");
+
+            await _attributesReposutory.RemoveAsync(Guid.Parse(id));
         }
     }
 }
