@@ -1,4 +1,7 @@
-﻿using Nexify.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Nexify.Data.Context;
+using Nexify.Domain.Entities.Attributes;
+using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Interfaces;
 
 namespace Nexify.Data.Repositories
@@ -10,11 +13,13 @@ namespace Nexify.Data.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public async Task AddAsync(Domain.Entities.Attributes.Attributes attributes)
+        public async Task AddAsync(Attributes attributes)
         {
             _context.Attributes.Add(attributes);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Attributes>> GetAllAsync() => await _context.Attributes.ToListAsync();
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Nexify.Domain.Entities.Attributes;
 using Nexify.Service.Dtos;
 using Nexify.Service.Services;
 
@@ -24,6 +25,15 @@ namespace Nexify.Api.Controllers
             await _attributesService.AddAttributesAsync(attributes);
 
             return Ok();
+        }
+
+        [HttpGet]
+        //[Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<Attributes>>> GetAll()
+        {
+            var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+            var attributes = await _attributesService.GetAllAddAttributesAsync(imageSrc);
+            return Ok(attributes);
         }
     }
 }

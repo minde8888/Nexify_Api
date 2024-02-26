@@ -31,18 +31,33 @@ namespace Nexify.Service.Services
                 var validationResult = await new AttributesRequestValidator().ValidateAsync(item);
                 ValidationExceptionHelper.ThrowIfInvalid<AttributesValidationException>(validationResult);
 
-                if (item.Images != null && item.Images.Any())
-                {
-                    var mappedAttributes = await _imagesService.MapAndSaveImages<AttributesRequest, Attributes>(item, item.Images, "ImagesNames");
-                    await _attributesReposutory.AddAsync(mappedAttributes);
-                }
-                else
-                {
-                    await _attributesReposutory.AddAsync(_mapper.Map<Attributes>(item));
-                }
+                await _attributesReposutory.AddAsync(_mapper.Map<Attributes>(item));
             }
-  
+
         }
 
+        public async Task<List<Attributes>> GetAllAddAttributesAsync(string imageSrc)
+        {
+            var attributess = await _attributesReposutory.GetAllAsync();
+
+            ProcessImagesForCategories(attributess, imageSrc, "ImagesNames");
+
+            var mappedAttributes = _mapper.Map<List<Attributes>>(attributess);
+
+            return mappedAttributes;
+        }
+
+        private void ProcessImagesForCategories(IEnumerable<Attributes> attributes, string imageSrc, string propertyName)
+        {
+            foreach (var attribute in attributes)
+            {
+                if (propertyName == "ImageNames")
+                {
+                    var processedImageName = _imagesService.ProcessImages(attribute, imageSrc, propertyName);
+                  attribute.ImagesNames.Add(processedImageName);
+
+                }
+            }
+        }
     }
 }
