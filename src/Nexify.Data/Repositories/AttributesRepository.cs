@@ -28,6 +28,14 @@ namespace Nexify.Data.Repositories
             _context.Attributes.Remove(attribute);
             await _context.SaveChangesAsync();
         }
+        public async Task ModifyAsync(Attributes attribute)
+        {
+            var currentAttributes = await _context.Attributes
+                .FirstOrDefaultAsync(p => p.Id == attribute.Id);
 
+            _context.Entry(currentAttributes).CurrentValues.SetValues(attribute);
+ 
+            await _context.SaveChangesAsync();
+        }
     }
 }

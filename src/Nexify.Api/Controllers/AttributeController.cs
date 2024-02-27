@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nexify.Domain.Entities.Attributes;
+using Nexify.Domain.Entities.Products;
 using Nexify.Service.Dtos;
 using Nexify.Service.Services;
 
@@ -35,6 +36,14 @@ namespace Nexify.Api.Controllers
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
             var attributes = await _attributesService.GetAllAddAttributesAsync(imageSrc);
             return Ok(attributes);
+        }
+
+        [HttpPut("update")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateAsync([FromForm] AttributesUpdate attribute)
+        {
+            await _attributesService.UpdateAttributesAsync(_hostEnvironment.ContentRootPath, attribute);
+            return Ok();
         }
 
         [HttpDelete("id")]

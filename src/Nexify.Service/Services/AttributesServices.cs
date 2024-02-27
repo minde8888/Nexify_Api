@@ -2,6 +2,8 @@
 using Nexify.Data.Helpers;
 using Nexify.Data.Repositories;
 using Nexify.Domain.Entities.Attributes;
+using Nexify.Domain.Entities.Posts;
+using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
@@ -41,7 +43,7 @@ namespace Nexify.Service.Services
         {
             var attributess = await _attributesReposutory.GetAllAsync();
 
-            ProcessImagesForCategories(attributess, imageSrc, "ImagesNames");
+            ProcessImagesForCategories(attributess, imageSrc, "ImageName");
 
             var mappedAttributes = _mapper.Map<List<Attributes>>(attributess);
 
@@ -52,13 +54,25 @@ namespace Nexify.Service.Services
         {
             foreach (var attribute in attributes)
             {
-                if (propertyName == "ImageNames")
+                if (propertyName == "ImageName")
                 {
-                    var processedImageName = _imagesService.ProcessImages(attribute, imageSrc, propertyName);
-                  attribute.ImagesNames.Add(processedImageName);
-
+                    attribute.ImageName = _imagesService.ProcessImages(attribute, imageSrc, propertyName);
                 }
             }
+        }
+
+        public async Task UpdateAttributesAsync(string contentRootPath, AttributesUpdate attribute)
+        {
+            var validationResult = await new AttributesUpdateValidator().ValidateAsync(attribute);
+            ValidationExceptionHelper.ThrowIfInvalid<AttributesValidationException>(validationResult);
+
+            var processedAttributes = await _imagesService.MapAndProcessObjectListAsync<AttributesUpdate, Attributes>(
+                attribute,
+                contentRootPath,
+                "ImageName"
+            );
+
+            await _attributesReposutory.ModifyAsync(processedAttributes);
         }
 
         public async Task RemovePostAsync(string id)
