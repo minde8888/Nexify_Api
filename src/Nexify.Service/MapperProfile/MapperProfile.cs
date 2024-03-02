@@ -56,6 +56,7 @@ namespace Nexify.Service.MapperProfile
             CreateMap<PostUpdateRequest, Post>().ReverseMap();
 
             CreateMap<AttributesRequest, Attributes>().ReverseMap();
+            CreateMap<AttributesUpdate, Attributes>().ReverseMap();
         }
 
     }

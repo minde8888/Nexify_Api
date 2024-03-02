@@ -6,7 +6,7 @@ namespace Nexify.Service.Dtos
     {
         public Guid Id { get; set; }
         public string AttributeName { get; set; }
-        public string ImageName { get; set; }   
+        public string ImageName  { get; set; }   
         public IFormFile Image { get; set; }
     }
 }

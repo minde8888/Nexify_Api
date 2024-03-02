@@ -13,7 +13,7 @@ namespace Nexify.Service.Validators
 
             RuleFor(x => x.AttributeName)
                 .NotEmpty().WithMessage("Attribute name is required.")
-                .Length(2, 50).WithMessage("Attribute name must be between 2 and 50 characters.");
+                .Length(1, 50).WithMessage("Attribute name must be between 2 and 50 characters.");
 
             RuleFor(x => x.ImageName)
                 .Length(2, 100).WithMessage("Image name must be between 2 and 100 characters.");

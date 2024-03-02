@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Nexify.Data.Helpers;
 using Nexify.Data.Repositories;
 using Nexify.Domain.Entities.Attributes;
@@ -61,18 +62,16 @@ namespace Nexify.Service.Services
             }
         }
 
-        public async Task UpdateAttributesAsync(string contentRootPath, AttributesUpdate attribute)
+        public async Task UpdateAttributesAsync(AttributesUpdate attribute)
         {
             var validationResult = await new AttributesUpdateValidator().ValidateAsync(attribute);
             ValidationExceptionHelper.ThrowIfInvalid<AttributesValidationException>(validationResult);
 
-            var processedAttributes = await _imagesService.MapAndProcessObjectListAsync<AttributesUpdate, Attributes>(
-                attribute,
-                contentRootPath,
-                "ImageName"
-            );
+            var mapAttribute = _mapper.Map<Attributes>(attribute);
 
-            await _attributesReposutory.ModifyAsync(processedAttributes);
+            mapAttribute.ImageName = await _imagesService.SaveImagesAsync(new List<IFormFile> { attribute.Image });
+
+            await _attributesReposutory.ModifyAsync(mapAttribute);
         }
 
         public async Task RemovePostAsync(string id)

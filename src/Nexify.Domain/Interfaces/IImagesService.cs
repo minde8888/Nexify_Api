@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Nexify.Domain.Entities.Attributes;
 
 namespace Nexify.Domain.Interfaces
 {

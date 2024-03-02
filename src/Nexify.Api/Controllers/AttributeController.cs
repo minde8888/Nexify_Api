@@ -42,7 +42,7 @@ namespace Nexify.Api.Controllers
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAsync([FromForm] AttributesUpdate attribute)
         {
-            await _attributesService.UpdateAttributesAsync(_hostEnvironment.ContentRootPath, attribute);
+            await _attributesService.UpdateAttributesAsync(attribute);
             return Ok();
         }
 
