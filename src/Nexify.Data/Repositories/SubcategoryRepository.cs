@@ -34,6 +34,8 @@ namespace Nexify.Data.Repositories
             var reesult = await _context.Subcategory
                 .FirstOrDefaultAsync(p => p.SubcategoryId == subcategory.SubcategoryId);
 
+            subcategory.CategoryId = reesult.CategoryId;
+
             _context.Entry(reesult).CurrentValues.SetValues(subcategory);
             reesult.DateUpdated = DateTime.UtcNow;
 

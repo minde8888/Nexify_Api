@@ -129,7 +129,7 @@ namespace Nexify.Service.UnitTests.Services
             // Arrange
             var categoryDto = new CategoryDto
             {
-                Title = "Test Category Name",
+                CategoryName = "Test Category Name",
                 Images = new List<IFormFile> { Mock.Of<IFormFile>() },
                 ImageName = "test.jpg"
             };

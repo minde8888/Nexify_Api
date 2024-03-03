@@ -5,11 +5,6 @@ using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos;
 using Nexify.Service.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tests.Services
 {
@@ -31,7 +26,7 @@ namespace Tests.Services
             // Arrange
             var categoriesDto = new List<BlogCategoryDto>
             {
-                new BlogCategoryDto { Title = "Test Category" }
+                new BlogCategoryDto { CategoryName = "Test Category" }
             };
 
             _imagesServiceMock.Setup(
@@ -85,7 +80,7 @@ namespace Tests.Services
             // Arrange
             var categoryDto = new BlogCategoryDto
             {
-                Title = "Test Category"
+                CategoryName = "Test Category"
             };
 
             _imagesServiceMock.Setup(x => x.MapAndProcessObjectAsync<BlogCategoryDto, BlogCategory>(
