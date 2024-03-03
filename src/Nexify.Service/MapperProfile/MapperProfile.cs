@@ -20,7 +20,7 @@ namespace Nexify.Service.MapperProfile
             CreateMap<Product, CategoryProducts>().ReverseMap();
 
             CreateMap<Subcategory, SubcategoryDto>()
-                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SubcategoryId))
                 .ReverseMap();
             CreateMap<Subcategory, AddSubcategory>()
@@ -28,23 +28,26 @@ namespace Nexify.Service.MapperProfile
                 .ReverseMap();
             CreateMap<Subcategory, SubcategoryResponse>()
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
-                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SubcategoryId))
                 .ReverseMap();
 
-            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, CategoryDto>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Title))
+                .ReverseMap();
             CreateMap<Category, CategoryResponse>()
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
                 .ForMember(dest => dest.Subcategories, opt => opt.MapFrom(src => src.Subcategories))
                 .ReverseMap();
             CreateMap<Category, CategoriesResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
                 .ReverseMap();
-            CreateMap<Category, AddCategories>().ReverseMap();
+            CreateMap<Category, AddCategories>()
+                   .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Title))
+                .ReverseMap();
 
             CreateMap<BlogCategory, BlogCategoryDto>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Title))
                 .ReverseMap();
             CreateMap<BlogCategory, BlogCategoryResponse>()
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))

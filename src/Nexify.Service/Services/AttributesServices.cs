@@ -69,7 +69,10 @@ namespace Nexify.Service.Services
 
             var mapAttribute = _mapper.Map<Attributes>(attribute);
 
-            mapAttribute.ImageName = await _imagesService.SaveImagesAsync(new List<IFormFile> { attribute.Image });
+            if (attribute.Image != null)
+            {
+                mapAttribute.ImageName = await _imagesService.SaveImagesAsync(new List<IFormFile> { attribute.Image });
+            }
 
             await _attributesReposutory.ModifyAsync(mapAttribute);
         }

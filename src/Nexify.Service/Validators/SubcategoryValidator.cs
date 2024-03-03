@@ -8,7 +8,7 @@ namespace Nexify.Service.Validators
     {                                                     
         public SubcategoryValidator()
         {
-            RuleFor(dto => dto.Title)
+            RuleFor(dto => dto.CategoryName)
                 .NotEmpty().WithMessage("SubCategoryName is required")
                 .MaximumLength(255).WithMessage("SubCategoryName cannot be longer than 255 characters");
 

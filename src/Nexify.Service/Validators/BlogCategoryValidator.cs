@@ -8,7 +8,7 @@ namespace Nexify.Service.Validators
     {
         public BlogCategoryDtoValidator()
         {
-            RuleFor(dto => dto.Title)
+            RuleFor(dto => dto.CategoryName)
                 .NotEmpty().WithMessage("CategoryName is required.")
                 .MaximumLength(255).WithMessage("CategoryName cannot be longer than 255 characters.");
 
