@@ -38,17 +38,6 @@ namespace Nexify.Service.Validators
                 .When(request => request.ImagesNames != null)
                 .WithMessage("All ImageNames must not be empty");
 
-            RuleFor(request => request.ItemsImages)
-                .Cascade(CascadeMode.Stop)
-                .Must(images => images == null || images.Any(image => image != null && image.Length > 0))
-                .WithMessage("Invalid item image file")
-                .When(request => request.ItemsImages != null);
-
-            RuleFor(request => request.ItemsImagesNames)
-                .Must(names => names == null || names.All(name => !string.IsNullOrWhiteSpace(name)))
-                .When(request => request.ItemsImagesNames != null)
-                .WithMessage("All ItemNames must not be empty");
-
             RuleFor(request => request.CategoriesIds)
                 .Must(categoryIds => categoryIds == null || categoryIds.All(id => id != Guid.Empty))
                 .WithMessage("All CategoryId entries must be valid GUIDs or null");

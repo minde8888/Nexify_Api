@@ -46,9 +46,7 @@ namespace Nexify.Service.Services
             var result = await _imagesService.MapAndSaveImages<ProductRequest, Product>(
                 product,
                 product.Images,
-                "ImagesNames",
-                product.ItemsImages,
-                "ItemsImagesNames");
+                "ImagesNames");
 
             await _productsRepository.AddAsync(result);
 
@@ -175,7 +173,6 @@ namespace Nexify.Service.Services
                 .ToList();
 
             dto.ImageSrc = transformNamesToUrls(product.ImagesNames ?? new List<string>());
-            dto.ItemSrc = transformNamesToUrls(product.ItemsImagesNames ?? new List<string>());
         }
     }
 }

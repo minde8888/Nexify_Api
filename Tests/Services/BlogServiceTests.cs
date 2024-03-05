@@ -52,7 +52,6 @@ namespace Tests.Services
 
             _imagesServiceMock.Setup(
                 s => s.MapAndSaveImages<PostRequest, Post>(It.IsAny<PostRequest>(),
-                It.IsAny<List<IFormFile>>(), It.IsAny<string>(),
                 It.IsAny<List<IFormFile>>(), It.IsAny<string>()))
                 .ReturnsAsync(post);
 

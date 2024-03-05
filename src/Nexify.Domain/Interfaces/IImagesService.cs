@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Nexify.Domain.Entities.Attributes;
 
 namespace Nexify.Domain.Interfaces
 {
@@ -22,9 +21,7 @@ namespace Nexify.Domain.Interfaces
         Task<TDestination> MapAndSaveImages<TSource, TDestination>(
             TSource sourceObject,
             List<IFormFile> images,
-            string propertyName,
-            List<IFormFile> itemsImages = null,
-            string propertyItemsNames = "");
+            string propertyName);
         string ProcessImages<T>(T obj, string imageSrc, string propertyName);
     }
 }

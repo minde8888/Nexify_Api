@@ -143,9 +143,7 @@ namespace Nexify.Service.Services
         public async Task<TDestination> MapAndSaveImages<TSource, TDestination>(
               TSource sourceObject,
             List<IFormFile> images,
-            string propertyName,
-            List<IFormFile> itemsImages = null,
-            string propertyItemsNames = "")
+            string propertyName)
         {
             var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
 
@@ -155,14 +153,6 @@ namespace Nexify.Service.Services
                 {
                     var imageSaveResult = await SaveImagesAsync(new List<IFormFile> { image });
                     SetImageNamePropertyList(mappedObject, imageSaveResult, propertyName);
-                }
-            }
-            if (itemsImages?.Any() == true)
-            {
-                foreach (var image in images)
-                {
-                    var imageSaveResult = await SaveImagesAsync(new List<IFormFile> { image });
-                    SetImageNamePropertyList(mappedObject, imageSaveResult, propertyItemsNames);
                 }
             }
             return mappedObject;

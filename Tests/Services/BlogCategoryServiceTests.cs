@@ -26,13 +26,12 @@ namespace Tests.Services
             // Arrange
             var categoriesDto = new List<BlogCategoryDto>
             {
-                new BlogCategoryDto { CategoryName = "Test Category" }
+                new BlogCategoryDto { Title = "Test Category" }
             };
 
             _imagesServiceMock.Setup(
                 x => x.MapAndSaveImages<BlogCategoryDto, BlogCategory>
-                (It.IsAny<BlogCategoryDto>(), 
-                It.IsAny<List<IFormFile>>(), It.IsAny<string>(),
+                (It.IsAny<BlogCategoryDto>(),
                 It.IsAny<List<IFormFile>>(), It.IsAny<string>()))
                               .ReturnsAsync(new BlogCategory());
 
@@ -55,7 +54,7 @@ namespace Tests.Services
                 new BlogCategory { Title = "Test Category" }
             };
 
-                    var categoryResponses = new List<BlogCategoryResponse>
+            var categoryResponses = new List<BlogCategoryResponse>
             {
                 new BlogCategoryResponse { Title = "Test Category", ImageSrc = "http://example.com/test.jpg" }
             };
@@ -80,14 +79,14 @@ namespace Tests.Services
             // Arrange
             var categoryDto = new BlogCategoryDto
             {
-                CategoryName = "Test Category"
+                Title = "Test Category"
             };
 
             _imagesServiceMock.Setup(x => x.MapAndProcessObjectAsync<BlogCategoryDto, BlogCategory>(
                 It.IsAny<BlogCategoryDto>(),
                 It.IsAny<Func<BlogCategoryDto, IEnumerable<IFormFile>>>(),
-                It.IsAny<Func<BlogCategoryDto, string>>(), 
-                It.IsAny<Func<BlogCategoryDto, string, string>>(), 
+                It.IsAny<Func<BlogCategoryDto, string>>(),
+                It.IsAny<Func<BlogCategoryDto, string, string>>(),
                 It.IsAny<string>(),
                 It.IsAny<string>()))
             .ReturnsAsync(new BlogCategory());

@@ -46,9 +46,7 @@ namespace Nexify.Service.MapperProfile
                    .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Title))
                 .ReverseMap();
 
-            CreateMap<BlogCategory, BlogCategoryDto>()
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Title))
-                .ReverseMap();
+            CreateMap<BlogCategory, BlogCategoryDto>().ReverseMap();
             CreateMap<BlogCategory, BlogCategoryResponse>()
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
                 .ReverseMap();

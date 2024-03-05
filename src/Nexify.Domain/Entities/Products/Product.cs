@@ -15,12 +15,11 @@ namespace Nexify.Domain.Entities.Products
         public string Stock { get; set; }
         public string Location { get; set; }
         public List<string> ImagesNames { get; set; }
-        public List<string> ItemsImagesNames { get; set; }
         public bool IsDeleted { get; set; } = false;
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DateUpdated { get; set; }
         public ICollection<Category> Categories { get; set; }
         public ICollection<Subcategory> Subcategories { get; set; }
-        public ProductAttribute ProductAttribute { get; set; }
+        public ICollection<ProductAttribute> ProductAttribute { get; set; }
     }
 }
