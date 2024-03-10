@@ -32,8 +32,8 @@ namespace Nexify.Data.Context
         public DbSet<BlogCategory> BlogCategory { get; set; }
         public DbSet<BlogCategoryPost> BlogCategoryPost { get; set; }
         public DbSet<Post> Posts { get; set; }
-        public DbSet<Domain.Entities.Attributes.Attributes> Attributes { get; set; }
-        public DbSet<ProductAttribute> ProductAttributes { get; set; }
+        public DbSet<ProductAttribute> ProductAttribute { get; set; }
+        public DbSet<ItemsAttributes> ItemsAttributes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -92,6 +92,19 @@ namespace Nexify.Data.Context
                     j => j.HasOne(bcp => bcp.Categories)
                           .WithMany()
                           .HasForeignKey(bcp => bcp.CategoriesId));
+
+            builder.Entity<Product>()
+                .HasMany(p => p.Attributes)
+                .WithMany(i => i.Products)
+                .UsingEntity<ProductAttribute>(
+                    j => j
+                        .HasOne(pa => pa.ItemsAttributes)
+                        .WithMany()
+                        .HasForeignKey(pa => pa.AtributesId),
+                    j => j
+                        .HasOne(pa => pa.Product)
+                        .WithMany()
+                        .HasForeignKey(pa => pa.ProductId));
         }
     }
 }

@@ -16,8 +16,7 @@ namespace Nexify.Domain.Interfaces
         Task<TDestination> MapAndProcessObjectListAsync<TSource, TDestination>(
            TSource sourceObject,
            string contentRootPath,
-           string propertyName1,
-           string propertyName2 = "");
+           string propertyName);
         Task<TDestination> MapAndSaveImages<TSource, TDestination>(
             TSource sourceObject,
             List<IFormFile> images,

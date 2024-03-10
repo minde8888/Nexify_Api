@@ -22,16 +22,16 @@ namespace Nexify.Api.Controllers
 
         [HttpPost]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult> AddNewAttributesAsync([FromForm] List<AttributesRequest> attributes)
+        public async Task<ActionResult> AddNewAttributesAsync([FromForm] List<AttributesRequest> attributesRequest)
         {
-            await _attributesService.AddAttributesAsync(attributes);
+            await _attributesService.AddAttributesAsync(attributesRequest);
 
             return Ok();
         }
 
         [HttpGet]
         //[Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<Attributes>>> GetAll()
+        public async Task<ActionResult<List<ItemsAttributes>>> GetAll()
         {
             var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
             var attributes = await _attributesService.GetAllAddAttributesAsync(imageSrc);

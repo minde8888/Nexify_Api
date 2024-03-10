@@ -4,9 +4,9 @@ namespace Nexify.Domain.Interfaces
 {
     public interface IAttributesRepository
     {
-        public Task AddAsync(Attributes attributes);
-        public Task<List<Attributes>> GetAllAsync();
+        public Task AddAsync(ItemsAttributes attributes);
+        public Task<List<ItemsAttributes>> GetAllAsync();
         public Task RemoveAsync(Guid id);
-        public Task ModifyAsync(Attributes attribute);
+        public Task ModifyAsync(ItemsAttributes attribute);
     }
 }

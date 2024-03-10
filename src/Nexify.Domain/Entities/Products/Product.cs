@@ -20,6 +20,6 @@ namespace Nexify.Domain.Entities.Products
         public DateTime DateUpdated { get; set; }
         public ICollection<Category> Categories { get; set; }
         public ICollection<Subcategory> Subcategories { get; set; }
-        public ICollection<ProductAttribute> ProductAttribute { get; set; }
+        public ICollection<ItemsAttributes> Attributes { get; set; }
     }
 }

@@ -1,10 +1,13 @@
 ﻿
+using Nexify.Domain.Entities.Products;
+
 namespace Nexify.Domain.Entities.Attributes
 {
     public class ProductAttribute
     {
-        public Guid Id { get; set; }
-        public string AttributeName { get; set; }
-        public string ImageName { get; set; }
+        public Guid AtributesId { get; set; }
+        public ItemsAttributes ItemsAttributes { get; set; }
+        public Guid ProductId { get; set; }
+        public Product Product { get; set; }
     }
 }

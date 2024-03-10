@@ -35,23 +35,23 @@ namespace Nexify.Service.Services
                 var validationResult = await new AttributesRequestValidator().ValidateAsync(item);
                 ValidationExceptionHelper.ThrowIfInvalid<AttributesValidationException>(validationResult);
 
-                await _attributesReposutory.AddAsync(_mapper.Map<Attributes>(item));
+                await _attributesReposutory.AddAsync(_mapper.Map<ItemsAttributes>(item));
             }
 
         }
 
-        public async Task<List<Attributes>> GetAllAddAttributesAsync(string imageSrc)
+        public async Task<List<ItemsAttributes>> GetAllAddAttributesAsync(string imageSrc)
         {
-            var attributess = await _attributesReposutory.GetAllAsync();
+            var attributes = await _attributesReposutory.GetAllAsync();
 
-            ProcessImagesForCategories(attributess, imageSrc, "ImageName");
+            ProcessImagesForCategories(attributes, imageSrc, "ImageName");
 
-            var mappedAttributes = _mapper.Map<List<Attributes>>(attributess);
+            var mappedAttributes = _mapper.Map<List<ItemsAttributes>>(attributes);
 
             return mappedAttributes;
         }
 
-        private void ProcessImagesForCategories(IEnumerable<Attributes> attributes, string imageSrc, string propertyName)
+        private void ProcessImagesForCategories(IEnumerable<ItemsAttributes> attributes, string imageSrc, string propertyName)
         {
             foreach (var attribute in attributes)
             {
@@ -67,7 +67,7 @@ namespace Nexify.Service.Services
             var validationResult = await new AttributesUpdateValidator().ValidateAsync(attribute);
             ValidationExceptionHelper.ThrowIfInvalid<AttributesValidationException>(validationResult);
 
-            var mapAttribute = _mapper.Map<Attributes>(attribute);
+            var mapAttribute = _mapper.Map<ItemsAttributes>(attribute);
 
             if (attribute.Image != null)
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexify.Data.Context;
+using Nexify.Domain.Entities.Attributes;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Interfaces;
 
@@ -46,6 +47,26 @@ namespace Nexify.Data.Repositories
                 .ToListAsync();
 
             _context.CategoriesProducts.RemoveRange(existingCategories);
+        }
+
+        public async Task AddProductAttributes(Guid attributeId, Guid productId)
+        {
+            var productAttribute = new ProductAttribute { AtributesId = attributeId, ProductId = productId };
+
+            _context.ProductAttribute.Add(productAttribute);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteRangeProductAttribute(Guid productId)
+        {
+            var entitiesToRemove = await _context.ProductAttribute
+                                     .Where(bc => bc.ProductId == productId)
+                                     .ToListAsync();
+
+            _context.ProductAttribute.RemoveRange(entitiesToRemove);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

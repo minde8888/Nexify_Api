@@ -15,9 +15,8 @@ namespace Nexify.Domain.Entities.Products
         public string Location { get; set; }
         public List<IFormFile> Images { get; set; }
         public List<string> ImagesNames { get; set; }
-        public List<IFormFile> ItemsImages { get; set; }
-        public List<string> ItemsImagesNames { get; set; }
         public List<Guid> CategoriesIds { get; set; } = new List<Guid>();
         public List<Guid> SubcategoriesIds { get; set; } = new List<Guid>();
+        public List<Guid> AttributesIds { get; set; } = new List<Guid>();
     }
 }

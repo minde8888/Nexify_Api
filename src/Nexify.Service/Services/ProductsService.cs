@@ -94,8 +94,7 @@ namespace Nexify.Service.Services
             var processedPost = await _imagesService.MapAndProcessObjectListAsync<ProductUpdate, Product>(
                 product,
                 contentRootPath,
-                "ImagesNames",
-                "ItemsImagesNames"
+                "ImagesNames"
             );
 
             await _productsRepository.ModifyAsync(processedPost);
@@ -117,6 +116,15 @@ namespace Nexify.Service.Services
                 foreach (var categoryId in product.CategoriesIds)
                 {
                     await _subcategoryRepository.AddProductSubcategoriesAsync(categoryId, processedPost.Id);
+                }
+            }
+            if (product.AttributesIds != null && product.AttributesIds.Any())
+            {
+                await _categoriesRepository.DeleteRangeProductAttribute(product.ProductId);
+
+                foreach (var id in product.AttributesIds)
+                {
+                    await _categoriesRepository.AddProductAttributes(id, product.ProductId);
                 }
             }
         }

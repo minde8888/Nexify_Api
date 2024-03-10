@@ -16,5 +16,6 @@ namespace Nexify.Service.Dtos
         public List<string> ImagesNames { get; set; }
         public List<Guid> CategoriesIds { get; set; }
         public List<Guid> SubcategoriesIds { get; set; }
+        public List<Guid> AttributesIds { get; set; } = new List<Guid>();
     }
 }

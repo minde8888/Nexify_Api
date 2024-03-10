@@ -12,25 +12,25 @@ namespace Nexify.Data.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public async Task AddAsync(Attributes attributes)
+        public async Task AddAsync(ItemsAttributes attributes)
         {
-            _context.Attributes.Add(attributes);
+            _context.ItemsAttributes.Add(attributes);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Attributes>> GetAllAsync() => await _context.Attributes.ToListAsync();
+        public async Task<List<ItemsAttributes>> GetAllAsync() => await _context.ItemsAttributes.ToListAsync();
 
         public async Task RemoveAsync(Guid id)
         {
-            var attribute = await _context.Attributes.
+            var attribute = await _context.ItemsAttributes.
                 Where(x => x.Id == id).FirstOrDefaultAsync();
 
-            _context.Attributes.Remove(attribute);
+            _context.ItemsAttributes.Remove(attribute);
             await _context.SaveChangesAsync();
         }
-        public async Task ModifyAsync(Attributes attribute)
+        public async Task ModifyAsync(ItemsAttributes attribute)
         {
-            var currentAttributes = await _context.Attributes
+            var currentAttributes = await _context.ItemsAttributes
                 .FirstOrDefaultAsync(p => p.Id == attribute.Id);
 
             _context.Entry(currentAttributes).CurrentValues.SetValues(attribute);

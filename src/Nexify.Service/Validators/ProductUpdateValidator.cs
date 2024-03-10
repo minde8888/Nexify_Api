@@ -45,7 +45,7 @@ namespace Nexify.Domain.Entities.Products
                 .Must(ids => ids != null && ids.Count > 0).WithMessage("At least one category is required.");
 
             RuleFor(p => p.SubcategoriesIds)
-                .Must(ids => ids != null && ids.Count > 0).WithMessage("At least one subcategory is required.");
+                .Must(ids => ids != null && ids.Count >= 0).WithMessage("At least one subcategory is required.");
         }
     }
 

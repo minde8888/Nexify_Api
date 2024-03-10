@@ -95,25 +95,17 @@ namespace Nexify.Service.Services
         public async Task<TDestination> MapAndProcessObjectListAsync<TSource, TDestination>(
            TSource sourceObject,
            string contentRootPath,
-           string propertyName1,
-           string propertyName2 = "")
+           string propertyName)
         {
             var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
 
-            var itemsImagesProperty = typeof(TSource).GetProperty("ItemsImages");
             var imagesProperty = typeof(TSource).GetProperty("Images");
 
-            var itemsImages = itemsImagesProperty?.GetValue(sourceObject) as List<IFormFile>;
             var images = imagesProperty?.GetValue(sourceObject) as List<IFormFile>;
-
-            if (itemsImages != null)
-            {
-                await ProcessImagesAsync(mappedObject, itemsImages, contentRootPath, propertyName2);
-            }
 
             if (images != null)
             {
-                await ProcessImagesAsync(mappedObject, images, contentRootPath, propertyName1);
+                await ProcessImagesAsync(mappedObject, images, contentRootPath, propertyName);
             }
 
             return mappedObject;
