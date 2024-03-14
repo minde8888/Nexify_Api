@@ -2,10 +2,10 @@
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
-using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Data.Helpers;
 using Nexify.Service.Interfaces;
+using Nexify.Service.Dtos.Category;
 
 namespace Nexify.Service.Services
 {

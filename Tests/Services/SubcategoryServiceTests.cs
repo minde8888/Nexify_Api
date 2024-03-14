@@ -3,11 +3,11 @@ using AutoMapper;
 using Nexify.Domain.Entities.Subcategories;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
-using Nexify.Service.Dtos;
 using Nexify.Service.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Nexify.Service.Dtos.Category;
 
 namespace Nexify.Service.UnitTests.Services
 {

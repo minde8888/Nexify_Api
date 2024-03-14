@@ -16,7 +16,7 @@ namespace Nexify.Domain.Entities.Products
                 .Length(1, 100).WithMessage("Title must be between 1 and 100 characters.");
 
             RuleFor(p => p.Content)
-                .NotEmpty().WithMessage("Content is required.");
+                 .MaximumLength(10000).WithMessage("Description cannot be longer than 10000 characters");
 
             RuleFor(p => p.Price)
                 .NotEmpty().WithMessage("Price is required.")

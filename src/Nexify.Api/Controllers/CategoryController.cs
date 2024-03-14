@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Category;
 using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers

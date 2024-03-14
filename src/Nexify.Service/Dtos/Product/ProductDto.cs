@@ -1,6 +1,7 @@
-﻿using Nexify.Domain.Entities.Attributes;
+﻿using Nexify.Service.Dtos.Attributes;
+using Nexify.Service.Dtos.Category;
 
-namespace Nexify.Service.Dtos
+namespace Nexify.Service.Dtos.Product
 {
     public class ProductDto
     {
@@ -14,7 +15,8 @@ namespace Nexify.Service.Dtos
         public string Location { get; set; }
         public List<string> ImageSrc { get; set; } = new List<string>();
         public DateTime DateCreated { get; set; }
-        public ICollection<CategoryResponse> Categories { get; set; }
-        public ICollection<ProductAttribute> ProductAttribute { get; set; }
+        public ICollection<CategoriesId> Categories { get; set; }
+        public ICollection<SubcategoriesId> Subcategories { get; set; }
+        public ICollection<AttributesId> Attributes { get; set; }
     }
 }

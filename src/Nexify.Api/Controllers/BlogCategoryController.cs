@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Blog;
 using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers

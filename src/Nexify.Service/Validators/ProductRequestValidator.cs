@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Product;
 
 namespace Nexify.Service.Validators
 {
@@ -13,7 +13,6 @@ namespace Nexify.Service.Validators
                 .MaximumLength(255).WithMessage("Title cannot be longer than 255 characters");
 
             RuleFor(request => request.Content)
-                .NotEmpty()
                 .MaximumLength(10000).WithMessage("Description cannot be longer than 10000 characters");
 
             RuleFor(request => request.Price)
@@ -21,7 +20,6 @@ namespace Nexify.Service.Validators
                 .Matches(@"^\d+(\.\d{1,2})?$").WithMessage("Price must be a valid amount with up to 2 decimal places");
 
             RuleFor(request => request.Discount)
-                .NotEmpty()
                 .Matches(@"^\d+(\.\d{1,2})?$").WithMessage("Discount must be a valid amount with up to 2 decimal places");
 
             RuleFor(request => request.Stock)

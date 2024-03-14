@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Category;
 
 namespace Nexify.Service.Validators
 {

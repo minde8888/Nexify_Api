@@ -13,24 +13,24 @@ namespace Nexify.Data.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddProductSubcategoriesAsync(Guid subcategoriesId, Guid postId)
+        public async Task AddProductSubcategoriesAsync(Guid subcategoriesId, Guid productsId)
         {
             var existingEntry = await _context.SubcategoriesProducts
-                .FirstOrDefaultAsync(bcp => bcp.ProductsId == postId && bcp.SubcategoriesId == subcategoriesId);
+                .FirstOrDefaultAsync(bcp => bcp.ProductsId == productsId && bcp.SubcategoriesId == subcategoriesId);
 
             if (existingEntry == null)
             {
-                var categoriesProducts = new SubcategoriesProducts { ProductsId = postId, SubcategoriesId = subcategoriesId };
+                var categoriesProducts = new SubcategoriesProducts { ProductsId = productsId, SubcategoriesId = subcategoriesId };
                 _context.SubcategoriesProducts.Add(categoriesProducts);
 
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteRangeProductSubcategories(Guid postId)
+        public async Task DeleteRangeProductSubcategories(Guid productsId)
         {
             var entitiesToRemove = await _context.SubcategoriesProducts
-                                                 .Where(bc => bc.ProductsId == postId)
+                                                 .Where(bc => bc.ProductsId == productsId)
                                                  .ToListAsync();
 
             _context.SubcategoriesProducts.RemoveRange(entitiesToRemove);

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Products;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Product;
 using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers

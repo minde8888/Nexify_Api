@@ -1,6 +1,6 @@
-﻿namespace Nexify.Service.Dtos
+﻿namespace Nexify.Service.Dtos.Blog
 {
-    public class SubcategoryResponse
+    public class BlogCategoryResponse
     {
         public Guid Id { get; set; }
         public string Title { get; set; }

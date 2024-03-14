@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Nexify.Domain.Entities.Attributes;
 using Nexify.Domain.Entities.Products;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Attributes;
 using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers

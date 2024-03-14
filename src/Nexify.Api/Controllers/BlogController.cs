@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nexify.Domain.Entities.Pagination;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Post;
 using Nexify.Service.Services;
 
 namespace Nexify.Api.Controllers

@@ -7,7 +7,7 @@ using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Attributes;
 using Nexify.Service.Validators;
 
 namespace Nexify.Service.Services

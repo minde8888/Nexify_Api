@@ -1,6 +1,6 @@
 ﻿
 using FluentValidation;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Attributes;
 
 namespace Nexify.Service.Validators
 {

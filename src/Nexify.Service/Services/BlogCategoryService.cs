@@ -3,7 +3,7 @@ using Nexify.Data.Helpers;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Blog;
 using Nexify.Service.Validators;
 
 namespace Nexify.Service.Services

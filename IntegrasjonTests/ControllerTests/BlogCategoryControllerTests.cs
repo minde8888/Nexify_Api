@@ -1,11 +1,12 @@
 ﻿using IntegrasjonTests.Setup;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using Nexify.Service.Dtos;
 using System.Net.Http.Headers;
 using System.Net;
 using Newtonsoft.Json;
 using Nexify.Domain.Entities.Categories;
+using Nexify.Service.Dtos.Post;
+using Nexify.Service.Dtos.Blog;
 
 namespace IntegrasjonTests.ControllerTests
 {

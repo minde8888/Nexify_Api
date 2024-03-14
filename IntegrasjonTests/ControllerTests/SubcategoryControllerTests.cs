@@ -1,8 +1,8 @@
 ﻿using IntegrasjonTests.Setup;
 using Microsoft.Extensions.Configuration;
-using Nexify.Service.Dtos;
 using System.Net.Http.Headers;
 using System.Net;
+using Nexify.Service.Dtos.Category;
 
 namespace IntegrasjonTests.ControllerTests
 {

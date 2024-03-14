@@ -1,6 +1,4 @@
-﻿
-
-namespace Nexify.Service.Dtos
+﻿namespace Nexify.Service.Dtos.Category
 {
     public class AddSubcategory
     {

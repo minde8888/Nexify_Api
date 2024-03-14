@@ -6,7 +6,7 @@ using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Entities.Products;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Post;
 using System;
 using System.Net;
 using System.Net.Http.Headers;

@@ -28,10 +28,10 @@ namespace Nexify.Data.Repositories
             }
         }
 
-        public async Task DeleteRangeProductCategories(Guid postId)
+        public async Task DeleteRangeProductCategories(Guid productId)
         {
             var entitiesToRemove = await _context.CategoriesProducts
-                                                 .Where(bc => bc.ProductsId == postId)
+                                                 .Where(bc => bc.ProductsId == productId)
                                                  .ToListAsync();
 
             _context.CategoriesProducts.RemoveRange(entitiesToRemove);

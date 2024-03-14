@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Nexify.Service.Dtos
+namespace Nexify.Service.Dtos.Blog
 {
     public class BlogCategoryDto
     {

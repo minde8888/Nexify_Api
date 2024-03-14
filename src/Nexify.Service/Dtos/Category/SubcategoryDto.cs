@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Nexify.Service.Dtos
+namespace Nexify.Service.Dtos.Category
 {
     public class SubcategoryDto
     {
@@ -9,6 +9,6 @@ namespace Nexify.Service.Dtos
         public string Description { get; set; }
         public List<IFormFile> Images { get; set; }
         public string ImageName { get; set; } = string.Empty;
-        public string CategoryId { get; set;} 
+        public string CategoryId { get; set; }
     }
 }

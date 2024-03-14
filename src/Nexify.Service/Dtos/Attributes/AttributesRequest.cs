@@ -1,4 +1,4 @@
-﻿namespace Nexify.Service.Dtos
+﻿namespace Nexify.Service.Dtos.Attributes
 {
     public class AttributesRequest
     {

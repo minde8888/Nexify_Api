@@ -1,7 +1,6 @@
-﻿
-namespace Nexify.Service.Dtos
+﻿namespace Nexify.Service.Dtos.Post
 {
-    public class ProductsResponse
+    public class PostsResponse
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
@@ -9,6 +8,6 @@ namespace Nexify.Service.Dtos
         public int TotalRecords { get; set; }
         public Uri NextPage { get; set; }
         public Uri PreviousPage { get; set; }
-        public List<ProductDto> Products { get; set; }
+        public List<PostDto> Post { get; set; }
     }
 }

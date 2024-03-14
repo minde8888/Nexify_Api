@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Interfaces;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Blog;
 using Nexify.Service.Services;
 
 namespace Tests.Services

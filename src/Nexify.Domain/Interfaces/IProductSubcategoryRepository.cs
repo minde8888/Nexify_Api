@@ -2,8 +2,8 @@
 {
     public interface IProductSubcategoryRepository
     {
-        Task AddProductSubcategoriesAsync(Guid subcategoriesId, Guid postId);
-        Task DeleteRangeProductSubcategories(Guid postId);
+        Task AddProductSubcategoriesAsync(Guid subcategoriesId, Guid productsId);
+        Task DeleteRangeProductSubcategories(Guid productsId);
         Task DeleteSubcategoriesProductAsync(Guid id);
     }
 }

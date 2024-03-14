@@ -3,10 +3,10 @@ using Nexify.Domain.Entities.Pagination;
 using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
-using Nexify.Service.Dtos;
 using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
 using Nexify.Data.Helpers;
+using Nexify.Service.Dtos.Product;
 
 namespace Nexify.Service.Services
 {
@@ -91,31 +91,31 @@ namespace Nexify.Service.Services
         {
             await ValidateProductUpdate(product);
 
-            var processedPost = await _imagesService.MapAndProcessObjectListAsync<ProductUpdate, Product>(
+            var processedProduct = await _imagesService.MapAndProcessObjectListAsync<ProductUpdate, Product>(
                 product,
                 contentRootPath,
                 "ImagesNames"
             );
 
-            await _productsRepository.ModifyAsync(processedPost);
+            await _productsRepository.ModifyAsync(processedProduct);
 
             if (product.CategoriesIds != null && product.CategoriesIds.Any())
             {
-                await _categoriesRepository.DeleteRangeProductCategories(processedPost.Id);
+                await _categoriesRepository.DeleteRangeProductCategories(processedProduct.Id);
 
                 foreach (var categoryId in product.CategoriesIds)
                 {
-                    await _categoriesRepository.AddProductCategoriesAsync(categoryId, processedPost.Id);
+                    await _categoriesRepository.AddProductCategoriesAsync(categoryId, processedProduct.Id);
                 }
             }
 
             if (product.SubcategoriesIds != null && product.SubcategoriesIds.Any())
             {
-                await _subcategoryRepository.DeleteRangeProductSubcategories(processedPost.Id);
+                await _subcategoryRepository.DeleteRangeProductSubcategories(processedProduct.Id);
 
-                foreach (var categoryId in product.CategoriesIds)
+                foreach (var subcategoriesId in product.SubcategoriesIds)
                 {
-                    await _subcategoryRepository.AddProductSubcategoriesAsync(categoryId, processedPost.Id);
+                    await _subcategoryRepository.AddProductSubcategoriesAsync(subcategoriesId, processedProduct.Id);
                 }
             }
             if (product.AttributesIds != null && product.AttributesIds.Any())

@@ -1,8 +1,6 @@
-﻿using Nexify.Domain.Entities.Categories;
-
-namespace Nexify.Service.Dtos
+﻿namespace Nexify.Service.Dtos.Category
 {
-    public class BlogPostCategoryResponse
+    public class CategoriesResponse
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -14,6 +12,6 @@ namespace Nexify.Service.Dtos
         public int TotalRecords { get; set; }
         public Uri NextPage { get; set; }
         public Uri PreviousPage { get; set; }
-        public List<CategoryPosts> Posts { get; set; }
+        public List<CategoryProducts> Products { get; set; }
     }
 }

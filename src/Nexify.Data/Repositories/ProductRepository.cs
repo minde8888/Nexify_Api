@@ -25,7 +25,7 @@ namespace Nexify.Data.Repositories
             var pagedData = await _context.Product
                 .Include(p => p.Attributes)
                 .Include(p => p.Categories)
-                .ThenInclude(p => p.Subcategories)        
+                .Include(p => p.Subcategories)        
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Take(validFilter.PageSize)
                 .ToListAsync();

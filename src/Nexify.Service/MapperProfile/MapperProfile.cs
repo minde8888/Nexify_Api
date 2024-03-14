@@ -4,7 +4,11 @@ using Nexify.Domain.Entities.Categories;
 using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Entities.Subcategories;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Attributes;
+using Nexify.Service.Dtos.Blog;
+using Nexify.Service.Dtos.Category;
+using Nexify.Service.Dtos.Post;
+using Nexify.Service.Dtos.Product;
 
 namespace Nexify.Service.MapperProfile
 {
@@ -30,6 +34,7 @@ namespace Nexify.Service.MapperProfile
                 .ForMember(dest => dest.ImageSrc, opt => opt.MapFrom(src => src.ImageName))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SubcategoryId))
                 .ReverseMap();
+            CreateMap<Subcategory, SubcategoriesId>().ReverseMap();
 
             CreateMap<Category, CategoryDto>()
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Title))
@@ -45,6 +50,7 @@ namespace Nexify.Service.MapperProfile
             CreateMap<Category, AddCategories>()
                    .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Title))
                 .ReverseMap();
+            CreateMap<Category, CategoriesId>().ReverseMap();
 
             CreateMap<BlogCategory, BlogCategoryDto>().ReverseMap();
             CreateMap<BlogCategory, BlogCategoryResponse>()
@@ -57,7 +63,9 @@ namespace Nexify.Service.MapperProfile
             CreateMap<PostUpdateRequest, Post>().ReverseMap();
 
             CreateMap<ItemsAttributes, AttributesUpdate>().ReverseMap();
-            CreateMap<ItemsAttributes, AttributesRequest>().ReverseMap();            
+            CreateMap<ItemsAttributes, AttributesRequest>().ReverseMap();
+            CreateMap<ItemsAttributes, ItemsAttributesDto>();
+            CreateMap<ItemsAttributes, AttributesId>();
         }
     }
 }

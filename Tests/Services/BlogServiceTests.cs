@@ -6,7 +6,7 @@ using Moq;
 using Nexify.Domain.Entities.Posts;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Post;
 using Nexify.Service.Services;
 using Nexify.Service.Validators;
 

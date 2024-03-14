@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Nexify.Service.Dtos;
+using Nexify.Service.Dtos.Category;
 
 namespace Nexify.Service.Validators
 {
