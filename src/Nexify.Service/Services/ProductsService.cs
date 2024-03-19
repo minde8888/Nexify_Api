@@ -7,6 +7,8 @@ using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
 using Nexify.Data.Helpers;
 using Nexify.Service.Dtos.Product;
+using Nexify.Data.Migrations;
+using Nexify.Data.Repositories;
 
 namespace Nexify.Service.Services
 {
@@ -18,7 +20,6 @@ namespace Nexify.Service.Services
         private readonly IProductCategoryRepository _categoriesRepository;
         private readonly IProductSubcategoryRepository _subcategoryRepository;
         private readonly IUriService _uriService;
-        private readonly DiscountService _discountService;
 
         public ProductsService(
             IImagesService imagesService,
@@ -26,8 +27,7 @@ namespace Nexify.Service.Services
                     IProductCategoryRepository categoriesRepository,
                         IProductSubcategoryRepository subcategoryRepository,
                             IMapper mapper,
-                                IUriService uriService,
-                                    DiscountService discountService)
+                                IUriService uriService)
         {
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
             _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(productsRepository));
@@ -35,7 +35,6 @@ namespace Nexify.Service.Services
             _subcategoryRepository = subcategoryRepository ?? throw new ArgumentNullException(nameof(subcategoryRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _uriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
-            _discountService = discountService ?? throw new ArgumentException(nameof(discountService));
         }
 
         public async Task AddProductAsync(ProductRequest product)
@@ -94,37 +93,29 @@ namespace Nexify.Service.Services
             var processedProduct = await _imagesService.MapAndProcessObjectListAsync<ProductUpdate, Product>(
                 product,
                 contentRootPath,
-                "ImagesNames"
+                "ImagesNames",
+                product.ImagesNames
             );
 
             await _productsRepository.ModifyAsync(processedProduct);
 
-            if (product.CategoriesIds != null && product.CategoriesIds.Any())
+            var categoryUpdater = new ProductCategoryUpdater(_categoriesRepository);
+            var subcategoryUpdater = new ProductSubcategoryUpdater(_subcategoryRepository);
+            var attributeUpdater = new ProductAttributeUpdater(_categoriesRepository);
+
+            await ApplyUpdates(processedProduct.Id, product.CategoriesIds, categoryUpdater);
+            await ApplyUpdates(processedProduct.Id, product.SubcategoriesIds, subcategoryUpdater);
+            await ApplyUpdates(processedProduct.Id, product.AttributesIds, attributeUpdater);
+        }
+
+        private async Task ApplyUpdates(Guid productId, IEnumerable<Guid> relationIds, IProductRelationUpdater updater)
+        {
+            if (relationIds != null && relationIds.Any())
             {
-                await _categoriesRepository.DeleteRangeProductCategories(processedProduct.Id);
-
-                foreach (var categoryId in product.CategoriesIds)
+                await updater.DeleteRangeAsync(productId);
+                foreach (var id in relationIds)
                 {
-                    await _categoriesRepository.AddProductCategoriesAsync(categoryId, processedProduct.Id);
-                }
-            }
-
-            if (product.SubcategoriesIds != null && product.SubcategoriesIds.Any())
-            {
-                await _subcategoryRepository.DeleteRangeProductSubcategories(processedProduct.Id);
-
-                foreach (var subcategoriesId in product.SubcategoriesIds)
-                {
-                    await _subcategoryRepository.AddProductSubcategoriesAsync(subcategoriesId, processedProduct.Id);
-                }
-            }
-            if (product.AttributesIds != null && product.AttributesIds.Any())
-            {
-                await _categoriesRepository.DeleteRangeProductAttribute(product.ProductId);
-
-                foreach (var id in product.AttributesIds)
-                {
-                    await _categoriesRepository.AddProductAttributes(id, product.ProductId);
+                    await updater.AddRelationAsync(id, productId);
                 }
             }
         }
@@ -150,8 +141,6 @@ namespace Nexify.Service.Services
             var pagedProducts = PaginationService.CreatePagedResponse(pageParams);
             var productDtos = _mapper.Map<List<ProductDto>>(pagedProducts.Data);
 
-            productDtos.ForEach(dto => ApplyDiscountIfAny(dto));
-
             productDtos.ForEach(dto =>
             {
                 var correspondingProduct = pagedProducts.Data.FirstOrDefault(p => p.Id == dto.Id);
@@ -162,14 +151,6 @@ namespace Nexify.Service.Services
             });
 
             return productDtos;
-        }
-
-        private void ApplyDiscountIfAny(ProductDto productDto)
-        {
-            if (!string.IsNullOrEmpty(productDto.Discount))
-            {
-                productDto.Price = _discountService.DiscountCounter(productDto.Discount, productDto.Price);
-            }
         }
 
         private void SetImageSourcesForDto(ProductDto dto, Product product, string baseImageSrc)

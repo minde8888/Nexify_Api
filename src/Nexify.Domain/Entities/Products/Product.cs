@@ -11,7 +11,6 @@ namespace Nexify.Domain.Entities.Products
         public string Content { get; set; }
         public string Price { get; set; }
         public string Discount { get; set; }
-        public string Size { get; set; }
         public string Stock { get; set; }
         public string Location { get; set; }
         public List<string> ImagesNames { get; set; }

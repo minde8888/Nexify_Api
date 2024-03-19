@@ -15,16 +15,10 @@ namespace Nexify.Data.Repositories
 
         public async Task AddProductSubcategoriesAsync(Guid subcategoriesId, Guid productsId)
         {
-            var existingEntry = await _context.SubcategoriesProducts
-                .FirstOrDefaultAsync(bcp => bcp.ProductsId == productsId && bcp.SubcategoriesId == subcategoriesId);
+            var categoriesProducts = new SubcategoriesProducts { ProductsId = productsId, SubcategoriesId = subcategoriesId };
+            _context.SubcategoriesProducts.Add(categoriesProducts);
 
-            if (existingEntry == null)
-            {
-                var categoriesProducts = new SubcategoriesProducts { ProductsId = productsId, SubcategoriesId = subcategoriesId };
-                _context.SubcategoriesProducts.Add(categoriesProducts);
-
-                await _context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteRangeProductSubcategories(Guid productsId)

@@ -100,7 +100,8 @@ namespace Nexify.Service.Services
             var processedPost = await _imagesService.MapAndProcessObjectListAsync<PostUpdateRequest, Post>(
                 post,
                 contentRootPath,
-                "ImageNames"
+                "ImageNames",
+                post.ImageNames
             );
 
             await _blogRepository.ModifyAsync(processedPost);            

@@ -95,7 +95,8 @@ namespace Nexify.Service.Services
         public async Task<TDestination> MapAndProcessObjectListAsync<TSource, TDestination>(
            TSource sourceObject,
            string contentRootPath,
-           string propertyName)
+           string propertyName,
+           List<string> imagesNames)
         {
             var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
 
@@ -105,13 +106,22 @@ namespace Nexify.Service.Services
 
             if (images != null)
             {
-                await ProcessImagesAsync(mappedObject, images, contentRootPath, propertyName);
+                var imageNamesList = await ProcessImagesAsync(mappedObject, images, contentRootPath, propertyName);
+                if (imagesNames != null && imagesNames.Any())
+                {
+                    imageNamesList.AddRange(imagesNames);
+                }
+                var propertyToSet = typeof(TDestination).GetProperty(propertyName);
+                if (propertyToSet != null && propertyToSet.CanWrite)
+                {
+                    propertyToSet.SetValue(mappedObject, imageNamesList);
+                }
             }
 
             return mappedObject;
         }
 
-        private async Task ProcessImagesAsync<TDestination>(
+        private async Task<List<string>> ProcessImagesAsync<TDestination>(
             TDestination mappedObject,
             IEnumerable<IFormFile> images,
             string contentRootPath,
@@ -130,6 +140,8 @@ namespace Nexify.Service.Services
                     await DeleteImageAsync(fullPath);
                 }
             }
+
+            return imageNamesList;
         }
 
         public async Task<TDestination> MapAndSaveImages<TSource, TDestination>(

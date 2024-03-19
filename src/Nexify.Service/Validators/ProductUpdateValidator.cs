@@ -26,9 +26,6 @@ namespace Nexify.Domain.Entities.Products
                 .Matches(@"^\d+(\.\d{1,2})?$").When(p => !string.IsNullOrEmpty(p.Discount)).WithMessage("Discount must be a valid decimal number with up to two decimal places.")
                 .Must((model, discount) => string.IsNullOrEmpty(discount) || (decimal.TryParse(discount, out var discountValue) && discountValue >= 0 && discountValue <= 100)).When(p => !string.IsNullOrEmpty(p.Discount)).WithMessage("Discount must be between 0 and 100 if provided.");
 
-            RuleFor(p => p.Size)
-                .Length(0, 50).When(p => !string.IsNullOrEmpty(p.Size)).WithMessage("Size must be between 0 and 50 characters if provided.");
-
             RuleFor(p => p.Stock)
                 .NotEmpty().WithMessage("Stock is required.")
                 .Matches("^[0-9]+$").WithMessage("Stock must be a valid integer.");
@@ -40,12 +37,6 @@ namespace Nexify.Domain.Entities.Products
                 .Must(images => images == null || images.Count <= 10).WithMessage("You can upload up to 10 images.");
 
             RuleForEach(p => p.Images).SetValidator(new FileValidator());
-
-            RuleFor(p => p.CategoriesIds)
-                .Must(ids => ids != null && ids.Count > 0).WithMessage("At least one category is required.");
-
-            RuleFor(p => p.SubcategoriesIds)
-                .Must(ids => ids != null && ids.Count >= 0).WithMessage("At least one subcategory is required.");
         }
     }
 
