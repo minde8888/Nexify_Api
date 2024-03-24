@@ -46,7 +46,5 @@ namespace Nexify.Service.UnitTests.Services
             // Act & Assert
             await _imagesService.DeleteImageAsync(path);
         }
-
-
     }
 }

@@ -7,8 +7,6 @@ using Nexify.Service.Validators;
 using Nexify.Service.Interfaces;
 using Nexify.Data.Helpers;
 using Nexify.Service.Dtos.Product;
-using Nexify.Data.Migrations;
-using Nexify.Data.Repositories;
 
 namespace Nexify.Service.Services
 {
@@ -94,7 +92,8 @@ namespace Nexify.Service.Services
                 product,
                 contentRootPath,
                 "ImagesNames",
-                product.ImagesNames
+                product.ImagesNames,
+                product.ImagesFilesIndices
             );
 
             await _productsRepository.ModifyAsync(processedProduct);
@@ -126,16 +125,6 @@ namespace Nexify.Service.Services
             ValidationExceptionHelper.ThrowIfInvalid<PaginationValidationException>(validationResult);
         }
 
-        public async Task RemoveProductsAsync(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                throw new ProductException("Product id can't by null");
-
-            Guid newId = new(id);
-
-            await _productsRepository.RemoveAsync(newId);
-        }
-
         public List<ProductDto> MapPagedProducts(PagedParams<Product> pageParams, string imageSrc)
         {
             var pagedProducts = PaginationService.CreatePagedResponse(pageParams);
@@ -155,13 +144,23 @@ namespace Nexify.Service.Services
 
         private void SetImageSourcesForDto(ProductDto dto, Product product, string baseImageSrc)
         {
-            Func<List<string>, List<string>> transformNamesToUrls = names => names
+            List<string> transformNamesToUrls(List<string> names) => names
                 .Where(name => !string.IsNullOrWhiteSpace(name))
                 .Distinct()
                 .Select(name => $"{baseImageSrc}/Images/{name.Trim()}")
                 .ToList();
 
             dto.ImageSrc = transformNamesToUrls(product.ImagesNames ?? new List<string>());
+        }
+
+        public async Task RemoveProductsAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new ProductException("Product id can't by null");
+
+            Guid newId = new(id);
+
+            await _productsRepository.RemoveAsync(newId);
         }
     }
 }

@@ -13,7 +13,6 @@ using Nexify.Service.Services;
 
 namespace Nexify.Service.UnitTests.Services
 {
-
     public class CategoryServiceTests
     {
         private readonly Mock<IMapper> _mapperMock = new Mock<IMapper>();

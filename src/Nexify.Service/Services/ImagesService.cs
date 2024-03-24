@@ -44,15 +44,16 @@ namespace Nexify.Service.Services
                 throw new FileException("File formant is not allowed.");
             }
 
-            var imageName = $"{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
-            var imagePath = Path.Combine("Images", imageName);
+            var originalNameWithoutExtension = Path.GetFileNameWithoutExtension(imageFile.FileName);
+            var uniqueImageName = $"{Guid.NewGuid()}_{originalNameWithoutExtension}{fileExtension}";
+            var imagePath = Path.Combine("Images", uniqueImageName);
 
             using (var stream = new FileStream(imagePath, FileMode.Create))
             {
                 await imageFile.CopyToAsync(stream);
             }
 
-            return imageName;
+            return uniqueImageName;
         }
 
         public async Task DeleteImageAsync(string imagePath)
@@ -96,7 +97,8 @@ namespace Nexify.Service.Services
            TSource sourceObject,
            string contentRootPath,
            string propertyName,
-           List<string> imagesNames)
+           List<string> imagesNames,
+           List<int> indices = null)
         {
             var mappedObject = _mapper.Map<TSource, TDestination>(sourceObject);
 
@@ -107,18 +109,46 @@ namespace Nexify.Service.Services
             if (images != null)
             {
                 var imageNamesList = await ProcessImagesAsync(mappedObject, images, contentRootPath, propertyName);
+                var mergedList = new List<string>();
                 if (imagesNames != null && imagesNames.Any())
                 {
-                    imageNamesList.AddRange(imagesNames);
+                    mergedList = MergeWithDesignatedPositions(imagesNames, imageNamesList, indices);
                 }
                 var propertyToSet = typeof(TDestination).GetProperty(propertyName);
                 if (propertyToSet != null && propertyToSet.CanWrite)
                 {
-                    propertyToSet.SetValue(mappedObject, imageNamesList);
+                    propertyToSet.SetValue(mappedObject, mergedList);
                 }
             }
 
             return mappedObject;
+        }
+        private static List<string> MergeWithDesignatedPositions(List<string> firstList, List<string> secondList, List<int> indicesList)
+        {
+            if (secondList.Count != indicesList.Count)
+            {
+                throw new FileException("The length of secondList should match the length of indicesList.");
+            }
+
+            var indexedElements = new Dictionary<int, string>();
+
+            for (int i = 0; i < secondList.Count; i++)
+            {
+                indexedElements[indicesList[i]] = secondList[i];
+            }
+
+            int currentIndex = 0;
+            foreach (var item in firstList)
+            {
+                while (indexedElements.ContainsKey(currentIndex))
+                {
+                    currentIndex++;
+                }
+                indexedElements[currentIndex] = item;
+                currentIndex++;
+            }
+
+            return indexedElements.OrderBy(element => element.Key).Select(element => element.Value).ToList();
         }
 
         private async Task<List<string>> ProcessImagesAsync<TDestination>(
@@ -145,7 +175,7 @@ namespace Nexify.Service.Services
         }
 
         public async Task<TDestination> MapAndSaveImages<TSource, TDestination>(
-              TSource sourceObject,
+            TSource sourceObject,
             List<IFormFile> images,
             string propertyName)
         {
