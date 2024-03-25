@@ -1,46 +1,45 @@
 ﻿using IntegrasjonTests.Setup;
-using Microsoft.Extensions.Configuration;
 using Moq;
-using Newtonsoft.Json;
-using Nexify.Domain.Entities.Categories;
-using Nexify.Domain.Entities.Pagination;
-using Nexify.Domain.Entities.Posts;
-using Nexify.Service.Dtos.Post;
-using System.Net;
+using Nexify.Service.Dtos.Product;
 using System.Net.Http.Headers;
+using System.Net;
+using Microsoft.Extensions.Configuration;
+using Nexify.Domain.Entities.Pagination;
+using Newtonsoft.Json;
+using Nexify.Domain.Entities.Products;
 
-namespace IntegrationTests.ControllerTests
+namespace IntegrasjonTests.ControllerTests
 {
-    public class BlogControllerTests
+    public class ProductControllerTests
     {
         private readonly CustomWebApplicationFactory<Program> _factory;
         private readonly HttpClient _client;
         private readonly string _baseUrl;
         private readonly JwtToken _jwtToken;
 
-        public BlogControllerTests()
+        public ProductControllerTests()
         {
             var configuration = new ConfigurationBuilder()
                 .AddUserSecrets<Program>().Build();
 
             _factory = new CustomWebApplicationFactory<Program>(configuration);
             _client = _factory.CreateClient();
-            _baseUrl = "/api/v1/blog";
+            _baseUrl = "/api/v1/Product";
 
             _jwtToken = new JwtToken(configuration);
         }
 
         [Fact]
-        public async Task AddNewPostAsync_ReturnsOkResult()
+        public async Task AddNewProductAsync_ReturnsOk()
         {
-            // Arrange
             var token = _jwtToken.GenerateJwtToken("admin@example.com", "Admin");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var formData = new MultipartFormDataContent
             {
-                { new StringContent("Test Title"), nameof(PostRequest.Title) },
-                { new StringContent("This is a test post."), nameof(PostRequest.Content) }
+                { new StringContent("Test Title"), nameof(ProductRequest.Title) },
+                { new StringContent("99.99"), nameof(ProductRequest.Price) }, 
+                { new StringContent("10"), nameof(ProductRequest.Stock) }
             };
 
             // Act
@@ -52,56 +51,55 @@ namespace IntegrationTests.ControllerTests
             {
                 throw new Xunit.Sdk.XunitException($"Expected OK, got {response.StatusCode}. Response content: {responseContent}");
             }
-
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
-        public async Task GetAllAsync_ReturnsOk()
+        public async Task GetAllAsync_ReturnsOkWithProductsResponse()
         {
             // Arrange
             var filter = new PaginationFilter { PageNumber = 1, PageSize = 10 };
-
-            var expectedProducts = new PagedResult<Post>
+            var mockProducts = new List<Product>
             {
-                Items = new List<Post>
-            {
-                new Post
+                new Product
                 {
                     Id = Guid.NewGuid(),
                     Title = "Sample Product",
                     Content = "Sample Description",
-                    IsDeleted = false,
+                    Price = "100",
+                    Discount = "10%",
+                    Stock = "20",
+                    Location = "Sample Location",
                     DateCreated = DateTime.Now,
-                    DateUpdated = DateTime.Now,
-                    Categories = new List<BlogCategory>()
                 }
-            },
-                TotalCount = 1
             };
 
-            _factory.BlogRepositoryMock
-                .Setup(repo => repo.RetrieveAllAsync(It.IsAny<PaginationFilter>()))
-                .ReturnsAsync(expectedProducts);
+            var pagedResult = new PagedResult<Product>
+            {
+                Items = mockProducts,
+                TotalCount = mockProducts.Count
+            };
+
+            _factory.ProductsRepositoryMock
+                .Setup(repo => repo.FetchAllAsync(It.IsAny<PaginationFilter>()))
+                .ReturnsAsync(pagedResult);
 
             // Act
-            var response = await _client.GetAsync($"{_baseUrl}" +
-                $"?pageNumber={filter.PageNumber}" +
-                $"&pageSize={filter.PageSize}");
-
-            var content = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<PostsResponse>(content);
+            var response = await _client.GetAsync($"{_baseUrl}?pageNumber={filter.PageNumber}&pageSize={filter.PageSize}");
+            var result = JsonConvert.DeserializeObject<ProductsResponse>(await response.Content.ReadAsStringAsync());
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(result);
             Assert.Equal(filter.PageNumber, result.PageNumber);
             Assert.Equal(filter.PageSize, result.PageSize);
-            Assert.Equal(expectedProducts.Items.Count, result.Post.Count);
+            Assert.Equal(1, result.TotalPages);
+            Assert.Equal(mockProducts.Count, result.TotalRecords);
+            Assert.Equal(mockProducts.Count, result.Products.Count);
         }
 
         [Fact]
-        public async Task UpdateAsync_ReturnsOkResult()
+        public async Task UpdateAsync_ReturnsOk()
         {
             // Arrange
             var token = _jwtToken.GenerateJwtToken("admin@example.com", "Admin");
@@ -110,9 +108,11 @@ namespace IntegrationTests.ControllerTests
 
             var formData = new MultipartFormDataContent
             {
-                { new StringContent(guid), nameof(PostUpdateRequest.Id) },
-                { new StringContent("Updated Title"), nameof(PostUpdateRequest.Title) },
-                { new StringContent("This is updated content."), nameof(PostUpdateRequest.Content) }
+                { new StringContent(guid), nameof(ProductUpdate.ProductId) },
+                { new StringContent("Test Title"), nameof(ProductRequest.Title) },
+                { new StringContent("99.99"), nameof(ProductRequest.Price) },
+                { new StringContent("10"), nameof(ProductRequest.Stock) },
+                { new StringContent("This is updated content."), nameof(ProductUpdate.Content) }
             };
 
             var requestUri = $"{_baseUrl}/update";
@@ -131,7 +131,7 @@ namespace IntegrationTests.ControllerTests
         }
 
         [Fact]
-        public async Task DeleteAsync_ReturnsOkResult()
+        public async Task DeleteProductAsync_ReturnsOk()
         {
             // Arrange
             var guid = Guid.NewGuid().ToString();

@@ -2,36 +2,35 @@
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Newtonsoft.Json;
-using Nexify.Domain.Entities.Categories;
-using Nexify.Domain.Entities.Pagination;
-using Nexify.Domain.Entities.Posts;
+using Nexify.Domain.Entities.Attributes;
+using Nexify.Service.Dtos.Attributes;
 using Nexify.Service.Dtos.Post;
 using System.Net;
 using System.Net.Http.Headers;
 
-namespace IntegrationTests.ControllerTests
+namespace IntegrasjonTests.ControllerTests
 {
-    public class BlogControllerTests
+    public class AttributeControllerTests
     {
         private readonly CustomWebApplicationFactory<Program> _factory;
         private readonly HttpClient _client;
         private readonly string _baseUrl;
         private readonly JwtToken _jwtToken;
 
-        public BlogControllerTests()
+        public AttributeControllerTests()
         {
             var configuration = new ConfigurationBuilder()
                 .AddUserSecrets<Program>().Build();
 
             _factory = new CustomWebApplicationFactory<Program>(configuration);
             _client = _factory.CreateClient();
-            _baseUrl = "/api/v1/blog";
+            _baseUrl = "/api/v1/Attribute";
 
             _jwtToken = new JwtToken(configuration);
         }
 
         [Fact]
-        public async Task AddNewPostAsync_ReturnsOkResult()
+        public async Task AddNewAttributesAsync_ReturnsOkResult()
         {
             // Arrange
             var token = _jwtToken.GenerateJwtToken("admin@example.com", "Admin");
@@ -39,8 +38,7 @@ namespace IntegrationTests.ControllerTests
 
             var formData = new MultipartFormDataContent
             {
-                { new StringContent("Test Title"), nameof(PostRequest.Title) },
-                { new StringContent("This is a test post."), nameof(PostRequest.Content) }
+                { new StringContent("Test Title"), nameof(AttributesRequest.AttributeName) }
             };
 
             // Act
@@ -57,47 +55,32 @@ namespace IntegrationTests.ControllerTests
         }
 
         [Fact]
-        public async Task GetAllAsync_ReturnsOk()
+        public async Task GetAll_ReturnsOkResultWithAttributes()
         {
             // Arrange
-            var filter = new PaginationFilter { PageNumber = 1, PageSize = 10 };
+            var token = _jwtToken.GenerateJwtToken("admin@example.com", "Admin");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var expectedProducts = new PagedResult<Post>
+            var attribute = new ItemsAttributes
             {
-                Items = new List<Post>
-            {
-                new Post
-                {
-                    Id = Guid.NewGuid(),
-                    Title = "Sample Product",
-                    Content = "Sample Description",
-                    IsDeleted = false,
-                    DateCreated = DateTime.Now,
-                    DateUpdated = DateTime.Now,
-                    Categories = new List<BlogCategory>()
-                }
-            },
-                TotalCount = 1
+                Id = Guid.NewGuid(),
+                AttributeName = "TestAttributeName"
             };
 
-            _factory.BlogRepositoryMock
-                .Setup(repo => repo.RetrieveAllAsync(It.IsAny<PaginationFilter>()))
-                .ReturnsAsync(expectedProducts);
+            var mockAttributes = new List<ItemsAttributes> { attribute };
+            _factory.AttributesRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(mockAttributes);
 
             // Act
-            var response = await _client.GetAsync($"{_baseUrl}" +
-                $"?pageNumber={filter.PageNumber}" +
-                $"&pageSize={filter.PageSize}");
+            var response = await _client.GetAsync($"{_baseUrl}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
-            var content = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<PostsResponse>(content);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var deserializedCategories = JsonConvert.DeserializeObject<List<ItemsAttributes>>(responseContent);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(result);
-            Assert.Equal(filter.PageNumber, result.PageNumber);
-            Assert.Equal(filter.PageSize, result.PageSize);
-            Assert.Equal(expectedProducts.Items.Count, result.Post.Count);
+            Assert.NotNull(deserializedCategories);
+            Assert.NotEmpty(deserializedCategories);
         }
 
         [Fact]
@@ -106,13 +89,21 @@ namespace IntegrationTests.ControllerTests
             // Arrange
             var token = _jwtToken.GenerateJwtToken("admin@example.com", "Admin");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var attribute = new ItemsAttributes
+            {
+                Id = Guid.NewGuid(),
+                AttributeName = "TestAttributeName"
+            };
+
+            _factory.AttributesRepositoryMock.Setup(x => x.ModifyAsync(attribute));
+
             var guid = Guid.NewGuid().ToString();
 
             var formData = new MultipartFormDataContent
             {
-                { new StringContent(guid), nameof(PostUpdateRequest.Id) },
-                { new StringContent("Updated Title"), nameof(PostUpdateRequest.Title) },
-                { new StringContent("This is updated content."), nameof(PostUpdateRequest.Content) }
+                { new StringContent(guid), nameof(ItemsAttributes.Id) },
+                { new StringContent("Updated Title"), nameof(ItemsAttributes.AttributeName) }
             };
 
             var requestUri = $"{_baseUrl}/update";
@@ -149,5 +140,6 @@ namespace IntegrationTests.ControllerTests
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
+
     }
 }

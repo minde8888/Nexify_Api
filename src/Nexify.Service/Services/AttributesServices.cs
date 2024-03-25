@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Nexify.Data.Helpers;
-using Nexify.Data.Repositories;
 using Nexify.Domain.Entities.Attributes;
-using Nexify.Domain.Entities.Posts;
-using Nexify.Domain.Entities.Products;
 using Nexify.Domain.Exceptions;
 using Nexify.Domain.Interfaces;
 using Nexify.Service.Dtos.Attributes;

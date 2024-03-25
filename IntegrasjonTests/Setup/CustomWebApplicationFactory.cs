@@ -21,7 +21,7 @@ namespace IntegrasjonTests.Setup
         public Mock<IBlogRepository> BlogRepositoryMock { get; } = new();
         public Mock<ICategoryRepository> CategoryRepositoryMock { get; } = new();
         public Mock<IPostCategoryRepository> PostCategoryRepository { get; } = new();
-        public Mock<IProductsRepository> ProductsRepository { get; } = new();
+        public Mock<IProductsRepository> ProductsRepositoryMock { get; } = new();
         public Mock<ISubcategoryRepository> SubcategoryRepository { get; } = new();
         public Mock<ITokenRepository> TokenRepositoryMock { get; } = new();
         public Mock<IUserRepository> UserRepositoryMock { get; } = new();
@@ -30,6 +30,7 @@ namespace IntegrasjonTests.Setup
         public Mock<IOptionsMonitor<JwtConfig>> JwtConfigMock { get; } = new();
         public Mock<ITokenService> TokenServiceMock { get; } = new();
         public Mock<IAuthServiceWrap> AuthServiceWrapMock { get; } = new();
+        public Mock<IAttributesRepository> AttributesRepositoryMock { get; } = new();
 
         private readonly IConfiguration _configuration;
 
@@ -53,7 +54,7 @@ namespace IntegrasjonTests.Setup
                 services.AddSingleton(CategoryRepositoryMock.Object);            
                 services.AddSingleton(BlogRepositoryMock.Object);
                 services.AddSingleton(PostCategoryRepository.Object);
-                services.AddSingleton(ProductsRepository.Object);
+                services.AddSingleton(ProductsRepositoryMock.Object);
                 services.AddSingleton(SubcategoryRepository.Object);
                 services.AddSingleton(TokenRepositoryMock.Object);
                 services.AddSingleton(UserRepositoryMock.Object);
@@ -62,6 +63,7 @@ namespace IntegrasjonTests.Setup
                 services.Configure<JwtConfig>(_configuration.GetSection("JwtConfig"));
                 services.AddSingleton(TokenServiceMock.Object);
                 services.AddSingleton(AuthServiceWrapMock.Object);
+                services.AddSingleton(AttributesRepositoryMock.Object);
             });
         }
     }

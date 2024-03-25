@@ -1,24 +1,24 @@
 ﻿using IntegrasjonTests.Setup;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Nexify.Service.Dtos.Category;
+using Nexify.Service.Dtos.Post;
+using System.Net.Http.Headers;
+using System.Net;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Nexify.Domain.Entities.Categories;
-using Nexify.Domain.Entities.Pagination;
-using Nexify.Domain.Entities.Posts;
-using Nexify.Service.Dtos.Post;
-using System.Net;
-using System.Net.Http.Headers;
 
-namespace IntegrationTests.ControllerTests
+namespace IntegrasjonTests.ControllerTests
 {
-    public class BlogControllerTests
+    public class CategoryControllerTests
     {
         private readonly CustomWebApplicationFactory<Program> _factory;
         private readonly HttpClient _client;
         private readonly string _baseUrl;
         private readonly JwtToken _jwtToken;
 
-        public BlogControllerTests()
+        public CategoryControllerTests()
         {
             var configuration = new ConfigurationBuilder()
                 .AddUserSecrets<Program>().Build();
@@ -31,7 +31,7 @@ namespace IntegrationTests.ControllerTests
         }
 
         [Fact]
-        public async Task AddNewPostAsync_ReturnsOkResult()
+        public async Task AddNewCategory_ReturnsOkResult()
         {
             // Arrange
             var token = _jwtToken.GenerateJwtToken("admin@example.com", "Admin");
@@ -39,8 +39,7 @@ namespace IntegrationTests.ControllerTests
 
             var formData = new MultipartFormDataContent
             {
-                { new StringContent("Test Title"), nameof(PostRequest.Title) },
-                { new StringContent("This is a test post."), nameof(PostRequest.Content) }
+                { new StringContent("Test Title"), nameof(AddCategories.CategoryName) }
             };
 
             // Act
@@ -56,63 +55,60 @@ namespace IntegrationTests.ControllerTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Fact]
-        public async Task GetAllAsync_ReturnsOk()
-        {
-            // Arrange
-            var filter = new PaginationFilter { PageNumber = 1, PageSize = 10 };
-
-            var expectedProducts = new PagedResult<Post>
-            {
-                Items = new List<Post>
-            {
-                new Post
-                {
-                    Id = Guid.NewGuid(),
-                    Title = "Sample Product",
-                    Content = "Sample Description",
-                    IsDeleted = false,
-                    DateCreated = DateTime.Now,
-                    DateUpdated = DateTime.Now,
-                    Categories = new List<BlogCategory>()
-                }
-            },
-                TotalCount = 1
-            };
-
-            _factory.BlogRepositoryMock
-                .Setup(repo => repo.RetrieveAllAsync(It.IsAny<PaginationFilter>()))
-                .ReturnsAsync(expectedProducts);
-
-            // Act
-            var response = await _client.GetAsync($"{_baseUrl}" +
-                $"?pageNumber={filter.PageNumber}" +
-                $"&pageSize={filter.PageSize}");
-
-            var content = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<PostsResponse>(content);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(result);
-            Assert.Equal(filter.PageNumber, result.PageNumber);
-            Assert.Equal(filter.PageSize, result.PageSize);
-            Assert.Equal(expectedProducts.Items.Count, result.Post.Count);
-        }
 
         [Fact]
-        public async Task UpdateAsync_ReturnsOkResult()
+        public async Task GetAll_ReturnsOkResultWithCategories()
         {
             // Arrange
             var token = _jwtToken.GenerateJwtToken("admin@example.com", "Admin");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var categories = new List<Category>
+            {
+                new Category
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Test Category"
+                }
+            };
+
+            _factory.CategoryRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(categories);
+
+            // Act
+            var response = await _client.GetAsync($"{_baseUrl}");
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            // Assuming the controller action converts entities to DTOs
+            var deserializedCategories = JsonConvert.DeserializeObject<List<CategoryResponse>>(responseContent);
+
+            // Assert
+            Assert.NotNull(deserializedCategories);
+            Assert.NotEmpty(deserializedCategories);
+        }
+
+        [Fact]
+        public async Task Update_ReturnsOkResult()
+        {
+            // Arrange
+            var token = _jwtToken.GenerateJwtToken("admin@example.com", "Admin");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var category = new Category
+            {
+                Id = Guid.NewGuid(),
+                Title = "Test Category"
+            };
+
+            _factory.CategoryRepositoryMock.Setup(x => x.UpdateAsync(category));
+
             var guid = Guid.NewGuid().ToString();
 
             var formData = new MultipartFormDataContent
             {
-                { new StringContent(guid), nameof(PostUpdateRequest.Id) },
-                { new StringContent("Updated Title"), nameof(PostUpdateRequest.Title) },
-                { new StringContent("This is updated content."), nameof(PostUpdateRequest.Content) }
+                { new StringContent(guid), nameof(category.Id) },
+                { new StringContent("Updated Title"), nameof(category.Title) }
             };
 
             var requestUri = $"{_baseUrl}/update";
@@ -131,7 +127,7 @@ namespace IntegrationTests.ControllerTests
         }
 
         [Fact]
-        public async Task DeleteAsync_ReturnsOkResult()
+        public async Task Delete_ReturnsOkResult()
         {
             // Arrange
             var guid = Guid.NewGuid().ToString();
